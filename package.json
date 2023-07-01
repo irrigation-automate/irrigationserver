@@ -6,10 +6,11 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npx tsc",
-    "start": "nodemon dist/index.js",
+    "start": "nodemon dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"npm run start\"",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [
     "irrigation",
@@ -44,5 +45,8 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "typescript": "^3.3.1"
+  },
+  "jest": { 
+    "testMatch": ["**/dist/__tests__/**/*.spec.js"]
   }
 }
