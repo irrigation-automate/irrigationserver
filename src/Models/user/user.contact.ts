@@ -1,7 +1,7 @@
 import mongoose  from 'mongoose';
-const {Schema, model} = mongoose;
+const { Schema, model } = mongoose;
 
-import {regex} from '../../validations/regex';
+import { regex } from '../../validations/regex';
 
 const userContactSchema = new Schema({
   email: {

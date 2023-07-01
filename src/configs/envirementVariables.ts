@@ -22,7 +22,7 @@ const {
   JWTSecret
 } = process.env;
 
-const serverConfig: TserverConfig ={
+const serverConfig: TserverConfig = {
   PORT
 };
 
