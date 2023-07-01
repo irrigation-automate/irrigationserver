@@ -13,6 +13,8 @@ const userSchema = new Schema({
     address: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'UserAddress',
+        require: true,
+        unique: true
     },
     blocked: {
         type: Boolean,
@@ -31,20 +33,15 @@ const userSchema = new Schema({
     password: {
         type: Schema.Types.ObjectId,
         ref: 'Password',
-        required: true,
-        unique: true
+        required: true
     },
     weather: {
         type: Schema.Types.ObjectId,
-        ref: 'Wether',
-        required: true,
-        unique: true
+        ref: 'Wether'
     },
     reglage: {
         type: Schema.Types.ObjectId,
-        ref: 'Reglage',
-        required: true,
-        unique: true
+        ref: 'Reglage'
     }
 });
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

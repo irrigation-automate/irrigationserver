@@ -5,14 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const connectDb_1 = require("./src/configs/connectDb");
+const testController_1 = require("./src/Routes/tests/testController");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
-const app = (0, express_1.default)();
-const port = process.env.PORT;
-app.get('/test', (req, res) => {
-    res.send('Express + TypeScript Servering');
-});
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
-(0, connectDb_1.connectToMongoDB)().then(response => console.log(response.message)).catch(error => console.log(error));
+const app = express_1.default();
+app.use(cors_1.default());
+app.use('/test', testController_1.getTestData);
+exports.default = app;

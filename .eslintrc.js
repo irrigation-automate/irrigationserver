@@ -13,6 +13,15 @@ const rules = {
   'indent': ['error', 2],
   'quotes': ['error', 'single'],
   'semi': ['error', 'always'],
+
+  // Example rule for enforcing space around operators
+  'space-infix-ops': 'error',
+
+  // Example rule for enforcing space inside parentheses
+  'space-in-parens': ['error', 'never'],
+  
+  // Example rule for enforcing space inside braces
+  'object-curly-spacing': ['error', 'always'],
 };
 
 

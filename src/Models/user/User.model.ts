@@ -1,18 +1,20 @@
 import mongoose  from 'mongoose';
-const {Schema, model} = mongoose;
+const { Schema, model } = mongoose;
 
 import jwt from 'jsonwebtoken';
-import {enirementVariables} from '../../configs/envirementVariables';
-const {JWTSecret} = enirementVariables.JWTConfig;
+import { enirementVariables } from '../../configs/envirementVariables';
+const { JWTSecret } = enirementVariables.JWTConfig;
 
 // ----- Create Schema for Users 
 const userSchema = new Schema({
   address: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserAddress',
+    require:true,
+    unique: true
   },
   blocked : {
-    type : Boolean,
+    type  : Boolean,
     required: true,
     default : true
   },
@@ -28,20 +30,15 @@ const userSchema = new Schema({
   password: {
     type: Schema.Types.ObjectId,
     ref: 'Password',
-    required: true,
-    unique: true
+    required: true
   },
   weather: {
     type: Schema.Types.ObjectId,
-    ref: 'Wether',
-    required: true,
-    unique: true
+    ref: 'Wether'
   },
   reglage: {
     type: Schema.Types.ObjectId,
-    ref: 'Reglage',
-    required: true,
-    unique: true
+    ref: 'Reglage'
   }
 });
 

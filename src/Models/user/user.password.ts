@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import mongoose  from 'mongoose';
-const {Schema, model} = mongoose;
+const { Schema, model } = mongoose;
 
 const passwordSchema = new Schema({
   password: {
