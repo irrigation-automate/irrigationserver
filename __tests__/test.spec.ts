@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../src/app';
+import app from '..';
 
 describe('GET /test', () => {
   it('responds with "Express + TypeScript Servering"', async () => {
