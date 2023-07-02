@@ -8,6 +8,16 @@ export interface IUserContactSchema extends Document {
     last_update: Date;
 }
 
+export interface IUserAdressSchema extends Document {
+    _id: string;
+    city: string ;
+    Street: string;
+    country: string;
+    codeZip: number;
+    last_update: Date;
+}
+
+
 export interface IUserSchema extends Document {
   _id: string;
   address?: Schema.Types.ObjectId | string;
