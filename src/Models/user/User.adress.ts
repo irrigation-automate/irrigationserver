@@ -1,7 +1,12 @@
-import mongoose  from 'mongoose';
-const { Schema, model } = mongoose;
+// ==============================|| package mongoose imports ||============================== //
 
-const userAddressSchema = new Schema({
+import { Model, Schema, model }  from 'mongoose';
+import { IUserAdressSchema } from '../../interface/interfaces/models';
+
+// ==============================|| User adress model ||============================== //
+// ======|| Create Schema for User adress
+
+const UserAddressSchema = new Schema<IUserAdressSchema>({
   city: {
     type: String,
   },
@@ -21,5 +26,8 @@ const userAddressSchema = new Schema({
   },
 });
 
-const userAddress = model('UserAddress', userAddressSchema);
-module.exports =  userAddress;
+// ======|| Create new document for User adress model
+
+const UserAddress : Model<IUserAdressSchema> = model<IUserAdressSchema>('UserAddress', UserAddressSchema);
+
+export default  UserAddress;

@@ -1,9 +1,18 @@
-import mongoose  from 'mongoose';
-const { Schema, model } = mongoose;
+// ==============================|| package, variables and functions ||============================== //
 
+// ======|| import mpngoose package for schema ( model )
+import { Model, Schema, model }  from 'mongoose';
+
+// ======|| import validation function 
 import { regex } from '../../validations/regex';
 
-const userContactSchema = new Schema({
+// ======|| import schema type 
+import { IUserContactSchema } from '../../interface/interfaces/models';
+
+// ==============================|| User contact model ||============================== //
+
+// ======|| Create Schema for User contact
+const UserContactSchema = new Schema<IUserContactSchema>({
   email: {
     type: String,
     unique: true,
@@ -29,5 +38,7 @@ const userContactSchema = new Schema({
   },
 });
 
-const userContact = model('UserContact', userContactSchema);
-module.exports =  userContact;
+// ======|| Create new document for User contact model
+const UserContact: Model<IUserContactSchema> = model<IUserContactSchema>('UserContact', UserContactSchema);
+
+export default UserContact;

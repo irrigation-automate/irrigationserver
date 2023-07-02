@@ -1,26 +1,43 @@
-import mongoose  from 'mongoose';
-const { Schema, model } = mongoose;
+// ==============================|| package, variables and functions ||============================== //
 
+// ======|| import mpngoose package for schema ( model )
+import { Model, model,  Schema } from 'mongoose';
+// ======|| import jwt package for generation authorization
 import jwt from 'jsonwebtoken';
+
+// ======|| import envirement variables 
 import { enirementVariables } from '../../configs/envirementVariables';
+// ======|| import interface user schema 
+import { IUserSchema } from '../../interface/interfaces/models';
+// ======|| import models  
+// --- import interface user adress schema 
+import UserAddress from './User.adress';
+// --- import interface user contact schema 
+import UserContact from './user.contact';
+// --- import interface user password schema 
+import UserPassword from './user.password';
+
+// === destraction JWT secret  variables 
 const { JWTSecret } = enirementVariables.JWTConfig;
 
-// ----- Create Schema for Users 
-const userSchema = new Schema({
+// ==============================|| User model ||============================== //
+
+// ======|| Create Schema for Users 
+const UserSchema = new Schema<IUserSchema>({
   address: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserAddress',
-    require:true,
-    unique: true
-  },
-  blocked : {
-    type  : Boolean,
-    required: true,
-    default : true
-  },
-  contact:{
     type: Schema.Types.ObjectId,
-    ref:'UserContact',
+    ref: UserAddress.modelName,
+    required: true,
+    unique: true,
+  },
+  blocked: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  contact: {
+    type: Schema.Types.ObjectId,
+    ref: UserContact.modelName,
     required: true,
   },
   creation_date: {
@@ -29,21 +46,22 @@ const userSchema = new Schema({
   },
   password: {
     type: Schema.Types.ObjectId,
-    ref: 'Password',
-    required: true
+    ref: UserPassword.modelName,
+    required: true,
   },
   weather: {
     type: Schema.Types.ObjectId,
-    ref: 'Wether'
+    ref: 'Weather',
   },
   reglage: {
     type: Schema.Types.ObjectId,
-    ref: 'Reglage'
-  }
+    ref: 'Reglage',
+  },
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-userSchema.methods.generateAuthToken = function () {
+// ======|| Create new methodes  for User model
+
+UserSchema.methods.generateAuthToken = function (): string | null {
   if(JWTSecret) {
     const token = jwt.sign({ _id: this._id }, JWTSecret, {
       expiresIn: '10h',
@@ -53,7 +71,8 @@ userSchema.methods.generateAuthToken = function () {
   return null;
 };
 
+// ======|| Create new document for User model
 
-const User = model('User', userSchema);
+const UserModel: Model<IUserSchema> = model<IUserSchema>('User', UserSchema);
 
-module.exports =  User;
+export default  UserModel;
