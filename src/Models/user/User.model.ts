@@ -2,19 +2,25 @@
 
 // ======|| import mpngoose package for schema ( model )
 import { Model, model,  Schema } from 'mongoose';
-import UserContact from './user.contact';
 // ======|| import jwt package for generation authorization
 import jwt from 'jsonwebtoken';
 
 // ======|| import envirement variables 
 import { enirementVariables } from '../../configs/envirementVariables';
+// ======|| import interface user schema 
 import { IUserSchema } from '../../interface/interfaces/models';
+// ======|| import models  
+// --- import interface user adress schema 
 import UserAddress from './User.adress';
+// --- import interface user contact schema 
+import UserContact from './user.contact';
+// --- import interface user password schema 
+import UserPassword from './user.password';
+
 // === destraction JWT secret  variables 
 const { JWTSecret } = enirementVariables.JWTConfig;
 
 // ==============================|| User model ||============================== //
-
 
 // ======|| Create Schema for Users 
 const UserSchema = new Schema<IUserSchema>({
@@ -40,7 +46,7 @@ const UserSchema = new Schema<IUserSchema>({
   },
   password: {
     type: Schema.Types.ObjectId,
-    ref: 'Password',
+    ref: UserPassword.modelName,
     required: true,
   },
   weather: {

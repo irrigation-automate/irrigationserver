@@ -17,14 +17,18 @@ export interface IUserAdressSchema extends Document {
     last_update: Date;
 }
 
-
+export interface IUserPasswordchema extends Document {
+    _id: string;
+    password: string ;
+    last_update: Date;
+}
 export interface IUserSchema extends Document {
   _id: string;
   address?: IUserAdressSchema['id'];
   blocked: boolean;
   contact: IUserContactSchema['id'];
   creation_date: Date;
-  password: Schema.Types.ObjectId | string;
+  password: IUserPasswordchema['id']
   weather?: Schema.Types.ObjectId | string;
   reglage?: Schema.Types.ObjectId | string;
   
