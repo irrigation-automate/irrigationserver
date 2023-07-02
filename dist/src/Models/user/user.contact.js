@@ -1,12 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+// ==============================|| package, variables and functions ||============================== //
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const { Schema, model } = mongoose_1.default;
+// ======|| import mpngoose package for schema ( model )
+const mongoose_1 = require("mongoose");
+// ======|| import validation function 
 const regex_1 = require("../../validations/regex");
-const userContactSchema = new Schema({
+// ==============================|| User contact model ||============================== //
+// ======|| Create Schema for User contact
+const UserContactSchema = new mongoose_1.Schema({
     email: {
         type: String,
         unique: true,
@@ -31,5 +32,6 @@ const userContactSchema = new Schema({
         default: Date.now(),
     },
 });
-const userContact = model('UserContact', userContactSchema);
-module.exports = userContact;
+// ======|| Create new document for User contact model
+const UserContact = mongoose_1.model('UserContact', UserContactSchema);
+exports.default = UserContact;

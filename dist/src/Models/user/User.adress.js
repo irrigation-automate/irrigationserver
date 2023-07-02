@@ -1,11 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+// ==============================|| package mongoose imports ||============================== //
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const { Schema, model } = mongoose_1.default;
-const userAddressSchema = new Schema({
+const mongoose_1 = require("mongoose");
+// ==============================|| User adress model ||============================== //
+// ======|| Create Schema for User adress
+const UserAddressSchema = new mongoose_1.Schema({
     city: {
         type: String,
     },
@@ -24,5 +23,6 @@ const userAddressSchema = new Schema({
         default: Date.now(),
     },
 });
-const userAddress = model('UserAddress', userAddressSchema);
-module.exports = userAddress;
+// ======|| Create new document for User adress model
+const UserAddress = mongoose_1.model('UserAddress', UserAddressSchema);
+exports.default = UserAddress;
