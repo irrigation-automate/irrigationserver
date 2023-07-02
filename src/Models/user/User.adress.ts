@@ -28,6 +28,6 @@ const UserAddressSchema = new Schema<IUserAdressSchema>({
 
 // ======|| Create new document for User adress model
 
-const userAddress : Model<IUserAdressSchema> = model<IUserAdressSchema>('UserAddress', UserAddressSchema);
+const UserAddress : Model<IUserAdressSchema> = model<IUserAdressSchema>('UserAddress', UserAddressSchema);
 
-export default  userAddress;
+export default  UserAddress;

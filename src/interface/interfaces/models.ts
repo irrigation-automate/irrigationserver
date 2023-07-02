@@ -20,9 +20,9 @@ export interface IUserAdressSchema extends Document {
 
 export interface IUserSchema extends Document {
   _id: string;
-  address?: Schema.Types.ObjectId | string;
+  address?: IUserAdressSchema['id'];
   blocked: boolean;
-  contact: IUserContactSchema;
+  contact: IUserContactSchema['id'];
   creation_date: Date;
   password: Schema.Types.ObjectId | string;
   weather?: Schema.Types.ObjectId | string;

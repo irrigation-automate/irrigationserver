@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 // ======|| import envirement variables 
 import { enirementVariables } from '../../configs/envirementVariables';
 import { IUserSchema } from '../../interface/interfaces/models';
+import UserAddress from './User.adress';
 // === destraction JWT secret  variables 
 const { JWTSecret } = enirementVariables.JWTConfig;
 
@@ -19,7 +20,7 @@ const { JWTSecret } = enirementVariables.JWTConfig;
 const UserSchema = new Schema<IUserSchema>({
   address: {
     type: Schema.Types.ObjectId,
-    ref: 'UserAddress',
+    ref: UserAddress.modelName,
     required: true,
     unique: true,
   },
