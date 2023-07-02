@@ -29,8 +29,8 @@ const UserSchema = new Schema<IUserSchema>({
     default: true,
   },
   contact: {
-    type: Schema.Types.ObjectId, // Explicitly cast the type
-    ref: UserContact.modelName, // Use the modelName property of the UserContact model
+    type: Schema.Types.ObjectId,
+    ref: UserContact.modelName,
     required: true,
   },
   creation_date: {
@@ -68,4 +68,4 @@ UserSchema.methods.generateAuthToken = function (): string | null {
 
 const UserModel: Model<IUserSchema> = model<IUserSchema>('User', UserSchema);
 
-module.exports =  UserModel;
+export default  UserModel;
