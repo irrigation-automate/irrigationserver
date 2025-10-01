@@ -7,6 +7,7 @@ export default {
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '.*\\.swagger\\.spec\\.[jt]sx?$'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
