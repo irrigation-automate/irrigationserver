@@ -3,21 +3,18 @@ import {
   createErrorResponse,
   createValidationErrorResponse,
   createPaginatedResponse,
-  isError
+  isError,
 } from '../../src/utils/responseHelpers';
 
 // Define local types since they're not exported from the module
 type ErrorDetails = Record<string, unknown>;
-type ValidationErrorDetails = {
-  validation: Record<string, string[]>;
-};
 
 /**
  * Test suite for utility functions that generate standardized API responses.
  */
 /**
  * Test suite for the response helpers utility functions.
- * 
+ *
  * @group Unit Tests
  */
 describe('Response Helpers', () => {
@@ -42,7 +39,7 @@ describe('Response Helpers', () => {
 
   /**
    * Tests for createSuccessResponse function
-   * 
+   *
    * @group Unit Tests/Response Helpers/createSuccessResponse
    */
   describe('createSuccessResponse', () => {
@@ -57,7 +54,7 @@ describe('Response Helpers', () => {
         success: true,
         data: testData,
         message: defaultMessage,
-        timestamp: mockDateISO
+        timestamp: mockDateISO,
       });
     });
 
@@ -68,7 +65,7 @@ describe('Response Helpers', () => {
         success: true,
         data: testData,
         message: customMessage,
-        timestamp: mockDateISO
+        timestamp: mockDateISO,
       });
     });
 
@@ -83,8 +80,16 @@ describe('Response Helpers', () => {
     });
 
     it('should handle null and undefined data', () => {
-      expect(createSuccessResponse(null)).toMatchObject({ success: true, data: null, message: 'Success' });
-      expect(createSuccessResponse(undefined)).toMatchObject({ success: true, data: undefined, message: 'Success' });
+      expect(createSuccessResponse(null)).toMatchObject({
+        success: true,
+        data: null,
+        message: 'Success',
+      });
+      expect(createSuccessResponse(undefined)).toMatchObject({
+        success: true,
+        data: undefined,
+        message: 'Success',
+      });
     });
   });
 
@@ -93,15 +98,15 @@ describe('Response Helpers', () => {
    */
   /**
    * Tests for createErrorResponse function
-   * 
+   *
    * @group Unit Tests/Response Helpers/createErrorResponse
    */
   describe('createErrorResponse', () => {
     const errorMessage = 'An error occurred';
     const statusCode = 400;
-    const errorDetails: ErrorDetails = { 
-      field: 'email', 
-      reason: 'Invalid format' 
+    const errorDetails: ErrorDetails = {
+      field: 'email',
+      reason: 'Invalid format',
     };
 
     it('should create an error response with default status code', () => {
@@ -112,8 +117,8 @@ describe('Response Helpers', () => {
         error: {
           message: errorMessage,
           status: 500, // Default status code
-          timestamp: mockDateISO
-        }
+          timestamp: mockDateISO,
+        },
       });
     });
 
@@ -125,8 +130,8 @@ describe('Response Helpers', () => {
         error: {
           message: errorMessage,
           status: statusCode,
-          timestamp: mockDateISO
-        }
+          timestamp: mockDateISO,
+        },
       });
     });
 
@@ -139,15 +144,15 @@ describe('Response Helpers', () => {
           message: errorMessage,
           status: statusCode,
           details: errorDetails,
-          timestamp: mockDateISO
-        }
+          timestamp: mockDateISO,
+        },
       });
     });
 
     it('should handle empty error details object', () => {
       const emptyDetails = {};
       const response = createErrorResponse(errorMessage, statusCode, emptyDetails);
-      
+
       expect(response.error.details).toEqual(emptyDetails);
     });
   });
@@ -157,13 +162,13 @@ describe('Response Helpers', () => {
    */
   /**
    * Tests for createValidationErrorResponse function
-   * 
+   *
    * @group Unit Tests/Response Helpers/createValidationErrorResponse
    */
   describe('createValidationErrorResponse', () => {
     const validationErrors = {
       email: ['Invalid email format', 'Email is required'],
-      password: ['Password is too short', 'Password must contain special characters']
+      password: ['Password is too short', 'Password must contain special characters'],
     };
     const defaultMessage = 'Validation failed';
     const customMessage = 'Custom validation error message';
@@ -177,10 +182,10 @@ describe('Response Helpers', () => {
           message: customMessage,
           status: 400,
           details: {
-            validation: validationErrors
+            validation: validationErrors,
           },
-          timestamp: mockDateISO
-        }
+          timestamp: mockDateISO,
+        },
       });
     });
 
@@ -192,7 +197,7 @@ describe('Response Helpers', () => {
     it('should handle empty validation errors object', () => {
       const emptyErrors = {};
       const response = createValidationErrorResponse(emptyErrors);
-      
+
       expect(response.error.details.validation).toEqual(emptyErrors);
     });
 
@@ -209,14 +214,14 @@ describe('Response Helpers', () => {
    */
   /**
    * Tests for createPaginatedResponse function
-   * 
+   *
    * @group Unit Tests/Response Helpers/createPaginatedResponse
    */
   describe('createPaginatedResponse', () => {
     const items = [
       { id: 1, name: 'Item 1' },
       { id: 2, name: 'Item 2' },
-      { id: 3, name: 'Item 3' }
+      { id: 3, name: 'Item 3' },
     ];
     const total = 10;
     const page = 2;
@@ -239,8 +244,8 @@ describe('Response Helpers', () => {
           currentPage: page,
           itemsPerPage: limit,
           hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1
-        }
+          hasPreviousPage: page > 1,
+        },
       });
     });
 
@@ -257,7 +262,7 @@ describe('Response Helpers', () => {
         hasPreviousPage: false,
         hasNextPage: true,
         currentPage: firstPage,
-        totalPages: 4
+        totalPages: 4,
       });
     });
 
@@ -268,7 +273,7 @@ describe('Response Helpers', () => {
       expect(response.pagination).toMatchObject({
         hasPreviousPage: true,
         hasNextPage: false,
-        currentPage: lastPage
+        currentPage: lastPage,
       });
     });
 
@@ -281,29 +286,29 @@ describe('Response Helpers', () => {
         total: 0,
         totalPages: 0,
         hasNextPage: false,
-        hasPreviousPage: false
+        hasPreviousPage: false,
       });
     });
 
     it('should handle single page of results', () => {
       const singlePageTotal = 2;
       const response = createPaginatedResponse(items.slice(0, 2), singlePageTotal, 1, 10);
-      
+
       expect(response.pagination).toMatchObject({
         total: singlePageTotal,
         totalPages: 1,
         hasNextPage: false,
-        hasPreviousPage: false
+        hasPreviousPage: false,
       });
     });
 
     it('should handle custom items per page', () => {
       const customLimit = 5;
       const response = createPaginatedResponse(items, total, 1, customLimit);
-      
+
       expect(response.pagination).toMatchObject({
         itemsPerPage: customLimit,
-        totalPages: Math.ceil(total / customLimit)
+        totalPages: Math.ceil(total / customLimit),
       });
     });
   });
@@ -313,7 +318,7 @@ describe('Response Helpers', () => {
    */
   /**
    * Tests for isError type guard
-   * 
+   *
    * @group Unit Tests/Response Helpers/isError
    */
   describe('isError', () => {
@@ -338,7 +343,7 @@ describe('Response Helpers', () => {
 
     it('should narrow the type when used in a type guard', () => {
       const maybeError: unknown = new Error('Test');
-      
+
       if (isError(maybeError)) {
         // TypeScript should know this is an Error here
         expect(maybeError.message).toBe('Test');

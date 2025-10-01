@@ -11,9 +11,9 @@ import { IUserAddressSchema } from '../../src/interface/interfaces/models';
 
 describe('UserAddress Model', () => {
   let mongoServer: MongoMemoryServer;
-  
-  /** 
-   * @constant {Partial<IUserAddressSchema>} validAddress 
+
+  /**
+   * @constant {Partial<IUserAddressSchema>} validAddress
    * @description A valid address object used for testing schema persistence.
    */
   const validAddress: Partial<IUserAddressSchema> = {
@@ -69,10 +69,10 @@ describe('UserAddress Model', () => {
   it('should set default country to "Tunisia" when not provided', async () => {
     const addressData = { ...validAddress };
     delete addressData.country;
-    
+
     const address = new UserAddress(addressData);
     const savedAddress = await address.save();
-    
+
     expect(savedAddress.country).toBe('Tunisia');
   });
 
@@ -100,7 +100,7 @@ describe('UserAddress Model', () => {
     const partialAddress = { city: 'Sousse' };
     const address = new UserAddress(partialAddress);
     const savedAddress = await address.save();
-    
+
     expect(savedAddress._id).toBeDefined();
     expect(savedAddress.city).toBe('Sousse');
     expect(savedAddress.street).toBeUndefined();
@@ -116,16 +116,16 @@ describe('UserAddress Model', () => {
       ...validAddress,
       codeZip: 'not-a-number',
     };
-    
+
     const address = new UserAddress(invalidAddress);
-    
+
     let error;
     try {
       await address.validate();
     } catch (e) {
       error = e;
     }
-    
+
     expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(error.errors.codeZip).toBeDefined();
   });

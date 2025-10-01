@@ -6,7 +6,6 @@ import { regex } from '../../src/validations/regex';
  * - Email validation
  */
 describe('Regex Validation', () => {
-
   /**
    * Test cases for password validation regex.
    * Rules:
@@ -20,7 +19,7 @@ describe('Regex Validation', () => {
     it('should validate passwords correctly', () => {
       /** Valid passwords */
       const validPasswords = ['Password1', 'Secure123', 'TestPass123', 'P@ssword1'];
-      validPasswords.forEach(password => {
+      validPasswords.forEach((password) => {
         expect(regex.passwordValidationRegex.test(password)).toBe(true);
       });
 
@@ -35,9 +34,9 @@ describe('Regex Validation', () => {
         /** Too short */
         'Pass1',
         /** No uppercase */
-        'password1'
+        'password1',
       ];
-      invalidPasswords.forEach(password => {
+      invalidPasswords.forEach((password) => {
         expect(regex.passwordValidationRegex.test(password)).toBe(false);
       });
     });
@@ -64,9 +63,9 @@ describe('Regex Validation', () => {
         'email@example-one.com',
         '_______@example.com',
         'email@example.co.jp',
-        'firstname-lastname@example.com'
+        'firstname-lastname@example.com',
       ];
-      validEmails.forEach(email => {
+      validEmails.forEach((email) => {
         expect(regex.emailValidationRegex.test(email)).toBe(true);
       });
 
@@ -87,12 +86,11 @@ describe('Regex Validation', () => {
         /** Leading hyphen in domain */
         'username@-example.com',
         /** Trailing hyphen in domain */
-        'username@example-.com'
+        'username@example-.com',
       ];
-      invalidEmails.forEach(email => {
+      invalidEmails.forEach((email) => {
         expect(regex.emailValidationRegex.test(email)).toBe(false);
       });
     });
   });
-
 });

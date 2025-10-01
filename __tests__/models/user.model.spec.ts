@@ -7,10 +7,10 @@
  * - Default values
  * - JWT token generation via the `generateAuthToken` method
  * - Document updates
- * 
+ *
  * Uses `mongodb-memory-server` to provide an isolated in-memory MongoDB instance
  * for testing without affecting a real database.
- * 
+ *
  * @module tests/models/user/User.model.test
  */
 
@@ -37,13 +37,12 @@ jest.mock('../../src/Models/user/user.contact');
 jest.mock('../../src/Models/user/User.adress');
 jest.mock('../../src/Models/user/user.password');
 
-
 /**
  * Test suite for the `User` model.
  */
 describe('User Model', () => {
   let mongoServer: MongoMemoryServer;
-  
+
   /** Test data for creating a valid user */
   let validUser: any;
 
@@ -54,11 +53,11 @@ describe('User Model', () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
-    
+
     const contactId = new mongoose.Types.ObjectId();
     const addressId = new mongoose.Types.ObjectId();
     const passwordId = new mongoose.Types.ObjectId();
-    
+
     validUser = {
       contact: contactId,
       address: addressId,
@@ -90,7 +89,7 @@ describe('User Model', () => {
   it('should create and save a user successfully', async () => {
     const user = new User(validUser);
     const savedUser = await user.save();
-    
+
     expect(savedUser._id).toBeDefined();
     expect(savedUser.contact?.toString()).toBe(validUser.contact?.toString());
     expect(savedUser.address?.toString()).toBe(validUser.address?.toString());
@@ -107,14 +106,14 @@ describe('User Model', () => {
    */
   it('should fail when required fields are missing', async () => {
     const user = new User({});
-    
+
     let error;
     try {
       await user.validate();
     } catch (e) {
       error = e;
     }
-    
+
     expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(error.errors.contact).toBeDefined();
     expect(error.errors.address).toBeDefined();
@@ -129,16 +128,16 @@ describe('User Model', () => {
     const contactId = new mongoose.Types.ObjectId();
     const addressId = new mongoose.Types.ObjectId();
     const passwordId = new mongoose.Types.ObjectId();
-    
+
     const userData = {
       contact: contactId,
       address: addressId,
       password: passwordId,
     };
-    
+
     const user = new User(userData);
     const savedUser = await user.save();
-    
+
     expect(savedUser.blocked).toBe(true); // Default value from schema
     expect(savedUser.creation_date).toBeDefined();
   });
@@ -154,31 +153,35 @@ describe('User Model', () => {
     it('should generate a valid JWT token', () => {
       const user = new User(validUser);
       const token = user.generateAuthToken();
-      
+
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');
-      
+
       const decoded = jwt.verify(token!, mockJWTSecret);
       expect(decoded).toHaveProperty('_id');
       expect(decoded).toHaveProperty('exp');
     });
-    
+
     /**
      * @test
      * Should return null if JWT secret is missing
      */
     it('should handle missing JWT secret', () => {
-      const originalJWTConfig = require('../../src/configs/envirementVariables').enirementVariables.JWTConfig;
-      
-      require('../../src/configs/envirementVariables').enirementVariables.JWTConfig = { JWTSecret: '' };
-      
+      const originalJWTConfig = require('../../src/configs/envirementVariables').enirementVariables
+        .JWTConfig;
+
+      require('../../src/configs/envirementVariables').enirementVariables.JWTConfig = {
+        JWTSecret: '',
+      };
+
       const UserWithMockedConfig = require('../../src/Models/user/User.model').default;
       const user = new UserWithMockedConfig(validUser);
-      
+
       const token = user.generateAuthToken();
       expect(token).toBeNull();
-      
-      require('../../src/configs/envirementVariables').enirementVariables.JWTConfig = originalJWTConfig;
+
+      require('../../src/configs/envirementVariables').enirementVariables.JWTConfig =
+        originalJWTConfig;
     });
   });
 
@@ -189,16 +192,16 @@ describe('User Model', () => {
   it('should update the user document correctly', async () => {
     const user = new User(validUser);
     await user.save();
-    
+
     const newBlockedStatus = true;
     const newContactId = new mongoose.Types.ObjectId();
-    
+
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       { blocked: newBlockedStatus, contact: newContactId },
-      { new: true }
+      { new: true },
     );
-    
+
     expect(updatedUser).not.toBeNull();
     expect(updatedUser!.blocked).toBe(newBlockedStatus);
     expect(updatedUser!.contact.toString()).toBe(newContactId.toString());

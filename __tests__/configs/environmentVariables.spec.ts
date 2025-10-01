@@ -3,7 +3,7 @@
  * @description
  * This file contains unit tests for validating the loading, parsing, and
  * type safety of environment variables used in the application.
- * 
+ *
  * It ensures that:
  * - Required environment variables are present and parsed correctly.
  * - Missing environment variables throw appropriate errors.

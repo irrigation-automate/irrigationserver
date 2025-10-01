@@ -14,9 +14,9 @@ const mockApp = {
         if (typeof callback === 'function') {
           callback();
         }
-      })
+      }),
     };
-  })
+  }),
 };
 
 // Mock the default export of the index module before importing anything that uses it
@@ -42,18 +42,18 @@ const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {
 const originalConsole = { ...console };
 const mockConsole = {
   log: jest.fn(),
-  error: jest.fn()
+  error: jest.fn(),
 };
 
 global.console = {
   ...originalConsole,
-  ...mockConsole
+  ...mockConsole,
 };
 
 describe('Server Module', () => {
   // Mock MongoDB client and database
   const mockClient = {
-    close: jest.fn().mockResolvedValue(undefined)
+    close: jest.fn().mockResolvedValue(undefined),
   };
 
   const mockDb = {
@@ -64,19 +64,18 @@ describe('Server Module', () => {
   const originalProcessOn = process.on;
   const originalProcessOff = process.off;
   const originalProcessRemoveListener = process.removeListener;
-  let signalHandlers: { [key: string]: Function } = {};
+  let signalHandlers: { [key: string]: (...args: unknown[]) => void } = {};
 
   beforeEach(() => {
-    // Reset all mocks
     jest.clearAllMocks();
-    
-    // Reset process.on mock
-    (process.on as jest.Mock) = jest.fn((signal: string, handler: Function) => {
-      signalHandlers[signal] = handler;
-      return process;
-    });
-    
-    // Reset signal handlers
+
+    (process.on as jest.Mock) = jest.fn(
+      (signal: NodeJS.Signals, handler: (...args: unknown[]) => void) => {
+        signalHandlers[signal] = handler;
+        return process;
+      },
+    );
+
     signalHandlers = {};
   });
 
@@ -85,14 +84,14 @@ describe('Server Module', () => {
     process.on = originalProcessOn;
     process.off = originalProcessOff;
     process.removeListener = originalProcessRemoveListener;
-    
+
     // Restore console
     global.console = originalConsole;
-    
+
     // Restore process.exit
     mockExit.mockRestore();
   });
-  
+
   // Helper function to wait for promises to resolve
   const flushPromises = () => new Promise(setImmediate);
 
@@ -103,24 +102,24 @@ describe('Server Module', () => {
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
 
       await startServer();
 
       // Verify MongoDB connection was attempted
       expect(connectToMongoDB).toHaveBeenCalled();
-      
+
       // Verify server started with default port
       expect(mockApp.listen).toHaveBeenCalledWith(
         enirementVariables.serverConfig.PORT,
-        expect.any(Function)
+        expect.any(Function),
       );
-      
+
       // Verify success message was logged
       expect(console.log).toHaveBeenCalledWith('✅', 'Connected to MongoDB');
       expect(console.log).toHaveBeenCalledWith(
-        `🚀 Server is running on port ${enirementVariables.serverConfig.PORT}`
+        `🚀 Server is running on port ${enirementVariables.serverConfig.PORT}`,
       );
     });
 
@@ -131,16 +130,13 @@ describe('Server Module', () => {
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
 
       await startServer(customPort);
 
       // Verify server started with custom port
-      expect(mockApp.listen).toHaveBeenCalledWith(
-        customPort,
-        expect.any(Function)
-      );
+      expect(mockApp.listen).toHaveBeenCalledWith(customPort, expect.any(Function));
     });
 
     it('should handle MongoDB connection failure', async () => {
@@ -148,7 +144,7 @@ describe('Server Module', () => {
       const errorMessage = 'Connection failed';
       (connectToMongoDB as jest.Mock).mockResolvedValueOnce({
         success: false,
-        message: errorMessage
+        message: errorMessage,
       });
 
       // Mock process.exit to prevent actual exit
@@ -158,18 +154,21 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Verify process.exit was called with error code 1
       expect(mockExit).toHaveBeenCalledWith(1);
-      expect(console.error).toHaveBeenCalledWith('❌ Failed to start server:', `Failed to connect to MongoDB: ${errorMessage}`);
-      
+      expect(console.error).toHaveBeenCalledWith(
+        '❌ Failed to start server:',
+        `Failed to connect to MongoDB: ${errorMessage}`,
+      );
+
       // Verify server did not start
       expect(mockApp.listen).not.toHaveBeenCalled();
-      
+
       // Restore the mock
       mockExit.mockRestore();
     });
-    
+
     it('should handle MongoDB connection error', async () => {
       // Mock error during MongoDB connection
       const error = new Error('Connection error');
@@ -182,14 +181,14 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Verify process.exit was called with error code 1
       expect(mockExit).toHaveBeenCalledWith(1);
       expect(console.error).toHaveBeenCalledWith('❌ Failed to start server:', 'Connection error');
-      
+
       // Verify server did not start
       expect(mockApp.listen).not.toHaveBeenCalled();
-      
+
       // Restore the mock
       mockExit.mockRestore();
     });
@@ -200,9 +199,9 @@ describe('Server Module', () => {
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
-      
+
       // Mock error during server startup
       const error = new Error('Server error');
       mockApp.listen.mockImplementationOnce(() => {
@@ -216,16 +215,16 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Verify process.exit was called with error code 1
       expect(mockExit).toHaveBeenCalledWith(1);
       expect(console.error).toHaveBeenCalledWith('❌ Failed to start server:', 'Server error');
-      
+
       // Verify MongoDB connection was closed
       // Note: In the actual implementation, the client.close() is called in the shutdown handler
       // which is not directly testable here due to process.exit()
       // This is a limitation of the test environment
-      
+
       // Restore the mock
       mockExit.mockRestore();
     });
@@ -238,7 +237,7 @@ describe('Server Module', () => {
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
 
       // Mock process.exit to prevent actual exit
@@ -248,18 +247,18 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Reset mocks to clear any calls from startServer
       (console.log as jest.Mock).mockClear();
-      
+
       // Trigger SIGTERM and wait for promises to resolve
       signalHandlers['SIGTERM']();
       await flushPromises();
-      
+
       // Verify shutdown sequence
       expect(console.log).toHaveBeenCalledWith('🛑 Shutting down server...');
       expect(console.log).toHaveBeenCalledWith('🛑 Server closed');
-      
+
       // Clean up
       mockExit.mockRestore();
     });
@@ -270,7 +269,7 @@ describe('Server Module', () => {
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
 
       // Mock process.exit to prevent actual exit
@@ -280,18 +279,18 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Reset mocks to clear any calls from startServer
       (console.log as jest.Mock).mockClear();
-      
+
       // Trigger SIGINT and wait for promises to resolve
       signalHandlers['SIGINT']();
       await flushPromises();
-      
+
       // Verify shutdown sequence
       expect(console.log).toHaveBeenCalledWith('🛑 Shutting down server...');
       expect(console.log).toHaveBeenCalledWith('🛑 Server closed');
-      
+
       // Clean up
       mockExit.mockRestore();
     });
@@ -300,12 +299,12 @@ describe('Server Module', () => {
       // Mock successful MongoDB connection
       const error = new Error('Disconnection error');
       mockClient.close.mockRejectedValueOnce(error);
-      
+
       (connectToMongoDB as jest.Mock).mockResolvedValueOnce({
         success: true,
         message: 'Connected to MongoDB',
         db: mockDb,
-        client: mockClient
+        client: mockClient,
       });
 
       // Mock process.exit to prevent actual exit
@@ -315,17 +314,20 @@ describe('Server Module', () => {
       }) as any);
 
       await startServer();
-      
+
       // Reset mocks to clear any calls from startServer
       (console.error as jest.Mock).mockClear();
-      
+
       // Trigger SIGTERM and wait for promises to resolve
       signalHandlers['SIGTERM']();
       await flushPromises();
-      
+
       // Verify error handling
-      expect(console.error).toHaveBeenCalledWith('Error closing MongoDB connection:', expect.any(Error));
-      
+      expect(console.error).toHaveBeenCalledWith(
+        'Error closing MongoDB connection:',
+        expect.any(Error),
+      );
+
       // Clean up
       mockExit.mockRestore();
     });

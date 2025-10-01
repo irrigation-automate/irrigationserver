@@ -22,7 +22,6 @@ jest.mock('../../src/configs/envirementVariables', () => ({
   },
 }));
 
-
 /**
  * Mock database object with minimal functionality.
  */
@@ -49,7 +48,6 @@ const mockDbFn = mockClient.db as jest.Mock;
 const mockClose = mockClient.close as jest.Mock;
 const mockCommand = mockDb.command as jest.Mock;
 
-
 /**
  * Test suite for MongoDB connection logic.
  */
@@ -70,7 +68,7 @@ describe('MongoDB Connection', () => {
       mockCommand.mockResolvedValueOnce({ ok: 1 });
 
       const { success, message, db, client } = await connectToMongoDB();
-      
+
       expect(success).toBe(true);
       expect(message).toBe('Successfully connected to MongoDB');
       expect(db).toBeDefined();
@@ -89,7 +87,7 @@ describe('MongoDB Connection', () => {
       mockCommand.mockResolvedValueOnce({ ok: 1 });
 
       const { success, db } = await connectToMongoDB();
-      
+
       expect(success).toBe(true);
       expect(db).toBeDefined();
       expect(db?.databaseName).toBe('testdb');
@@ -106,7 +104,7 @@ describe('MongoDB Connection', () => {
       console.error = jest.fn();
 
       const { success, message } = await connectToMongoDB();
-      
+
       expect(success).toBe(false);
       expect(message).toContain('Connection failed');
       expect(mockConnect).toHaveBeenCalled();
@@ -125,7 +123,7 @@ describe('MongoDB Connection', () => {
       console.error = jest.fn();
 
       const { success } = await connectToMongoDB();
-      
+
       expect(success).toBe(false);
       expect(mockClose).toHaveBeenCalled();
 

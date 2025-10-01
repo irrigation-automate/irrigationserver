@@ -16,7 +16,7 @@ import { IUserContactSchema } from '../../src/interface/interfaces/models';
  */
 describe('UserContact Model', () => {
   let mongoServer: MongoMemoryServer;
-  
+
   /**
    * Valid user contact test data.
    */
@@ -69,14 +69,14 @@ describe('UserContact Model', () => {
    */
   it('should fail when required fields are missing', async () => {
     const contact = new UserContact({});
-    
+
     let error;
     try {
       await contact.validate();
     } catch (e) {
       error = e;
     }
-    
+
     expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(error.errors.email).toBeDefined();
     expect(error.errors.firstName).toBeDefined();
@@ -91,14 +91,14 @@ describe('UserContact Model', () => {
       ...validContact,
       email: 'invalid-email',
     });
-    
+
     let error;
     try {
       await contact.validate();
     } catch (e) {
       error = e;
     }
-    
+
     expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(error.errors.email).toBeDefined();
   });
@@ -109,19 +109,19 @@ describe('UserContact Model', () => {
   it('should enforce unique email constraint', async () => {
     const contact1 = new UserContact(validContact);
     await contact1.save();
-    
+
     const contact2 = new UserContact({
       ...validContact,
       firstName: 'Jane',
     });
-    
+
     let error;
     try {
       await contact2.save();
     } catch (e) {
       error = e;
     }
-    
+
     expect(error).toBeDefined();
     expect(error.code).toBe(11000);
   });
@@ -133,10 +133,10 @@ describe('UserContact Model', () => {
     const contact = new UserContact(validContact);
     const savedContact = await contact.save();
     const initialUpdateTime = savedContact.last_update;
-    
+
     savedContact.firstName = 'Updated';
     const updatedContact = await savedContact.save();
-    
+
     expect(updatedContact.firstName).toBe('Updated');
     expect(updatedContact.last_update).toBeDefined();
     expect(updatedContact.last_update).not.toBe(initialUpdateTime);

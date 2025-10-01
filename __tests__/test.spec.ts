@@ -6,7 +6,6 @@ import app from '../src/index';
  * and handling of unknown routes.
  */
 describe('Test Endpoint', () => {
-
   /**
    * Test the `/api/test` endpoint for a successful server status response.
    */
@@ -22,8 +21,8 @@ describe('Test Endpoint', () => {
         message: expect.any(String),
         status: 'active',
         version: expect.any(String),
-        timestamp: expect.any(String)
-      }
+        timestamp: expect.any(String),
+      },
     });
   });
 
@@ -40,8 +39,8 @@ describe('Test Endpoint', () => {
       error: {
         message: 'Not Found',
         status: 404,
-        timestamp: expect.any(String)
-      }
+        timestamp: expect.any(String),
+      },
     });
   });
 });

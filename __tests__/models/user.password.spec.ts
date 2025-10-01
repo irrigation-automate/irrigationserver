@@ -19,7 +19,7 @@ import { IUserPasswordSchema } from '../../src/interface/interfaces/models';
  */
 describe('UserPassword Model', () => {
   let mongoServer: MongoMemoryServer;
-  
+
   /**
    * @constant {Partial<IUserPasswordSchema>} validPassword
    * @description A valid password object used for positive test cases.
@@ -66,7 +66,7 @@ describe('UserPassword Model', () => {
     expect(savedPassword._id).toBeDefined();
     expect(savedPassword.password).not.toBe(validPassword.password);
     expect(savedPassword.last_update).toBeDefined();
-    
+
     const isMatch = await bcrypt.compare(validPassword.password!, savedPassword.password);
     expect(isMatch).toBe(true);
   });
@@ -77,14 +77,14 @@ describe('UserPassword Model', () => {
    */
   it('should fail when password is not provided', async () => {
     const password = new UserPassword({});
-    
+
     let error: mongoose.Error.ValidationError | undefined;
     try {
       await password.validate();
     } catch (e) {
       error = e as mongoose.Error.ValidationError;
     }
-    
+
     expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(error?.errors.password).toBeDefined();
   });
@@ -96,9 +96,9 @@ describe('UserPassword Model', () => {
   it('should hash the password before saving', async () => {
     const password = new UserPassword(validPassword);
     await password.save();
-    
+
     expect(password.password).not.toBe(validPassword.password);
-    
+
     const isMatch = await bcrypt.compare(validPassword.password!, password.password);
     expect(isMatch).toBe(true);
   });
@@ -111,10 +111,10 @@ describe('UserPassword Model', () => {
     const password = new UserPassword(validPassword);
     const savedPassword = await password.save();
     const initialUpdateTime = savedPassword.last_update;
-    
+
     savedPassword.password = 'NewPassword@123';
     const updatedPassword = await savedPassword.save();
-    
+
     expect(updatedPassword.password).not.toBe('NewPassword@123');
     expect(updatedPassword.last_update.getTime()).toBeGreaterThan(initialUpdateTime.getTime());
   });
@@ -127,10 +127,10 @@ describe('UserPassword Model', () => {
     const password = new UserPassword(validPassword);
     const savedPassword = await password.save();
     const initialHash = savedPassword.password;
-    
+
     savedPassword.markModified('last_update');
     await savedPassword.save();
-    
+
     expect(savedPassword.password).toBe(initialHash);
   });
 });

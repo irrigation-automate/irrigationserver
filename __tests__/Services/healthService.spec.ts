@@ -14,10 +14,10 @@ jest.mock('mongoose', () => {
   return {
     connection: {
       readyState: 1,
-      db: mockDb
+      db: mockDb,
     },
     __mockPing: mockPing,
-    __mockAdmin: mockAdmin
+    __mockAdmin: mockAdmin,
   };
 });
 
@@ -32,7 +32,7 @@ describe('Health Service', () => {
   const setReadyState = (state: number) => {
     Object.defineProperty(mongoose.connection, 'readyState', {
       value: state,
-      writable: true
+      writable: true,
     });
   };
 
@@ -55,7 +55,7 @@ describe('Health Service', () => {
 
       expect(result).toEqual({
         connected: true,
-        duration: expect.any(Number)
+        duration: expect.any(Number),
       });
       expect(result.duration).toBeGreaterThanOrEqual(0);
       expect(mockPing).toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('Health Service', () => {
       expect(result).toEqual({
         connected: false,
         duration: expect.any(Number),
-        error: 'Mongoose not connected'
+        error: 'Mongoose not connected',
       });
       expect(mockPing).not.toHaveBeenCalled();
     });
@@ -83,7 +83,7 @@ describe('Health Service', () => {
       expect(result).toEqual({
         connected: false,
         duration: expect.any(Number),
-        error: errorMessage
+        error: errorMessage,
       });
       expect(mockPing).toHaveBeenCalled();
     });
@@ -95,11 +95,11 @@ describe('Health Service', () => {
   describe('getMemoryUsage', () => {
     it('should return memory usage in MB', () => {
       const mockMemoryUsage = {
-        rss: 1024 * 1024 * 100,      // 100 MB
+        rss: 1024 * 1024 * 100, // 100 MB
         heapTotal: 1024 * 1024 * 50, // 50 MB
-        heapUsed: 1024 * 1024 * 30,  // 30 MB
-        external: 1024 * 1024 * 20,  // 20 MB
-        arrayBuffers: 0               // added to satisfy NodeJS.MemoryUsage
+        heapUsed: 1024 * 1024 * 30, // 30 MB
+        external: 1024 * 1024 * 20, // 20 MB
+        arrayBuffers: 0, // added to satisfy NodeJS.MemoryUsage
       } as NodeJS.MemoryUsage;
 
       jest.spyOn(process, 'memoryUsage').mockReturnValue(mockMemoryUsage);
@@ -110,7 +110,7 @@ describe('Health Service', () => {
         rss: '100.00 MB',
         heapTotal: '50.00 MB',
         heapUsed: '30.00 MB',
-        external: '20.00 MB'
+        external: '20.00 MB',
       });
     });
   });

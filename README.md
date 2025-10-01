@@ -1,7 +1,7 @@
 # 🌱 Irrigation Server
 
-> **Note**: This project uses TypeScript and generates build artifacts in the `dist/` directory. 
-> The `dist/` directory is intentionally excluded from version control. Always build the project 
+> **Note**: This project uses TypeScript and generates build artifacts in the `dist/` directory.
+> The `dist/` directory is intentionally excluded from version control. Always build the project
 > locally before running in production environments.
 
 A robust backend server for irrigation automation systems, built with Node.js, Express, TypeScript, and MongoDB, following clean architecture principles.
@@ -29,6 +29,7 @@ src/
 The server provides comprehensive health monitoring through the following endpoints:
 
 #### 1. Health Check
+
 - **Endpoint**: `GET /health`
 - **Description**: Provides detailed health status of the application
 - **Response**:
@@ -56,6 +57,7 @@ The server provides comprehensive health monitoring through the following endpoi
   ```
 
 #### 2. Readiness Probe
+
 - **Endpoint**: `GET /health/readiness`
 - **Description**: Used by Kubernetes to check if the application is ready to receive traffic
 - **Success Response (200)**:
@@ -78,6 +80,7 @@ The server provides comprehensive health monitoring through the following endpoi
   ```
 
 #### 3. Liveness Probe
+
 - **Endpoint**: `GET /health/liveness`
 - **Description**: Used by Kubernetes to check if the application is running
 - **Response**:
@@ -93,6 +96,7 @@ The server provides comprehensive health monitoring through the following endpoi
 This project includes automated API documentation using Swagger/OpenAPI. The documentation is automatically generated from your route handlers and TypeScript types.
 
 **Access the documentation:**
+
 - **Development**: http://localhost:5000/api-docs
 - **API Spec**: http://localhost:5000/swagger.json
 
@@ -171,6 +175,7 @@ npm run test:watch
 ### Test Coverage
 
 The test suite provides comprehensive coverage for:
+
 - Server startup and shutdown
 - Database connections
 - API endpoints
@@ -224,8 +229,8 @@ const mockFunction = jest.fn().mockResolvedValue(mockData);
 // Mock class
 jest.mock('class-name', () => ({
   ClassName: jest.fn().mockImplementation(() => ({
-    method: jest.fn().mockResolvedValue(mockData)
-  }))
+    method: jest.fn().mockResolvedValue(mockData),
+  })),
 }));
 ```
 
@@ -332,19 +337,22 @@ Document your endpoints using JSDoc comments in your route handlers:
 ### Development Workflow
 
 1. Start the development server:
+
    ```bash
    npm run dev
    ```
+
    The server will be available at `http://localhost:5000`
 
 2. Run tests:
+
    ```bash
    # Run all tests
    npm test
-   
+
    # Run tests in watch mode
    npm run test:watch
-   
+
    # Generate test coverage
    npm run test:coverage
    ```
@@ -357,18 +365,18 @@ Document your endpoints using JSDoc comments in your route handlers:
 
 ### NPM Scripts
 
-| Script | Description |
-|--------|-------------|
-| `dev` | Start development server with hot-reload |
-| `build` | Compile TypeScript to JavaScript |
-| `start` | Start production server |
-| `test` | Run all tests |
-| `test:watch` | Run tests in watch mode |
-| `test:coverage` | Generate test coverage report |
-| `lint` | Run ESLint |
-| `lint:fix` | Fix linting issues |
-| `swagger:generate` | Generate Swagger documentation |
-| `swagger:serve` | Auto-generate Swagger docs on file changes |
+| Script             | Description                                |
+| ------------------ | ------------------------------------------ |
+| `dev`              | Start development server with hot-reload   |
+| `build`            | Compile TypeScript to JavaScript           |
+| `start`            | Start production server                    |
+| `test`             | Run all tests                              |
+| `test:watch`       | Run tests in watch mode                    |
+| `test:coverage`    | Generate test coverage report              |
+| `lint`             | Run ESLint                                 |
+| `lint:fix`         | Fix linting issues                         |
+| `swagger:generate` | Generate Swagger documentation             |
+| `swagger:serve`    | Auto-generate Swagger docs on file changes |
 
 ### Environment Variables
 
@@ -392,11 +400,13 @@ JWT_EXPIRES_IN=7d
 ### Production Build
 
 1. Install production dependencies:
+
    ```bash
    npm ci --only=production
    ```
 
 2. Build the application:
+
    ```bash
    npm run build
    ```
@@ -445,13 +455,13 @@ readinessProbe:
 
 ### Environment Variables
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `PORT` | No | `5000` | Port to run the server on |
-| `NODE_ENV` | No | `development` | Environment (development/production) |
-| `MONGODB_URI` | Yes | - | MongoDB connection string |
-| `JWT_SECRET` | Yes | - | Secret for JWT signing |
-| `JWT_EXPIRES_IN` | No | `7d` | JWT expiration time |
+| Variable         | Required | Default       | Description                          |
+| ---------------- | -------- | ------------- | ------------------------------------ |
+| `PORT`           | No       | `5000`        | Port to run the server on            |
+| `NODE_ENV`       | No       | `development` | Environment (development/production) |
+| `MONGODB_URI`    | Yes      | -             | MongoDB connection string            |
+| `JWT_SECRET`     | Yes      | -             | Secret for JWT signing               |
+| `JWT_EXPIRES_IN` | No       | `7d`          | JWT expiration time                  |
 
 ## 🔒 Authentication
 
@@ -464,6 +474,7 @@ Authorization: Bearer your-jwt-token
 ## 🧪 Testing
 
 The project uses Jest for testing with a focus on:
+
 - Unit tests for services and utilities
 - Integration tests for API endpoints
 - Mocking external dependencies
@@ -542,13 +553,13 @@ src/
 
 ## 🔒 Environment Variables
 
-| Variable          | Description                     | Required | Default |
-|-------------------|---------------------------------|----------|---------|
-| PORT              | Server port                     | No       | 3000    |
-| mongoDbUserName   | MongoDB Atlas username          | Yes      | -       |
-| mongoDbPassword   | MongoDB Atlas password          | Yes      | -       |
-| mongoDbDatabase   | MongoDB database name           | Yes      | -       |
-| JWTSecret        | Secret key for JWT tokens       | Yes      | -       |
+| Variable        | Description               | Required | Default |
+| --------------- | ------------------------- | -------- | ------- |
+| PORT            | Server port               | No       | 3000    |
+| mongoDbUserName | MongoDB Atlas username    | Yes      | -       |
+| mongoDbPassword | MongoDB Atlas password    | Yes      | -       |
+| mongoDbDatabase | MongoDB database name     | Yes      | -       |
+| JWTSecret       | Secret key for JWT tokens | Yes      | -       |
 
 ## 🤝 Contributing
 
