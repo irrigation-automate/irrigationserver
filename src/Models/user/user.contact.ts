@@ -77,7 +77,7 @@ const UserContactSchema: Schema<IUserContactSchema> = new Schema<IUserContactSch
 });
 
 // Add a pre-save hook to update the last_update field
-UserContactSchema.pre('save', function(next) {
+UserContactSchema.pre('save', function (next) {
   this.last_update = new Date();
   next();
 });
@@ -106,7 +106,7 @@ UserContactSchema.pre('save', function(next) {
  */
 const UserContact: Model<IUserContactSchema> = model<IUserContactSchema>(
   'UserContact',
-  UserContactSchema
+  UserContactSchema,
 );
 
 export default UserContact;

@@ -6,7 +6,7 @@ import path from 'path';
 /**
  * Represents the structure of a Swagger/OpenAPI document.
  * This interface defines the expected shape of the OpenAPI specification.
- * 
+ *
  * @interface
  * @name SwaggerDocument
  * @export
@@ -14,57 +14,57 @@ import path from 'path';
 export interface SwaggerDocument {
   /** The OpenAPI specification version being used. */
   openapi: string;
-  
+
   /** The host (name or IP) serving the API. */
   host?: string;
-  
+
   /** The base path on which the API is served. */
   basePath?: string;
-  
+
   /** The transfer protocol of the API. */
   schemes?: string[];
-  
+
   /** A list of MIME types the APIs can consume. */
   consumes?: string[];
-  
+
   /** A list of MIME types the APIs can produce. */
   produces?: string[];
-  
+
   /** A list of tags used by the specification with additional metadata. */
   tags?: Array<{
     /** The name of the tag. */
     name: string;
-    
+
     /** A short description for the tag. */
     description?: string;
-    
+
     /** Additional external documentation for this tag. */
     externalDocs?: {
       /** A short description of the target documentation. */
       description?: string;
-      
+
       /** The URL for the target documentation. */
       url: string;
     };
   }>;
-  
+
   /** A declaration of which security mechanisms can be used across the API. */
   security?: Array<{
     [securityScheme: string]: string[];
   }>;
-  
+
   /** Metadata about the API. */
   info: {
     /** The title of the API. */
     title: string;
-    
+
     /** The version of the API documentation. */
     version: string;
-    
+
     /** A short description of the API. */
     description?: string;
   };
-  
+
   /**
    * The available paths and operations on the API.
    * @type {Object.<string, Object.<string, import('./types').OperationObject>>}
@@ -74,42 +74,42 @@ export interface SwaggerDocument {
       [method: string]: {
         /** Tags for API documentation control. */
         tags?: string[];
-        
+
         /** A short summary of what the operation does. */
         summary?: string;
-        
+
         /** A verbose explanation of the operation behavior. */
         description?: string;
-        
+
         /** A list of parameters that are applicable for this operation. */
         parameters?: Array<{
           /** The name of the parameter. */
           name: string;
-          
+
           /** The location of the parameter. */
           in: 'query' | 'header' | 'path' | 'cookie';
-          
+
           /** A brief description of the parameter. */
           description?: string;
-          
+
           /** Determines whether this parameter is mandatory. */
           required?: boolean;
-          
+
           /** The schema defining the type used for the parameter. */
           schema: {
             type: string;
             format?: string;
           };
         }>;
-        
+
         /** The request body applicable for this operation. */
         requestBody?: {
           /** A brief description of the request body. */
           description: string;
-          
+
           /** Determines if the request body is required in the request. */
           required: boolean;
-          
+
           /** The content of the request body. */
           content: {
             [contentType: string]: {
@@ -119,13 +119,13 @@ export interface SwaggerDocument {
             };
           };
         };
-        
+
         /** The list of possible responses as they are returned from executing this operation. */
         responses: {
           [statusCode: string]: {
             /** A short description of the response. */
             description: string;
-            
+
             /** A map containing descriptions of potential response payloads. */
             content?: {
               [contentType: string]: {
@@ -139,7 +139,7 @@ export interface SwaggerDocument {
       };
     };
   };
-  
+
   /** An element to hold various schemas and security schemes for the specification. */
   components?: {
     /** Reusable schema definitions */
@@ -150,7 +150,7 @@ export interface SwaggerDocument {
         required?: string[];
       };
     };
-    
+
     /** Security scheme definitions that can be used across the specification */
     securitySchemes?: {
       [name: string]: {
@@ -191,14 +191,14 @@ export interface SwaggerDocument {
 
 /**
  * Sets up Swagger/OpenAPI documentation for the Express application.
- * 
+ *
  * This function configures the Swagger UI middleware to serve API documentation
  * at the '/api-docs' endpoint and makes the raw OpenAPI specification available
  * at '/swagger.json'.
  *
  * @param {Express} app - The Express application instance to attach the Swagger UI to.
  * @returns {void}
- * 
+ *
  * @example
  * const express = require('express');
  * const app = express();
@@ -211,7 +211,7 @@ export const setupSwagger = (app: Express): void => {
    * @type {string}
    */
   const swaggerPath = path.join(process.cwd(), 'swagger-output.json');
-  
+
   /**
    * Middleware to serve the Swagger UI.
    * Handles both the UI and the underlying OpenAPI specification.
@@ -236,7 +236,7 @@ export const setupSwagger = (app: Express): void => {
       `);
     }
   });
-  
+
   /**
    * Endpoint to serve the raw OpenAPI specification in JSON format.
    * This is useful for API clients that need to consume the specification directly.
@@ -251,11 +251,11 @@ export const setupSwagger = (app: Express): void => {
       console.error('Error serving swagger.json:', error);
       res.status(500).json({
         error: 'Failed to load Swagger documentation',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   });
-  
+
   // Log successful initialization
   console.log('📚 Swagger documentation available at /api-docs');
 };

@@ -16,28 +16,28 @@ import { enirementVariables } from './configs/envirementVariables';
  * @returns {Promise<{server: any, db: any, client: any}>} Server, database, and client instances
  * @throws {Error} If the server fails to start or connect to the database
  */
-export async function startServer(port?: number): Promise<{server: any, db: any, client: any}> {
+export async function startServer(port?: number): Promise<{ server: any; db: any; client: any }> {
   try {
     const { success, message, db, client } = await connectToMongoDB();
-    
+
     if (!success || !db || !client) {
       throw new Error(`Failed to connect to MongoDB: ${message}`);
     }
-    
+
     console.log('✅', message);
-    
+
     const serverPort = port || enirementVariables.serverConfig.PORT;
-    
+
     const server = app.listen(serverPort, () => {
       console.log(`🚀 Server is running on port ${serverPort}`);
     });
-    
+
     const shutdown = async (): Promise<void> => {
       console.log('🛑 Shutting down server...');
-      
+
       server.close(async () => {
         console.log('🛑 Server closed');
-        
+
         try {
           if (client && typeof client.close === 'function') {
             await client.close();
@@ -50,10 +50,10 @@ export async function startServer(port?: number): Promise<{server: any, db: any,
         }
       });
     };
-    
+
     process.on('SIGTERM', shutdown);
     process.on('SIGINT', shutdown);
-    
+
     return { server, db, client };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';

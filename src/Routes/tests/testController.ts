@@ -13,18 +13,18 @@ import { createSuccessResponse, createErrorResponse } from '../../utils/response
  * @throws {Error} 500 - Server error
  */
 export const getTestData = async (
-  _req: Request, 
+  _req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const testData = {
       message: 'Express + TypeScript Server is running',
       status: 'active',
       version: process.env.npm_package_version || '1.0.0',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
+
     res.status(200).json(createSuccessResponse(testData));
   } catch (error) {
     next(error);
@@ -40,7 +40,7 @@ export const getTestData = async (
 export const getTestError = async (
   _req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     // Simulate an error
@@ -60,20 +60,22 @@ export const getTestError = async (
 export const getHello = async (
   req: Request<{ name: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { name } = req.params;
-    
+
     if (!name) {
       res.status(400).json(createErrorResponse('Name parameter is required', 400));
       return;
     }
-    
-    res.status(200).json(createSuccessResponse({
-      message: `Hello, ${name}!`,
-      timestamp: new Date().toISOString()
-    }));
+
+    res.status(200).json(
+      createSuccessResponse({
+        message: `Hello, ${name}!`,
+        timestamp: new Date().toISOString(),
+      }),
+    );
   } catch (error) {
     next(error);
   }

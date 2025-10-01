@@ -48,11 +48,11 @@ interface PaginatedResponse<T> {
  * @returns {Object} Standardized success response object
  */
 export function createSuccessResponse<T = unknown>(
-  data: T, 
-  message = 'Success'
-): { 
-  success: true; 
-  data: T; 
+  data: T,
+  message = 'Success',
+): {
+  success: true;
+  data: T;
   message: string;
   timestamp: string;
 } {
@@ -60,7 +60,7 @@ export function createSuccessResponse<T = unknown>(
     success: true,
     data,
     message,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -72,17 +72,17 @@ export function createSuccessResponse<T = unknown>(
  * @returns {Object} Standardized error response object
  */
 export function createErrorResponse(
-  message: string, 
-  status = 500, 
-  details?: ErrorDetails
-): { 
-  success: boolean; 
-  error: { 
-    message: string; 
-    status: number; 
+  message: string,
+  status = 500,
+  details?: ErrorDetails,
+): {
+  success: boolean;
+  error: {
+    message: string;
+    status: number;
     details?: ErrorDetails;
     timestamp: string;
-  } 
+  };
 } {
   return {
     success: false,
@@ -90,8 +90,8 @@ export function createErrorResponse(
       message,
       status,
       ...(details && { details }),
-      timestamp: new Date().toISOString()
-    }
+      timestamp: new Date().toISOString(),
+    },
   };
 }
 
@@ -103,15 +103,15 @@ export function createErrorResponse(
  */
 export function createValidationErrorResponse(
   errors: Record<string, string[]>,
-  message = 'Validation failed'
-): { 
-  success: false; 
-  error: { 
-    message: string; 
-    status: number; 
+  message = 'Validation failed',
+): {
+  success: false;
+  error: {
+    message: string;
+    status: number;
     details: ValidationErrorDetails;
     timestamp: string;
-  } 
+  };
 } {
   return {
     success: false,
@@ -119,8 +119,8 @@ export function createValidationErrorResponse(
       message,
       status: 400,
       details: { validation: errors },
-      timestamp: new Date().toISOString()
-    }
+      timestamp: new Date().toISOString(),
+    },
   };
 }
 
@@ -135,14 +135,14 @@ export function createValidationErrorResponse(
  * @returns {PaginatedResponse<T>} Paginated response object
  */
 export function createPaginatedResponse<T>(
-  items: T[], 
-  total: number, 
-  page: number, 
-  limit: number, 
-  message = 'Success'
+  items: T[],
+  total: number,
+  page: number,
+  limit: number,
+  message = 'Success',
 ): PaginatedResponse<T> {
   const totalPages = Math.ceil(total / limit);
-  
+
   return {
     ...createSuccessResponse(items, message),
     pagination: {
@@ -151,8 +151,8 @@ export function createPaginatedResponse<T>(
       currentPage: page,
       itemsPerPage: limit,
       hasNextPage: page < totalPages,
-      hasPreviousPage: page > 1
-    }
+      hasPreviousPage: page > 1,
+    },
   };
 }
 

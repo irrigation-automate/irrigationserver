@@ -19,23 +19,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ]
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "__tests__/**/*.ts",
-    "*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "dist"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "__tests__/**/*.ts", "*.ts", "prettier.config.js"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "dist"],
   "ts-node": {
     "esm": false,
     "experimentalSpecifierResolution": "node",

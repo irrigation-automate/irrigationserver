@@ -148,13 +148,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "address",
-              "blocked",
-              "contact",
-              "password",
-              "creation_date"
-            ],
+            "example": ["address", "blocked", "contact", "password", "creation_date"],
             "items": {
               "type": "string"
             }
@@ -232,11 +226,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "email",
-              "firstName",
-              "lastName"
-            ],
+            "example": ["email", "firstName", "lastName"],
             "items": {
               "type": "string"
             }
@@ -319,12 +309,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "city",
-              "Street",
-              "country",
-              "codeZip"
-            ],
+            "example": ["city", "Street", "country", "codeZip"],
             "items": {
               "type": "string"
             }
@@ -384,9 +369,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "password"
-            ],
+            "example": ["password"],
             "items": {
               "type": "string"
             }
@@ -447,10 +430,7 @@
                   },
                   "example": {
                     "type": "array",
-                    "example": [
-                      "Error detail 1",
-                      "Error detail 2"
-                    ],
+                    "example": ["Error detail 1", "Error detail 2"],
                     "items": {
                       "type": "string"
                     }
@@ -461,10 +441,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "code",
-              "message"
-            ],
+            "example": ["code", "message"],
             "items": {
               "type": "string"
             }
@@ -520,9 +497,7 @@
           },
           "required": {
             "type": "array",
-            "example": [
-              "success"
-            ],
+            "example": ["success"],
             "items": {
               "type": "string"
             }

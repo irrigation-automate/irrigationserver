@@ -26,7 +26,7 @@ const clientOptions: MongoClientOptions = {
   serverSelectionTimeoutMS: 30000,
   maxPoolSize: 10,
   retryWrites: true,
-  w: 'majority'
+  w: 'majority',
 };
 
 /**
@@ -34,7 +34,7 @@ const clientOptions: MongoClientOptions = {
  * @async
  * @function connectToMongoDB
  * @returns {Promise<{success: boolean; message: string; db?: Db; client?: MongoClient}>} Connection result with status and optional database client
- * 
+ *
  * @example
  * const { success, message, db, client } = await connectToMongoDB();
  * if (success) {
@@ -51,30 +51,30 @@ export async function connectToMongoDB(): Promise<{
   client?: MongoClient;
 }> {
   const client = new MongoClient(url, clientOptions);
-  
+
   try {
     await client.connect();
-    
+
     await client.db(mongoDbDatabase).command({ ping: 1 });
-    
+
     return {
       success: true,
       message: 'Successfully connected to MongoDB',
       db: client.db(mongoDbDatabase),
-      client
+      client,
     };
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    
+
     try {
       await client.close();
     } catch (closeError) {
       console.error('Error closing MongoDB connection:', closeError);
     }
-    
+
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to connect to MongoDB'
+      message: error instanceof Error ? error.message : 'Failed to connect to MongoDB',
     };
   }
 }

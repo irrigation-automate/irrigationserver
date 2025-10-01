@@ -11,27 +11,27 @@ class HealthService {
    */
   public async checkDatabaseConnection(): Promise<DatabaseCheckResult> {
     const startTime = Date.now();
-    
+
     try {
       if (mongoose.connection.readyState === 1) {
         await mongoose.connection.db.admin().ping();
-        
+
         return {
           connected: true,
-          duration: Date.now() - startTime
+          duration: Date.now() - startTime,
         };
       }
-      
+
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: 'Mongoose not connected'
+        error: 'Mongoose not connected',
       };
     } catch (error) {
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown database error'
+        error: error instanceof Error ? error.message : 'Unknown database error',
       };
     }
   }
@@ -42,12 +42,12 @@ class HealthService {
    */
   public getMemoryUsage(): MemoryUsage {
     const memoryUsage = process.memoryUsage();
-    
+
     return {
       rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
       heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
       heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-      external: `${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`
+      external: `${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`,
     };
   }
 

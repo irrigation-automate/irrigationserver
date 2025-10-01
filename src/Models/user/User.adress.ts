@@ -11,7 +11,6 @@
 import { Model, Schema, model } from 'mongoose';
 import { IUserAddressSchema } from '../../interface/interfaces/models';
 
-
 /**
  * User Address Schema.
  *
@@ -67,7 +66,7 @@ const UserAddressSchema: Schema<IUserAddressSchema> = new Schema<IUserAddressSch
 });
 
 // Add a pre-save hook to update the last_update field
-UserAddressSchema.pre('save', function(next) {
+UserAddressSchema.pre('save', function (next) {
   this.last_update = new Date();
   next();
 });
@@ -93,7 +92,7 @@ UserAddressSchema.pre('save', function(next) {
  */
 const UserAddress: Model<IUserAddressSchema> = model<IUserAddressSchema>(
   'UserAddress',
-  UserAddressSchema
+  UserAddressSchema,
 );
 
 export default UserAddress;

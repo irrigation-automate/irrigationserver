@@ -11,7 +11,6 @@ import { Model, model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { IUserPasswordSchema } from '../../interface/interfaces/models';
 
-
 /**
  * User Password Schema.
  *
@@ -59,15 +58,15 @@ PasswordSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
-  
+
   // Hash the password
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(this.password, salt);
   this.password = hash;
-  
+
   // Update the last_update timestamp
   this.last_update = new Date();
-  
+
   next();
 });
 
@@ -89,9 +88,6 @@ PasswordSchema.pre('save', async function (next) {
  * const found = await Password.findById(pwd._id);
  * ```
  */
-const Password: Model<IUserPasswordSchema> = model<IUserPasswordSchema>(
-  'Password',
-  PasswordSchema
-);
+const Password: Model<IUserPasswordSchema> = model<IUserPasswordSchema>('Password', PasswordSchema);
 
 export default Password;

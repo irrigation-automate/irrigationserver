@@ -20,13 +20,7 @@ dotenv.config();
  * @property {string} mongoDbDatabase - Name of the MongoDB database
  * @property {string} JWTSecret - Secret key for JWT token generation and verification
  */
-const {
-  PORT,
-  mongoDbUserName,
-  mongoDbPassword,
-  mongoDbDatabase,
-  JWTSecret
-} = process.env;
+const { PORT, mongoDbUserName, mongoDbPassword, mongoDbDatabase, JWTSecret } = process.env;
 
 // Validate required environment variables
 const requiredEnvVars = {
@@ -34,7 +28,7 @@ const requiredEnvVars = {
   mongoDbUserName,
   mongoDbPassword,
   mongoDbDatabase,
-  JWTSecret
+  JWTSecret,
 };
 
 const missingVars = Object.entries(requiredEnvVars)
@@ -50,7 +44,7 @@ if (missingVars.length > 0) {
  * @type {TserverConfig}
  */
 const serverConfig: TserverConfig = {
-  PORT: parseInt(PORT as string, 10) || 5001
+  PORT: parseInt(PORT as string, 10) || 5001,
 };
 
 /**
@@ -60,7 +54,7 @@ const serverConfig: TserverConfig = {
 const mongoDbConfig: TmongoDbConfig = {
   mongoDbUserName: mongoDbUserName as string,
   mongoDbPassword: mongoDbPassword as string,
-  mongoDbDatabase: mongoDbDatabase as string
+  mongoDbDatabase: mongoDbDatabase as string,
 };
 
 /**
@@ -68,7 +62,7 @@ const mongoDbConfig: TmongoDbConfig = {
  * @type {TjwtConfig}
  */
 const JWTConfig: TjwtConfig = {
-  JWTSecret: JWTSecret as string
+  JWTSecret: JWTSecret as string,
 };
 
 /**
@@ -82,5 +76,5 @@ const JWTConfig: TjwtConfig = {
 export const enirementVariables = {
   serverConfig,
   mongoDbConfig,
-  JWTConfig
+  JWTConfig,
 } as const;

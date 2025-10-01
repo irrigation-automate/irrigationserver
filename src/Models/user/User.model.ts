@@ -18,7 +18,6 @@ import UserPassword from './user.password';
 // Get JWT secret
 const getJWTSecret = () => enirementVariables.JWTConfig.JWTSecret;
 
-
 /**
  * User Schema.
  *
