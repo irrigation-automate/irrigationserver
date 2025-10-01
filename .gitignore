@@ -3,6 +3,13 @@ dist/
 build/
 *.tsbuildinfo
 
+# JavaScript files
+*.js
+!src/**/*.js  # Allow JS files in src for TypeScript compilation
+
+# Source map files
+*.js.map
+
 # Dependencies
 node_modules/
 

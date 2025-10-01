@@ -498,9 +498,9 @@
     },
     "securitySchemes": {
       "bearerAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
         "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
       }
     }

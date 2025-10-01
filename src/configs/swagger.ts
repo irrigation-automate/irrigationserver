@@ -1,8 +1,26 @@
+/**
+ * @module config/swagger
+ * @description Swagger/OpenAPI configuration for automatic API documentation generation.
+ * This module handles the setup and configuration of the Swagger documentation
+ * for the Irrigation Server API.
+ */
+
 import swaggerAutogen from 'swagger-autogen';
-import path from 'path';
+import * as path from 'path';
+import * as fs from 'fs';
+import swaggerUi from 'swagger-ui-express';
+import { Express } from 'express';
+import { SwaggerDocument } from '../utils/swagger';
 
 /**
- * Model schemas for Swagger/OpenAPI documentation
+ * Defines the data models used in the API documentation.
+ * These schemas are used to generate the API documentation and validate requests/responses.
+ * 
+ * @constant {Object} modelSchemas
+ * @property {Object} User - Schema for the User model
+ * @property {Object} UserContact - Schema for the UserContact model
+ * @property {Object} UserAddress - Schema for the UserAddress model
+ * @property {Object} UserPassword - Schema for the UserPassword model
  */
 const modelSchemas = {
   User: {
@@ -54,9 +72,15 @@ const modelSchemas = {
 };
 
 /**
- * Swagger/OpenAPI configuration
+ * Main Swagger/OpenAPI configuration object.
+ * This defines the metadata, security schemes, and other global settings
+ * for the API documentation.
+ * 
+ * @type {SwaggerDocument}
+ * @see {@link https://swagger.io/specification/|OpenAPI Specification}
  */
-const swaggerOptions = {
+const swaggerOptions: SwaggerDocument = {
+  openapi: '3.0.0',
   info: {
     version: '1.0.0',
     title: 'Irrigation Server API',
@@ -77,61 +101,60 @@ const swaggerOptions = {
       description: 'Irrigation system management',
     },
   ],
-  securityDefinitions: {
-    bearerAuth: {
-      type: 'apiKey',
-      name: 'Authorization',
-      in: 'header',
-      description: 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
-    },
-  },
+  paths: {},
   components: {
-    schemas: modelSchemas,
+    schemas: {
+      ...modelSchemas,
+      Error: {
+        type: 'object',
+        properties: {
+          code: { type: 'number', example: 400 },
+          message: { type: 'string', example: 'Error message' },
+          errors: { 
+            type: 'array',
+            items: { type: 'string' },
+            example: ['Error detail 1', 'Error detail 2']
+          }
+        },
+        required: ['code', 'message']
+      },
+      Success: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Operation successful' },
+          data: { type: 'object' }
+        },
+        required: ['success']
+      }
+    },
     securitySchemes: {
       bearerAuth: {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'Enter JWT token in the format: Bearer <token>'
-      }
-    }
+        description: 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
+      },
+    },
   },
   security: [{
     bearerAuth: []
   }],
-  definitions: {
-    Error: {
-      type: 'object',
-      properties: {
-        code: { type: 'number', example: 400 },
-        message: { type: 'string', example: 'Error message' },
-        errors: { 
-          type: 'array',
-          items: { type: 'string' },
-          example: ['Error detail 1', 'Error detail 2']
-        }
-      },
-      required: ['code', 'message']
-    },
-    Success: {
-      type: 'object',
-      properties: {
-        success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Operation successful' },
-        data: { type: 'object' }
-      },
-      required: ['success']
-    }
-  },
 };
 
 /**
- * Path to the output Swagger JSON file
+ * Path to the output Swagger JSON file.
+ * This file will be generated automatically and should not be committed to version control.
+ * 
+ * @constant {string}
  */
 const outputFile = path.join(process.cwd(), 'swagger-output.json');
 
 /**
- * Files containing OpenAPI route annotations
+ * Array of file patterns to scan for OpenAPI route annotations.
+ * These files should contain JSDoc comments with `@openapi` tags.
+ * 
+ * @constant {string[]}
  */
 const endpointsFiles = [
   path.join(process.cwd(), 'src/Routes/*.ts'),
@@ -139,8 +162,17 @@ const endpointsFiles = [
 ];
 
 /**
- * Generates Swagger/OpenAPI documentation
- * @returns {Promise<void>}
+ * Generates the Swagger/OpenAPI documentation by scanning the codebase
+ * for JSDoc annotations and writing the output to a JSON file.
+ * 
+ * @async
+ * @function generateSwagger
+ * @returns {Promise<void>} A promise that resolves when the documentation is generated
+ * @throws {Error} If there's an error during documentation generation
+ * 
+ * @example
+ * // Generate documentation
+ * await generateSwagger();
  */
 const generateSwagger = async (): Promise<void> => {
   try {
@@ -173,6 +205,24 @@ const generateSwagger = async (): Promise<void> => {
     process.exit(1);
   }
 };
+
+/**
+ * Sets up Swagger middleware for the Express application
+ * @param {import('express').Express} app - Express application instance
+ */
+/**
+ * Sets up Swagger middleware for the Express application
+ * @param {Express} app - Express application instance
+ */
+export function setupSwagger(app: Express): void {
+  // Load Swagger document
+  const swaggerDocument = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../../swagger-output.json'), 'utf-8')
+  ) as SwaggerDocument;
+  
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  console.log('📚 Swagger UI is available at /api-docs');
+}
 
 // If this file is run directly, execute the generator
 if (require.main === module) {

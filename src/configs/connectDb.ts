@@ -1,29 +1,83 @@
-// ==============================|| package, variables and functions ||============================== //
+/**
+ * @module config/connectDb
+ * @description MongoDB connection configuration and utilities.
+ * This module handles the connection to MongoDB Atlas and provides a reusable client.
+ */
 
-// ======|| import connect to mongodb
-import { MongoClient } from 'mongodb';
-// ======|| import envirement variables
+import { MongoClient, MongoClientOptions, Db } from 'mongodb';
 import { enirementVariables } from './envirementVariables';
 
-// === destractions of mongodb envirement variables
+/**
+ * MongoDB connection URL constructed from environment variables
+ * @constant
+ * @type {string}
+ */
 const { mongoDbDatabase, mongoDbPassword, mongoDbUserName } = enirementVariables.mongoDbConfig;
-// --- create mongodb url connection
 const url = `mongodb+srv://${mongoDbUserName}:${mongoDbPassword}@cluster0.ywnsq.mongodb.net/${mongoDbDatabase}?retryWrites=true&w=majority`;
 
-// ==============================|| Connect to mongodb Atlas database function ||============================== //
+/**
+ * MongoDB client options
+ * @constant
+ * @type {MongoClientOptions}
+ */
+const clientOptions: MongoClientOptions = {
+  connectTimeoutMS: 10000, // 10 seconds
+  socketTimeoutMS: 30000,  // 30 seconds
+  serverSelectionTimeoutMS: 30000, // 30 seconds
+  maxPoolSize: 10,
+  retryWrites: true,
+  w: 'majority'
+};
 
-export async function connectToMongoDB() : Promise<{message: string}> {
-  // ======|| instance service
-  const client = new MongoClient(url);
+/**
+ * Establishes a connection to the MongoDB Atlas database
+ * @async
+ * @function connectToMongoDB
+ * @returns {Promise<{success: boolean; message: string; db?: Db; client?: MongoClient}>} Connection result with status and optional database client
+ * 
+ * @example
+ * const { success, message, db, client } = await connectToMongoDB();
+ * if (success) {
+ *   // Use db for database operations
+ *   const result = await db.collection('users').find({}).toArray();
+ *   // Don't forget to close the connection when done
+ *   await client.close();
+ * }
+ */
+export async function connectToMongoDB(): Promise<{
+  success: boolean;
+  message: string;
+  db?: Db;
+  client?: MongoClient;
+}> {
+  const client = new MongoClient(url, clientOptions);
+  
   try {
     // Connect to the MongoDB server
     await client.connect();
-    // message to return
-    return { message: 'connect to database done with success' };
-  } catch (err) {
-    // see error at console for details
-    console.error(err);
-    // message error to return
-    return { message: 'connent to database is failed' };
+    
+    // Verify connection
+    await client.db(mongoDbDatabase).command({ ping: 1 });
+    
+    return {
+      success: true,
+      message: 'Successfully connected to MongoDB',
+      db: client.db(mongoDbDatabase),
+      client
+    };
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    
+    // Ensure the client is closed on error
+    try {
+      await client.close();
+    } catch (closeError) {
+      console.error('Error closing MongoDB connection:', closeError);
+    }
+    
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to connect to MongoDB'
+    };
   }
 }

@@ -1,10 +1,36 @@
-// ==============================|| regex validation statement ||============================== //
 
-// ======|| password regex
-const passwordValidationRegex    = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-// ======|| email regex
-const emailValidationRegex       = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+/**
+ * Password validation regex.
+ *
+ * Rules:
+ * - At least one lowercase letter
+ * - At least one uppercase letter
+ * - At least one digit
+ * - Minimum length of 8 characters
+ *
+ * @example
+ * passwordValidationRegex.test("StrongPass1"); // true
+ * passwordValidationRegex.test("weakpass");    // false
+ */
+const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-// ==============================|| export regex validation statement ||============================== //
+/**
+ * Email validation regex.
+ *
+ * Matches most valid email addresses according to RFC 5322 (simplified).
+ * Ensures proper structure: local-part@domain
+ *
+ * @example
+ * emailValidationRegex.test("user@example.com"); // true
+ * emailValidationRegex.test("invalid-email");    // false
+ */
+const emailValidationRegex =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-export const regex = { passwordValidationRegex, emailValidationRegex };
+/**
+ * Collection of commonly used regex patterns for validation.
+ */
+export const regex = {
+  passwordValidationRegex,
+  emailValidationRegex,
+};
