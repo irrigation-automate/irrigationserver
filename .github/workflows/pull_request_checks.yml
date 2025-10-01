@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.16.0]
 
     env:
       PORT: ${{ secrets.PORT }}
@@ -36,10 +36,7 @@ jobs:
       - name: 🛠️ Install dependencies
         run: npm ci
 
-      - name: Run TypeScript type check
-        run: npx tsc --noEmit
-
-      - name: 🔎 Run ESLint and 🔍 TypeScript type check
+      - name: 🔎 Run ESLint, TypeScript check & Prettier
         run: npm run check-all
 
       - name: 🧪 Run Jest tests with coverage
@@ -63,7 +60,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.16.0
 
       - name: 📦 Install dependencies
         run: npm ci
