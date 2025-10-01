@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
       - '**'
-  push:
-    branches:
-      - develop
 
 jobs:
   lint-types-tests:
@@ -36,22 +33,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 🛠️ Install pnpm globally and Vercel CLI
-        run: |
-          npm install --global pnpm
-          npm install --global vercel
+      - name: 🛠️ Install dependencies
+        run: npm ci
 
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 🔎 Run ESLint
-        run: pnpm lint
-
-      - name: 🔍 TypeScript type check
-        run: npx tsc --noEmit
+      - name: 🔎 Run ESLint and 🔍 TypeScript type check
+        run: npm run check-all
 
       - name: 🧪 Run Jest tests with coverage
-        run: pnpm test -- --coverage
+        run: npm run test -- --coverage
 
       - name: 📤 Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -67,8 +56,6 @@ jobs:
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
@@ -76,7 +63,7 @@ jobs:
           node-version: 20
 
       - name: 📦 Install dependencies
-        run: pnpm install
+        run: npm ci
 
       - name: 🔍 SonarQube Scan (develop baseline)
         if: github.ref == 'refs/heads/develop'
