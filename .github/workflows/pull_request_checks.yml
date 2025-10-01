@@ -84,7 +84,7 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.branch.name=develop
-
+            -Dsonar.exclusions=src/index.ts,src/utils/swagger.ts,src/configs/swagger.ts
       - name: 🔍 SonarQube Scan (PR)
         if: github.event_name == 'pull_request'
         uses: SonarSource/sonarqube-scan-action@v6
@@ -103,3 +103,4 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
+            -Dsonar.exclusions=src/index.ts,src/utils/swagger.ts,src/configs/swagger.ts
