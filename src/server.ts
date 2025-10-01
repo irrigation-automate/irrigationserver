@@ -12,12 +12,12 @@ import { enirementVariables } from './configs/envirementVariables';
  * Starts the Express server and establishes a connection to MongoDB.
  * @async
  * @function startServer
- * @returns {Promise<void>}
+ * @param {number} [port] - Optional port number to use (defaults to environment variable)
+ * @returns {Promise<{server: any, db: any, client: any}>} Server, database, and client instances
  * @throws {Error} If the server fails to start or connect to the database
  */
-async function startServer(): Promise<void> {
+export async function startServer(port?: number): Promise<{server: any, db: any, client: any}> {
   try {
-    // Attempt to connect to MongoDB
     const { success, message, db, client } = await connectToMongoDB();
     
     if (!success || !db || !client) {
@@ -26,23 +26,23 @@ async function startServer(): Promise<void> {
     
     console.log('✅', message);
     
-    // Start the Express server
-    const server = app.listen(enirementVariables.serverConfig.PORT, () => {
-      console.log(`🚀 Server is running on port ${enirementVariables.serverConfig.PORT}`);
+    const serverPort = port || enirementVariables.serverConfig.PORT;
+    
+    const server = app.listen(serverPort, () => {
+      console.log(`🚀 Server is running on port ${serverPort}`);
     });
     
-    // Handle graceful shutdown
     const shutdown = async (): Promise<void> => {
       console.log('🛑 Shutting down server...');
       
-      // Close the server
       server.close(async () => {
         console.log('🛑 Server closed');
         
-        // Close MongoDB connection
         try {
-          await client.close();
-          console.log('🛑 MongoDB connection closed');
+          if (client && typeof client.close === 'function') {
+            await client.close();
+            console.log('🛑 MongoDB connection closed');
+          }
           process.exit(0);
         } catch (error) {
           console.error('Error closing MongoDB connection:', error);
@@ -51,10 +51,10 @@ async function startServer(): Promise<void> {
       });
     };
     
-    // Handle termination signals
     process.on('SIGTERM', shutdown);
     process.on('SIGINT', shutdown);
     
+    return { server, db, client };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     console.error('❌ Failed to start server:', errorMessage);
@@ -62,8 +62,9 @@ async function startServer(): Promise<void> {
   }
 }
 
-// Start the server
-startServer().catch((error) => {
-  console.error('❌ Fatal error during server startup:', error);
-  process.exit(1);
-});
+if (require.main === module) {
+  startServer().catch((error) => {
+    console.error('❌ Fatal error during server startup:', error);
+    process.exit(1);
+  });
+}

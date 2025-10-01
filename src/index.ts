@@ -51,10 +51,9 @@ testRouter.get('/error', getTestError);
 testRouter.get('/hello/:name', getHello);
 app.use('/api/test', testRouter);
 
-// Health check endpoint
-app.get('/health', (_req: Request, res: Response) => {
-  res.status(200).json({ status: 'UP', timestamp: new Date().toISOString() });
-});
+// Health check routes
+import healthRouter from './Routes/health';
+app.use('/health', healthRouter);
 
 // Swagger documentation (only in non-production environments)
 if (process.env.NODE_ENV !== 'production') {

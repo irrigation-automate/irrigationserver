@@ -21,9 +21,9 @@ const url = `mongodb+srv://${mongoDbUserName}:${mongoDbPassword}@cluster0.ywnsq.
  * @type {MongoClientOptions}
  */
 const clientOptions: MongoClientOptions = {
-  connectTimeoutMS: 10000, // 10 seconds
-  socketTimeoutMS: 30000,  // 30 seconds
-  serverSelectionTimeoutMS: 30000, // 30 seconds
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 30000,
+  serverSelectionTimeoutMS: 30000,
   maxPoolSize: 10,
   retryWrites: true,
   w: 'majority'
@@ -53,10 +53,8 @@ export async function connectToMongoDB(): Promise<{
   const client = new MongoClient(url, clientOptions);
   
   try {
-    // Connect to the MongoDB server
     await client.connect();
     
-    // Verify connection
     await client.db(mongoDbDatabase).command({ ping: 1 });
     
     return {
@@ -68,7 +66,6 @@ export async function connectToMongoDB(): Promise<{
   } catch (error) {
     console.error('MongoDB connection error:', error);
     
-    // Ensure the client is closed on error
     try {
       await client.close();
     } catch (closeError) {

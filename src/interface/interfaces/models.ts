@@ -105,7 +105,7 @@ export interface IUserSchema extends Document {
   /**
    * Reference to the user address document (optional).
    */
-  address?: IUserAddressSchema['_id'];
+  address?: Schema.Types.ObjectId | IUserAddressSchema['_id'];
 
   /**
    * Indicates whether the user is blocked from the system.
@@ -116,7 +116,7 @@ export interface IUserSchema extends Document {
   /**
    * Reference to the user contact document.
    */
-  contact: IUserContactSchema['_id'];
+  contact: Schema.Types.ObjectId | IUserContactSchema['_id'];
 
   /**
    * Date when the user account was created.
@@ -126,7 +126,7 @@ export interface IUserSchema extends Document {
   /**
    * Reference to the user password document.
    */
-  password: IUserPasswordSchema['_id'];
+  password: Schema.Types.ObjectId | IUserPasswordSchema['_id'];
 
   /**
    * Reference to the user weather preferences (if configured).
