@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - '**'
+  push:
+    branches:
+      - develop
 
 jobs:
   lint-types-tests:
@@ -13,6 +16,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
+
     env:
       PORT: ${{ secrets.PORT }}
       mongoDbUserName: ${{ secrets.mongoDbUserName }}
@@ -20,28 +24,36 @@ jobs:
       mongoDbDatabase: ${{ secrets.mongoDbDatabase }}
       JWTSecret: ${{ secrets.JWTSecret }}
       NODE_ENV: ${{ secrets.NODE_ENV }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm ci
+      - name: 🛠️ Install pnpm globally and Vercel CLI
+        run: |
+          npm install --global pnpm
+          npm install --global vercel
 
-      - name: Run ESLint
-        run: npm run lint
+      - name: 📦 Install dependencies
+        run: pnpm install
 
-      - name: Run TypeScript type check
+      - name: 🔎 Run ESLint
+        run: pnpm lint
+
+      - name: 🔍 TypeScript type check
         run: npx tsc --noEmit
 
-      - name: Run Jest tests with coverage
-        run: npm test -- --coverage
+      - name: 🧪 Run Jest tests with coverage
+        run: pnpm test -- --coverage
 
-      - name: Upload coverage artifact
+      - name: 📤 Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -53,18 +65,21 @@ jobs:
     needs: lint-types-tests
 
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: 📦 Install dependencies
+        run: pnpm install
 
-      - name: Run SonarQube Scan
+      - name: 🔍 SonarQube Scan (develop baseline)
+        if: github.ref == 'refs/heads/develop'
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -78,3 +93,23 @@ jobs:
             -Dsonar.test.inclusions="**/*.test.ts,**/*.spec.ts"
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.branch.name=develop
+
+      - name: 🔍 SonarQube Scan (PR)
+        if: github.event_name == 'pull_request'
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=irrigation-automate_irrigationserver
+            -Dsonar.organization=irrigation-automate
+            -Dsonar.projectName=irrigationserver
+            -Dsonar.sources=src
+            -Dsonar.tests=__tests__
+            -Dsonar.test.inclusions="**/*.test.ts,**/*.spec.ts"
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
