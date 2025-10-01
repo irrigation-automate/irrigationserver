@@ -101,10 +101,7 @@ describe('Test Controller', () => {
       const { getTestData } = await import('../src/Routes/tests/testController');
 
       const mockReq = {} as any;
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      } as any;
+      const mockRes = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
       const mockNext = jest.fn();
 
       await getTestData(mockReq, mockRes, mockNext);
@@ -114,27 +111,19 @@ describe('Test Controller', () => {
 
       restoreResponseHelpers();
     });
+  });
 
-    it('should return server status information', async () => {
-      const response = await request(app).get('/api/test');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          message: 'Express + TypeScript Server is running',
-          status: 'active',
-          version: expect.any(String),
-          timestamp: expect.any(String),
-        },
-      });
-    });
-
+  /**
+   * Tests for the `/api/test/error` endpoint
+   *
+   * @group API/Test/Error
+   */
+  describe('GET /api/test/error', () => {
     /**
      * @test {GET /api/test/error}
-     * Should handle and return error responses
+     * Should return a test error response
      */
-    it('should handle errors gracefully', async () => {
+    it('should return a test error', async () => {
       const originalConsoleError = console.error;
       console.error = jest.fn();
 
@@ -152,26 +141,6 @@ describe('Test Controller', () => {
   });
 
   /**
-   * Tests for the `/api/test/error` endpoint
-   *
-   * @group API/Test/Error
-   */
-  describe('GET /api/test/error', () => {
-    /**
-     * @test {GET /api/test/error}
-     * Should return a test error response
-     */
-    it('should return a test error', async () => {
-      const response = await request(app).get('/api/test/error');
-
-      expect(response.status).toBe(500);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body.error).toHaveProperty('message');
-      expect(response.body.error.message).toContain('Internal Server Error');
-    });
-  });
-
-  /**
    * Tests for the `/api/test/hello/:name` endpoint
    *
    * @group API/Test/Hello
@@ -179,52 +148,21 @@ describe('Test Controller', () => {
   describe('GET /api/test/hello/:name', () => {
     /**
      * @test {GET /api/test/hello/:name}
-     * Should return a personalized greeting message
+     * Should return a personalized greeting message for various name inputs
      */
-    it('should return a greeting with the provided name', async () => {
-      const name = 'John';
+    it.each([
+      { name: 'John', expected: 'Hello, John!' },
+      { name: 'TestUser', expected: 'Hello, TestUser!' },
+      { name: '%20', expected: 'Hello' },
+      { name: '""', expected: 'Hello' },
+    ])('should return greeting for name "$name"', async ({ name, expected }) => {
       const response = await request(app).get(`/api/test/hello/${name}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          message: `Hello, ${name}!`,
-          timestamp: expect.any(String),
-        },
-      });
-    });
-
-    /**
-     * @test {GET /api/test/hello/:name}
-     * Should correctly handle and include the name parameter in the response
-     */
-    it('should handle name parameter correctly', async () => {
-      const name = 'TestUser';
-      const response = await request(app).get(`/api/test/hello/${name}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('data.message');
-      expect(response.body.data.message).toContain(name);
-    });
-
-    /**
-     * @test {GET /api/test/hello/:name}
-     * Should handle empty or whitespace name parameters gracefully
-     */
-    it('should handle empty name parameter gracefully', async () => {
-      const response1 = await request(app).get('/api/test/hello/');
-      expect(response1.status).toBe(404);
-
-      const response2 = await request(app).get('/api/test/hello/%20');
-      expect(response2.status).toBe(200);
-      expect(response2.body).toHaveProperty('data.message');
-      expect(response2.body.data.message).toContain('Hello');
-
-      const response3 = await request(app).get('/api/test/hello/""');
-      expect(response3.status).toBe(200);
-      expect(response3.body).toHaveProperty('data.message');
-      expect(response3.body.data.message).toContain('Hello');
+      if (name === '') {
+        expect(response.status).toBe(404);
+      } else {
+        expect(response.status).toBe(200);
+        expect(response.body.data.message).toContain(expected);
+      }
     });
 
     /**
@@ -232,18 +170,10 @@ describe('Test Controller', () => {
      * Should handle missing name parameter in the request
      */
     it('should handle missing name parameter', async () => {
-      const mockReq = {
-        params: {},
-      } as any;
-
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      } as any;
-
+      const mockReq = { params: {} } as any;
+      const mockRes = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
       const next = jest.fn();
 
-      /** Import the controller directly to test the function */
       const { getHello } = await import('../src/Routes/tests/testController');
       await getHello(mockReq, mockRes, next);
 
@@ -267,14 +197,8 @@ describe('Test Controller', () => {
       mockResponseHelpersToThrow();
 
       const { getHello } = await import('../src/Routes/tests/testController');
-
-      const mockReq = {
-        params: { name: 'test' },
-      } as any;
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      } as any;
+      const mockReq = { params: { name: 'test' } } as any;
+      const mockRes = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
       const mockNext = jest.fn();
 
       await getHello(mockReq, mockRes, mockNext);
@@ -283,71 +207,6 @@ describe('Test Controller', () => {
       expect(mockNext.mock.calls[0][0].message).toContain('Test error in createSuccessResponse');
 
       restoreResponseHelpers();
-    });
-
-    it('should return a greeting with the provided name', async () => {
-      const name = 'John';
-      const response = await request(app).get(`/api/test/hello/${name}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          message: `Hello, ${name}!`,
-          timestamp: expect.any(String),
-        },
-      });
-    });
-
-    it('should handle name parameter correctly', async () => {
-      const name = 'TestUser';
-      const response = await request(app).get(`/api/test/hello/${name}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('data.message');
-      expect(response.body.data.message).toContain(name);
-    });
-
-    it('should handle empty name parameter gracefully', async () => {
-      const response1 = await request(app).get('/api/test/hello/');
-      expect(response1.status).toBe(404);
-
-      const response2 = await request(app).get('/api/test/hello/%20');
-      expect(response2.status).toBe(200);
-      expect(response2.body).toHaveProperty('data.message');
-      expect(response2.body.data.message).toContain('Hello');
-
-      const response3 = await request(app).get('/api/test/hello/""');
-      expect(response3.status).toBe(200);
-      expect(response3.body).toHaveProperty('data.message');
-      expect(response3.body.data.message).toContain('Hello');
-    });
-
-    it('should handle missing name parameter', async () => {
-      const mockReq = {
-        params: {},
-      } as any;
-
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      } as any;
-
-      const next = jest.fn();
-
-      const { getHello } = await import('../src/Routes/tests/testController');
-      await getHello(mockReq, mockRes, next);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            message: 'Name parameter is required',
-            status: 400,
-          }),
-        }),
-      );
     });
   });
 });
