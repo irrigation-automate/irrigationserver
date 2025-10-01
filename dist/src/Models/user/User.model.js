@@ -67,5 +67,6 @@ UserSchema.methods.generateAuthToken = function () {
     return null;
 };
 // ======|| Create new document for User model
-const UserModel = mongoose_1.model('User', UserSchema);
+const UserModel = (0, mongoose_1.model)('User', UserSchema);
 exports.default = UserModel;
+//# sourceMappingURL=User.model.js.map

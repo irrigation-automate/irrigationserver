@@ -24,5 +24,6 @@ const UserAddressSchema = new mongoose_1.Schema({
     },
 });
 // ======|| Create new document for User adress model
-const UserAddress = mongoose_1.model('UserAddress', UserAddressSchema);
+const UserAddress = (0, mongoose_1.model)('UserAddress', UserAddressSchema);
 exports.default = UserAddress;
+//# sourceMappingURL=User.adress.js.map

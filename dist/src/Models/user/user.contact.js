@@ -33,5 +33,6 @@ const UserContactSchema = new mongoose_1.Schema({
     },
 });
 // ======|| Create new document for User contact model
-const UserContact = mongoose_1.model('UserContact', UserContactSchema);
+const UserContact = (0, mongoose_1.model)('UserContact', UserContactSchema);
 exports.default = UserContact;
+//# sourceMappingURL=user.contact.js.map
