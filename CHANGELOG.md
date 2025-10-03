@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [x] User management models
   - [x] User preferences models
   - [x] Session management models
-  - [ ] Pump and zone schemas
+  - [x] Pump and zone schemas
   - [ ] Scheduling system models
   - [ ] Notification system models
   - [ ] Water usage tracking models
