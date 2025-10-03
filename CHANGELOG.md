@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [x] Database schema design
   - [x] User management models
-  - [ ] User preferences models
+  - [x] User preferences models
   - [ ] Session management models
   - [ ] Pump and zone schemas
   - [ ] Scheduling system models
