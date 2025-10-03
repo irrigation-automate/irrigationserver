@@ -1,6 +1,7 @@
 # Irrigation Service Architecture
 
 ## Table of Contents
+
 - [Service Overview](#service-overview)
 - [Core Services](#core-services)
 - [API Endpoints](#api-endpoints)
@@ -21,7 +22,7 @@ classDiagram
         -scheduler: Scheduler
         -waterManager: WaterManager
     }
-    
+
     class PumpManager {
         +createPump(config)
         +updatePump(pumpId, updates)
@@ -29,7 +30,7 @@ classDiagram
         +controlPump(pumpId, action, params)
         +getPumpStatus(pumpId)
     }
-    
+
     class ZoneManager {
         +createZone(config)
         +updateZone(zoneId, updates)
@@ -37,7 +38,7 @@ classDiagram
         +controlZone(zoneId, action)
         +getZoneStatus(zoneId)
     }
-    
+
     class Scheduler {
         +createSchedule(zoneId, config)
         +updateSchedule(scheduleId, updates)
@@ -45,14 +46,14 @@ classDiagram
         +pauseSchedule(scheduleId)
         +resumeSchedule(scheduleId)
     }
-    
+
     class WaterManager {
         +getWaterUsage(period)
         +getFlowRate(zoneId)
         +detectLeaks()
         +getWaterSourceStatus()
     }
-    
+
     IrrigationService --> PumpManager
     IrrigationService --> ZoneManager
     IrrigationService --> Scheduler
@@ -64,21 +65,25 @@ classDiagram
 ## Core Services
 
 ### 1. Pump Manager
+
 - Manages all pump-related operations
 - Handles communication with physical/virtual pumps
 - Maintains pump state and health
 
 ### 2. Zone Manager
+
 - Manages irrigation zones
 - Handles zone-pump relationships
 - Controls zone valves and flow
 
 ### 3. Scheduler
+
 - Manages irrigation schedules
 - Handles one-time and recurring events
 - Processes weather-based adjustments
 
 ### 4. Water Manager
+
 - Monitors water usage
 - Manages water sources
 - Detects leaks and anomalies
@@ -86,6 +91,7 @@ classDiagram
 ## API Endpoints
 
 ### Pump Management
+
 ```
 GET    /api/v1/pumps           # List all pumps
 POST   /api/v1/pumps           # Create new pump
@@ -98,6 +104,7 @@ GET    /api/v1/pumps/:id/stats # Get pump statistics
 ```
 
 ### Zone Management
+
 ```
 GET    /api/v1/zones           # List all zones
 POST   /api/v1/zones           # Create new zone
@@ -110,6 +117,7 @@ GET    /api/v1/zones/:id/logs  # Get zone activity logs
 ```
 
 ### Scheduling
+
 ```
 GET    /api/v1/schedules              # List all schedules
 POST   /api/v1/schedules              # Create new schedule
@@ -122,6 +130,7 @@ GET    /api/v1/schedules/upcoming     # Get upcoming schedule runs
 ```
 
 ### Water Management
+
 ```
 GET    /api/v1/water/usage            # Get water usage statistics
 GET    /api/v1/water/sources          # List water sources
@@ -132,15 +141,16 @@ GET    /api/v1/water/alerts           # Get active water alerts
 ## Data Models
 
 ### Pump
+
 ```typescript
 interface Pump {
   id: string;
   name: string;
   type: 'submersible' | 'surface' | 'booster';
   status: 'idle' | 'running' | 'fault';
-  flowRate: number;  // L/min
-  maxPressure: number;  // PSI
-  powerConsumption: number;  // Watts
+  flowRate: number; // L/min
+  maxPressure: number; // PSI
+  powerConsumption: number; // Watts
   lastMaintenance: Date;
   health: {
     temperature: number;
@@ -153,24 +163,26 @@ interface Pump {
 ```
 
 ### Zone
+
 ```typescript
 interface Zone {
   id: string;
   name: string;
   pumpId: string;
-  area: number;  // m²
-  flowRate: number;  // L/min
-  pressure: number;  // PSI
+  area: number; // m²
+  flowRate: number; // L/min
+  pressure: number; // PSI
   status: 'idle' | 'irrigating' | 'paused' | 'error';
   vegetationType: string;
   soilType: string;
-  coordinates: Array<{lat: number, lng: number}>;
+  coordinates: Array<{ lat: number; lng: number }>;
   createdAt: Date;
   updatedAt: Date;
 }
 ```
 
 ### Schedule
+
 ```typescript
 interface Schedule {
   id: string;
@@ -178,9 +190,9 @@ interface Schedule {
   name: string;
   enabled: boolean;
   type: 'interval' | 'fixed' | 'weather';
-  days: number[];  // 0-6 (Sun-Sat)
-  startTime: string;  // HH:MM
-  duration: number;  // minutes
+  days: number[]; // 0-6 (Sun-Sat)
+  startTime: string; // HH:MM
+  duration: number; // minutes
   weatherConditions?: {
     minTemp?: number;
     maxTemp?: number;
@@ -197,6 +209,7 @@ interface Schedule {
 ## Sequence Diagrams
 
 ### Starting Zone Irrigation
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -204,42 +217,43 @@ sequenceDiagram
     participant ZoneSvc as Zone Service
     participant PumpSvc as Pump Service
     participant HW as Hardware Controller
-    
+
     User->>+API: POST /zones/{id}/start
     API->>+ZoneSvc: startZone(zoneId)
-    
+
     ZoneSvc->>+PumpSvc: checkPumpStatus(zone.pumpId)
     PumpSvc-->>-ZoneSvc: Pump status OK
-    
+
     ZoneSvc->>+HW: Open zone valve(zoneId)
     HW-->>-ZoneSvc: Valve opened
-    
+
     ZoneSvc->>+PumpSvc: startPump(zone.pumpId, zone.flowRate)
     PumpSvc->>+HW: Start pump with flow rate
     HW-->>-PumpSvc: Pump started
     PumpSvc-->>-ZoneSvc: Pump started
-    
+
     ZoneSvc->>ZoneSvc: Log irrigation start
     ZoneSvc-->>-API: Zone started successfully
     API-->>-User: 200 OK
 ```
 
 ### Processing Scheduled Irrigation
+
 ```mermaid
 sequenceDiagram
     participant Scheduler
     participant ZoneSvc as Zone Service
     participant Weather as Weather Service
     participant Notif as Notification Service
-    
+
     Scheduler->>Scheduler: Check for due schedules
     Scheduler->>+Weather: Get forecast(zone.location)
     Weather-->>-Scheduler: Weather data
-    
+
     alt Weather conditions met
         Scheduler->>+ZoneSvc: startZone(zoneId, schedule.duration)
         ZoneSvc-->>-Scheduler: Zone started
-        
+
         Scheduler->>+Notif: sendNotification({
         |   type: 'irrigation_started',
         |   zone: zoneId,
@@ -261,6 +275,7 @@ sequenceDiagram
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "error": {
@@ -274,6 +289,7 @@ sequenceDiagram
 ```
 
 #### 409 Conflict
+
 ```json
 {
   "error": {
@@ -284,6 +300,7 @@ sequenceDiagram
 ```
 
 #### 503 Service Unavailable
+
 ```json
 {
   "error": {

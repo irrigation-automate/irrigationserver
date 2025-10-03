@@ -1,6 +1,7 @@
 # Irrigation Service
 
 ## Table of Contents
+
 - [Service Architecture](#service-architecture)
 - [API Endpoints](#api-endpoints)
   - [Pump Management](#pump-management)
@@ -24,7 +25,7 @@ classDiagram
         -scheduler: Scheduler
         -waterManager: WaterManager
     }
-    
+
     class PumpManager {
         +createPump(config)
         +updatePump(pumpId, updates)
@@ -32,7 +33,7 @@ classDiagram
         +controlPump(pumpId, action, params)
         +getPumpStatus(pumpId)
     }
-    
+
     class ZoneManager {
         +createZone(config)
         +updateZone(zoneId, updates)
@@ -40,7 +41,7 @@ classDiagram
         +controlZone(zoneId, action)
         +getZoneStatus(zoneId)
     }
-    
+
     class Scheduler {
         +createSchedule(zoneId, config)
         +updateSchedule(scheduleId, updates)
@@ -48,14 +49,14 @@ classDiagram
         +pauseSchedule(scheduleId)
         +resumeSchedule(scheduleId)
     }
-    
+
     class WaterManager {
         +getWaterUsage(period)
         +getFlowRate(zoneId)
         +detectLeaks()
         +getWaterSourceStatus()
     }
-    
+
     IrrigationService --> PumpManager
     IrrigationService --> ZoneManager
     IrrigationService --> Scheduler
@@ -69,11 +70,13 @@ classDiagram
 ### Pump Management
 
 #### 1. List All Pumps
+
 ```http
 GET /api/v1/irrigation/pumps
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -108,12 +111,14 @@ GET /api/v1/irrigation/pumps
 ```
 
 #### 2. Get Pump Details
+
 ```http
 GET /api/v1/irrigation/pumps/{pumpId}
 ```
 
 **Response**
-```json
+
+````json
 {
   "success": true,
   "data": {
@@ -141,9 +146,10 @@ GET /api/v1/irrigation/pumps/{pumpId}
 #### 3. Create New Pump
 ```http
 POST /api/v1/irrigation/pumps
-```
+````
 
 **Request Body**
+
 ```json
 {
   "name": "Backyard Pump",
@@ -155,6 +161,7 @@ POST /api/v1/irrigation/pumps
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -183,11 +190,13 @@ POST /api/v1/irrigation/pumps
 ### Zone Management
 
 #### 1. List All Zones
+
 ```http
 GET /api/v1/irrigation/zones
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -212,11 +221,13 @@ GET /api/v1/irrigation/zones
 ```
 
 #### 2. Create New Zone
+
 ```http
 POST /api/v1/irrigation/zones
 ```
 
 **Request Body**
+
 ```json
 {
   "name": "Backyard Garden",
@@ -226,15 +237,16 @@ POST /api/v1/irrigation/zones
   "vegetationType": "vegetables",
   "soilType": "sandy",
   "coordinates": [
-    {"lat": 34.0522, "lng": -118.2437},
-    {"lat": 34.0522, "lng": -118.2447},
-    {"lat": 34.0512, "lng": -118.2447},
-    {"lat": 34.0512, "lng": -118.2437}
+    { "lat": 34.0522, "lng": -118.2437 },
+    { "lat": 34.0522, "lng": -118.2447 },
+    { "lat": 34.0512, "lng": -118.2447 },
+    { "lat": 34.0512, "lng": -118.2437 }
   ]
 }
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -250,10 +262,10 @@ POST /api/v1/irrigation/zones
     "vegetationType": "vegetables",
     "soilType": "sandy",
     "coordinates": [
-      {"lat": 34.0522, "lng": -118.2437},
-      {"lat": 34.0522, "lng": -118.2447},
-      {"lat": 34.0512, "lng": -118.2447},
-      {"lat": 34.0512, "lng": -118.2437}
+      { "lat": 34.0522, "lng": -118.2437 },
+      { "lat": 34.0522, "lng": -118.2447 },
+      { "lat": 34.0512, "lng": -118.2447 },
+      { "lat": 34.0512, "lng": -118.2437 }
     ],
     "createdAt": "2025-10-02T10:45:00Z",
     "updatedAt": "2025-10-02T10:45:00Z"
@@ -264,11 +276,13 @@ POST /api/v1/irrigation/zones
 ### Water Management
 
 #### 1. Get Water Usage
+
 ```http
 GET /api/v1/irrigation/water/usage?period=month&year=2025&month=10
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -285,7 +299,7 @@ GET /api/v1/irrigation/water/usage?period=month&year=2025&month=10
       {
         "zoneId": "zone-2",
         "zoneName": "Back Garden",
-        "usage": 800.50,
+        "usage": 800.5,
         "percentage": 64
       }
     ],
@@ -302,26 +316,29 @@ GET /api/v1/irrigation/water/usage?period=month&year=2025&month=10
   }
 }
 ```
-```
+
+````
 
 ## Pump Control
 
 ### 1. Control Pump
 ```http
 POST /api/v1/irrigation/pumps/{pumpId}/control
-```
+````
 
 **Request Body**
+
 ```json
 {
-  "action": "start",  // or "stop"
-  "flowRate": 30,    // L/min
-  "duration": 1800,  // in seconds (optional)
+  "action": "start", // or "stop"
+  "flowRate": 30, // L/min
+  "duration": 1800, // in seconds (optional)
   "zoneId": "zone-1" // optional for logging
 }
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -335,11 +352,13 @@ POST /api/v1/irrigation/pumps/{pumpId}/control
 ```
 
 ### 2. Update Pump Settings
+
 ```http
 PATCH /api/v1/irrigation/pumps/{pumpId}
 ```
 
 **Request Body**
+
 ```json
 {
   "name": "Main Garden Pump - Updated",
@@ -350,6 +369,7 @@ PATCH /api/v1/irrigation/pumps/{pumpId}
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -367,11 +387,13 @@ PATCH /api/v1/irrigation/pumps/{pumpId}
 ## Scheduling
 
 ### 1. Create Schedule
+
 ```http
 POST /api/v1/irrigation/schedules
 ```
 
 **Request Body**
+
 ```json
 {
   "name": "Morning Watering",
@@ -399,14 +421,15 @@ POST /api/v1/irrigation/schedules
 ## Data Models
 
 ### Pump
+
 ```typescript
 interface Pump {
   id: string;
   name: string;
   status: 'offline' | 'idle' | 'priming' | 'pumping' | 'error';
-  flowRate: number;  // L/min
-  pressure: number;  // PSI
-  powerConsumption: number;  // Watts
+  flowRate: number; // L/min
+  pressure: number; // PSI
+  powerConsumption: number; // Watts
   lastActive: Date;
   zones: Zone[];
   settings: PumpSettings;
@@ -421,7 +444,8 @@ interface PumpSettings {
 ```
 
 ### Zone
-```typescript
+
+````typescript
 interface Zone {
   id: string;
   name: string;
@@ -458,46 +482,48 @@ interface Pump {
   createdAt: Date;
   updatedAt: Date;
 }
-```
+````
 
 ### Zone
+
 ```typescript
 interface Zone {
   id: string;
   name: string;
   pumpId: string;
   status: 'idle' | 'starting' | 'irrigating' | 'stopping' | 'error';
-  area: number;           // m²
-  flowRate: number;       // L/min
-  pressure: number;       // PSI
-  maxFlowRate: number;    // L/min
+  area: number; // m²
+  flowRate: number; // L/min
+  pressure: number; // PSI
+  maxFlowRate: number; // L/min
   vegetationType: string;
   soilType: string;
-  coordinates: Array<{lat: number, lng: number}>;
+  coordinates: Array<{ lat: number; lng: number }>;
   lastWatered?: Date;
-  waterUsed: number;      // liters
+  waterUsed: number; // liters
   createdAt: Date;
   updatedAt: Date;
 }
 ```
 
 ### Schedule
+
 ```typescript
 interface Schedule {
   id: string;
   name: string;
   zoneId: string;
   type: 'one-time' | 'recurring';
-  days: number[];  // 0-6 (Sun-Sat)
-  startTime: string;  // HH:MM
-  duration: number;   // seconds
+  days: number[]; // 0-6 (Sun-Sat)
+  startTime: string; // HH:MM
+  duration: number; // seconds
   enabled: boolean;
   weatherAware: boolean;
   weatherConditions?: {
-    minTemp?: number;  // °C
-    maxTemp?: number;  // °C
-    precipitationThreshold?: number;  // mm
-    windSpeedThreshold?: number;      // km/h
+    minTemp?: number; // °C
+    maxTemp?: number; // °C
+    precipitationThreshold?: number; // mm
+    windSpeedThreshold?: number; // km/h
   };
   lastRun?: Date;
   nextRun?: Date;
@@ -511,6 +537,7 @@ interface Schedule {
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -525,6 +552,7 @@ interface Schedule {
 ```
 
 #### 404 Not Found
+
 ```json
 {
   "success": false,
@@ -536,6 +564,7 @@ interface Schedule {
 ```
 
 #### 409 Conflict
+
 ```json
 {
   "success": false,
@@ -547,6 +576,7 @@ interface Schedule {
 ```
 
 #### 500 Internal Server Error
+
 ```json
 {
   "success": false,
@@ -561,6 +591,7 @@ interface Schedule {
 ## Sequence Flows
 
 ### Starting Zone Irrigation
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -568,42 +599,43 @@ sequenceDiagram
     participant ZoneService
     participant PumpService
     participant Hardware
-    
+
     User->>+API: POST /zones/{id}/control
     API->>+ZoneService: startZone(zoneId, duration)
-    
+
     ZoneService->>+PumpService: checkPumpStatus(zone.pumpId)
     PumpService-->>-ZoneService: Pump status OK
-    
+
     ZoneService->>+Hardware: Open zone valve(zoneId)
     Hardware-->>-ZoneService: Valve opened
-    
+
     ZoneService->>+PumpService: startPump(zone.pumpId, zone.flowRate)
     PumpService->>+Hardware: Start pump with flow rate
     Hardware-->>-PumpService: Pump started
     PumpService-->>-ZoneService: Pump started
-    
+
     ZoneService->>ZoneService: Log irrigation start
     ZoneService-->>-API: Zone started successfully
     API-->>-User: 200 OK
 ```
 
 ### Processing Scheduled Irrigation
+
 ```mermaid
 sequenceDiagram
     participant Scheduler
     participant ZoneService
     participant WeatherService
     participant NotificationService
-    
+
     Scheduler->>Scheduler: Check for due schedules
     Scheduler->>+WeatherService: Get forecast(zone.location)
     WeatherService-->>-Scheduler: Weather data
-    
+
     alt Weather conditions met
         Scheduler->>+ZoneService: startZone(zoneId, schedule.duration)
         ZoneService-->>-Scheduler: Zone started
-        
+
         Scheduler->>+NotificationService: sendNotification({
         |   type: 'irrigation_started',
         |   zone: zoneId,
@@ -619,7 +651,8 @@ sequenceDiagram
         NotificationService-->>-Scheduler: Notification sent
     end
 ```
-```
+
+````
 
 ## Error Handling
 
@@ -632,9 +665,10 @@ sequenceDiagram
     "message": "Invalid action specified. Must be 'start' or 'stop'"
   }
 }
-```
+````
 
 ### 409 Conflict
+
 ```json
 {
   "success": false,
@@ -646,6 +680,7 @@ sequenceDiagram
 ```
 
 ### 503 Service Unavailable
+
 ```json
 {
   "success": false,
@@ -659,6 +694,7 @@ sequenceDiagram
 ## WebSocket Events
 
 ### Pump Status Update
+
 ```json
 {
   "event": "pump:status",
@@ -674,6 +710,7 @@ sequenceDiagram
 ```
 
 ### Zone Watering Complete
+
 ```json
 {
   "event": "zone:watering_complete",

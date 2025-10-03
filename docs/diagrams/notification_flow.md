@@ -1,6 +1,7 @@
 # Notification Service Flows
 
 ## Table of Contents
+
 - [Data Models](#data-models)
 - [Notification Flows](#notification-flows)
   - [1. Create Notification](#1-create-notification)
@@ -13,31 +14,33 @@
 ## Data Models
 
 ### Notification Document
+
 ```typescript
 interface INotificationDocument {
   id: string;
-  moduleName: ModuleName;        // Module that triggered the notification
-  action: ActionType;           // Type of action that occurred
-  subscribe: INotificationSubscriber[];  // List of subscribers
-  status: NotificationStatus;    // Current status of the notification
-  payload?: Record<string, unknown>;  // Additional data
-  createdAt: Date;              // When the notification was created
-  updatedAt: Date;              // When the notification was last updated
+  moduleName: ModuleName; // Module that triggered the notification
+  action: ActionType; // Type of action that occurred
+  subscribe: INotificationSubscriber[]; // List of subscribers
+  status: NotificationStatus; // Current status of the notification
+  payload?: Record<string, unknown>; // Additional data
+  createdAt: Date; // When the notification was created
+  updatedAt: Date; // When the notification was last updated
 }
 
 interface INotificationSubscriber {
-  userId: mongoose.Types.ObjectId;  // ID of the user
-  seenAt?: Date | null;             // When the user viewed the notification
+  userId: mongoose.Types.ObjectId; // ID of the user
+  seenAt?: Date | null; // When the user viewed the notification
 }
 ```
 
 ### Enums
+
 ```typescript
 enum ModuleName {
   USER = 'USER',
   AUTH = 'AUTH',
   IRRIGATION = 'IRRIGATION',
-  SYSTEM = 'SYSTEM'
+  SYSTEM = 'SYSTEM',
 }
 
 enum ActionType {
@@ -46,14 +49,14 @@ enum ActionType {
   DELETED = 'DELETED',
   APPROVAL_REQUIRED = 'APPROVAL_REQUIRED',
   COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED'
+  FAILED = 'FAILED',
 }
 
 enum NotificationStatus {
   PENDING = 'PENDING',
   SENT = 'SENT',
   READ = 'READ',
-  ARCHIVED = 'ARCHIVED'
+  ARCHIVED = 'ARCHIVED',
 }
 ```
 
@@ -67,31 +70,33 @@ sequenceDiagram
     participant NotificationService
     participant Database
     participant WebSocket as WebSocket Service
-    
+
     Service->>+NotificationService: createNotification({
     |   moduleName: 'IRRIGATION',
     |   action: 'COMPLETED',
     |   userIds: ['user1', 'user2'],
     |   payload: { /* notification data */ }
     |})
-    
+
     NotificationService->>+Database: Create Notification
     Database-->>-NotificationService: Created Notification
-    
+
     loop For each user
         NotificationService->>+WebSocket: Send real-time update
         WebSocket-->>-User: Push notification
     end
-    
+
     NotificationService-->>-Service: Notification created
 ```
 
 **Endpoint**
+
 ```http
 POST /api/v1/notifications
 ```
 
 **Request**
+
 ```json
 {
   "moduleName": "IRRIGATION",
@@ -106,6 +111,7 @@ POST /api/v1/notifications
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -127,39 +133,41 @@ sequenceDiagram
     participant Client
     participant NotificationService
     participant Database
-    
+
     User->>+Client: Click on notification
     Client->>+NotificationService: markAsRead(notificationId, userId)
-    
+
     NotificationService->>+Database: Find notification by ID
     Database-->>-NotificationService: Return notification
-    
+
     alt Notification exists and user is subscriber
         NotificationService->>+Database: Update seenAt for user
         Database-->>-NotificationService: Update successful
-        
+
         NotificationService->>+Database: Check if all subscribers have read
         Database-->>-NotificationService: All read status
-        
+
         alt All subscribers have read
             NotificationService->>+Database: Update status to 'READ'
             Database-->>-NotificationService: Status updated
         end
-        
+
         NotificationService-->>-Client: Success response
     else Notification not found or user not subscribed
         NotificationService-->>-Client: Error response
     end
-    
+
     Client-->>-User: Update UI (remove unread indicator)
 ```
 
 **Endpoint**
+
 ```http
 PATCH /api/v1/notifications/:id/read
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -179,36 +187,38 @@ sequenceDiagram
     participant Client
     participant NotificationService
     participant Database
-    
+
     User->>+Client: Click 'Mark all as read'
     Client->>+NotificationService: markAllAsRead(userId)
-    
+
     NotificationService->>+Database: Find all unread notifications for user
     Database-->>-NotificationService: Return unread notifications
-    
+
     loop For each notification
         NotificationService->>+Database: Update seenAt for user
         Database-->>-NotificationService: Update successful
-        
+
         NotificationService->>+Database: Check if all subscribers have read
         Database-->>-NotificationService: All read status
-        
+
         alt All subscribers have read
             NotificationService->>+Database: Update status to 'READ'
             Database-->>-NotificationService: Status updated
         end
     end
-    
+
     NotificationService-->>-Client: Success response
     Client-->>-User: Update UI (clear all unread indicators)
 ```
 
 **Endpoint**
+
 ```http
 PATCH /api/v1/notifications/read-all
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -227,27 +237,29 @@ sequenceDiagram
     participant Client
     participant NotificationService
     participant Database
-    
+
     User->>+Client: View notifications
     Client->>+NotificationService: getUserNotifications(userId, {
     |   status: 'UNREAD',
     |   limit: 10,
     |   page: 1
     |})
-    
+
     NotificationService->>+Database: Query notifications
     Database-->>-NotificationService: Return notifications
-    
+
     NotificationService-->>-Client: Paginated notifications
     Client-->>-User: Display notifications
 ```
 
 **Endpoint**
+
 ```http
 GET /api/v1/notifications?status=UNREAD&limit=10&page=1
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -280,6 +292,7 @@ GET /api/v1/notifications?status=UNREAD&limit=10&page=1
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -291,6 +304,7 @@ GET /api/v1/notifications?status=UNREAD&limit=10&page=1
 ```
 
 #### 401 Unauthorized
+
 ```json
 {
   "success": false,
@@ -302,6 +316,7 @@ GET /api/v1/notifications?status=UNREAD&limit=10&page=1
 ```
 
 #### 403 Forbidden
+
 ```json
 {
   "success": false,
@@ -313,6 +328,7 @@ GET /api/v1/notifications?status=UNREAD&limit=10&page=1
 ```
 
 #### 404 Not Found
+
 ```json
 {
   "success": false,

@@ -22,9 +22,18 @@ const emailValidationRegex =
   /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
 
 /**
+ * 24-hour time format validation regex (HH:mm).
+ *
+ * Matches times from 00:00 to 23:59.
+ * Uses concise \d character class.
+ */
+const time24HourRegex = /^([01]?\d|2[0-3]):[0-5]\d$/;
+
+/**
  * Collection of commonly used regex patterns for validation.
  */
 export const regex = {
   passwordValidationRegex,
   emailValidationRegex,
+  time24HourRegex,
 };

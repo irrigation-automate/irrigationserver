@@ -1,57 +1,60 @@
 /**
- * @file Test suite for UserContact model
- * @description
- * Validates the `UserContact` schema rules, including required fields,
- * email format, uniqueness, and automatic timestamp behavior.
- * Uses `mongodb-memory-server` for an isolated in-memory test database.
+ * __UserContact Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create user contacts with valid personal information
+ * - Validate required field constraints
+ * - Test email format validation
+ * - Verify unique email constraint enforcement
+ * - Test timestamp updates on modifications
+ * - Ensure data integrity and persistence
+ * - Handle validation errors appropriately
  */
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import UserContact from '../../src/Models/user/user.contact';
 import { IUserContactSchema } from '../../src/interface/interfaces/models';
 
 /**
- * Test suite for the `UserContact` model.
+ * __UserContact Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create user contacts with valid personal information
+ * - Validate required field constraints
+ * - Test email format validation
+ * - Verify unique email constraint enforcement
+ * - Test timestamp updates on modifications
+ * - Ensure data integrity and persistence
+ * - Handle validation errors appropriately
  */
 describe('UserContact Model', () => {
   let mongoServer: MongoMemoryServer;
 
-  /**
-   * Valid user contact test data.
-   */
   const validContact: Partial<IUserContactSchema> = {
     email: 'test@example.com',
     firstName: 'John',
     lastName: 'Doe',
   };
 
-  /**
-   * Setup: Start in-memory MongoDB and connect before all tests.
-   */
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
   });
 
-  /**
-   * Cleanup: Remove all documents after each test to keep tests isolated.
-   */
   afterEach(async () => {
     await UserContact.deleteMany({});
   });
 
-  /**
-   * Teardown: Disconnect from database and stop in-memory server after all tests.
-   */
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
   });
 
   /**
-   * Test: Should create and save a user contact successfully with valid data.
+   * __Valid Contact Creation
+   * Acceptance case (scenario)
+   * - Create contact with all required fields
+   * - Verify saved document contains valid values
+   * - Ensure automatic timestamp generation
    */
   it('should create and save a user contact successfully', async () => {
     const contact = new UserContact(validContact);
@@ -65,12 +68,16 @@ describe('UserContact Model', () => {
   });
 
   /**
-   * Test: Should fail validation when required fields are missing.
+   * __Required Field Validation
+   * Acceptance case (scenario)
+   * - Attempt to create contact without required fields
+   * - Verify validation errors for email, firstName, and lastName
+   * - Ensure contact data completeness
    */
   it('should fail when required fields are missing', async () => {
     const contact = new UserContact({});
+    let error: any;
 
-    let error;
     try {
       await contact.validate();
     } catch (e) {
@@ -84,15 +91,19 @@ describe('UserContact Model', () => {
   });
 
   /**
-   * Test: Should fail validation when email format is invalid.
+   * __Email Format Validation
+   * Acceptance case (scenario)
+   * - Attempt to save contact with invalid email format
+   * - Verify validation error is thrown
+   * - Ensure email address integrity
    */
   it('should fail when email is invalid', async () => {
     const contact = new UserContact({
       ...validContact,
       email: 'invalid-email',
     });
+    let error: any;
 
-    let error;
     try {
       await contact.validate();
     } catch (e) {
@@ -104,7 +115,11 @@ describe('UserContact Model', () => {
   });
 
   /**
-   * Test: Should enforce unique constraint on email field.
+   * __Unique Email Constraint
+   * Acceptance case (scenario)
+   * - Create two contacts with identical email addresses
+   * - Verify duplicate key error is thrown
+   * - Ensure email uniqueness across system
    */
   it('should enforce unique email constraint', async () => {
     const contact1 = new UserContact(validContact);
@@ -114,8 +129,8 @@ describe('UserContact Model', () => {
       ...validContact,
       firstName: 'Jane',
     });
+    let error: any;
 
-    let error;
     try {
       await contact2.save();
     } catch (e) {
@@ -127,7 +142,11 @@ describe('UserContact Model', () => {
   });
 
   /**
-   * Test: Should update `last_update` timestamp on save.
+   * __Timestamp Update on Modification
+   * Acceptance case (scenario)
+   * - Modify existing contact data
+   * - Verify last_update timestamp is refreshed
+   * - Ensure change tracking mechanism
    */
   it('should update last_update timestamp on save', async () => {
     const contact = new UserContact(validContact);
