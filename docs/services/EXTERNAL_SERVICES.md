@@ -1,6 +1,7 @@
 # External Services Integration
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Weather Service](#weather-service)
 - [Water Management](#water-management)
@@ -9,16 +10,19 @@
 - [Error Handling](#error-handling)
 
 ## Overview
+
 This document outlines the integration with external services used by the irrigation system.
 
 ## Weather Service
 
 ### Weather Data Integration
+
 ```http
 GET /api/v1/weather/current?lat={latitude}&lon={longitude}
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -46,11 +50,13 @@ GET /api/v1/weather/current?lat={latitude}&lon={longitude}
 ```
 
 ### Weather-Based Adjustments
+
 ```http
 GET /api/v1/irrigation/weather-adjustment?zoneId=zone-1
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -67,11 +73,13 @@ GET /api/v1/irrigation/weather-adjustment?zoneId=zone-1
 ## Water Management
 
 ### Water Usage Statistics
+
 ```http
 GET /api/v1/water/usage?period=month&year=2025&month=10
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -87,7 +95,7 @@ GET /api/v1/water/usage?period=month&year=2025&month=10
       {
         "zoneId": "zone-2",
         "zoneName": "Back Garden",
-        "usage": 800.50,
+        "usage": 800.5,
         "percentage": 64
       }
     ],
@@ -106,11 +114,13 @@ GET /api/v1/water/usage?period=month&year=2025&month=10
 ```
 
 ### Water Restrictions
+
 ```http
 GET /api/v1/water/restrictions?lat=37.7749&lng=-122.4194
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -136,11 +146,13 @@ GET /api/v1/water/restrictions?lat=37.7749&lng=-122.4194
 ## Geolocation
 
 ### Address to Coordinates
+
 ```http
 GET /api/v1/geocode?address=1600+Amphitheatre+Parkway
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -161,11 +173,13 @@ GET /api/v1/geocode?address=1600+Amphitheatre+Parkway
 ```
 
 ### Time Zone Information
+
 ```http
 GET /api/v1/timezone?lat=37.7749&lng=-122.4194
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -182,11 +196,13 @@ GET /api/v1/timezone?lat=37.7749&lng=-122.4194
 ## Billing & Payments
 
 ### Get Water Bill
+
 ```http
 GET /api/v1/billing/water
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -205,7 +221,7 @@ GET /api/v1/billing/water
     "paymentHistory": [
       {
         "date": "2025-09-01",
-        "amount": 78.50,
+        "amount": 78.5,
         "status": "paid",
         "method": "Credit Card"
       }
@@ -217,6 +233,7 @@ GET /api/v1/billing/water
 ## Error Handling
 
 ### 429 Too Many Requests
+
 ```json
 {
   "success": false,
@@ -229,6 +246,7 @@ GET /api/v1/billing/water
 ```
 
 ### 503 Service Unavailable
+
 ```json
 {
   "success": false,
@@ -241,6 +259,7 @@ GET /api/v1/billing/water
 ```
 
 ## Rate Limits
+
 - 100 requests per hour per user for external API calls
 - Caching is implemented to reduce external API calls
 - Retry mechanism with exponential backoff for failed requests
