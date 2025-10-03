@@ -3,6 +3,7 @@
 ## Architecture Overview
 
 ### Directory Structure
+
 ```
 src/
 ├── modules/
@@ -26,6 +27,7 @@ src/
 ### Key Components
 
 #### Controllers
+
 - `AuthController`
   - `register()`: Handle user registration
   - `login()`: Handle user login
@@ -38,6 +40,7 @@ src/
   - `listPendingUsers()`: List users pending approval
 
 #### Services
+
 - `AuthService`
   - `registerUser()`: Create new user
   - `verifyUserEmail()`: Verify user's email
@@ -56,6 +59,7 @@ src/
   - `sendAccountApprovedEmail()`: Notify user of approval
 
 #### Routes
+
 ```typescript
 // auth.routes.ts
 router.post('/register', validate(registerSchema), authController.register);
@@ -81,10 +85,10 @@ sequenceDiagram
     participant EmailService
     participant Database
     participant Admin
-    participant TokenService 
+    participant TokenService
     participant NotificationService
     participant SecureStore
-    
+
     %% Registration Flow
     User->>MobileApp: 1. Open App & Submit Registration Form
     MobileApp->>AuthController: 2. POST /auth/register
@@ -95,7 +99,7 @@ sequenceDiagram
     TokenService-->>AuthService: 7. Token Generated
     AuthService->>EmailService: 8. Send Verification Email
     EmailService-->>User: 9. Verification Email Sent
-    
+
     %% Email Verification
     User->>AuthController: 10. GET /auth/verify-email/:token
     AuthController->>AuthService: 11. Verify Token
@@ -105,7 +109,7 @@ sequenceDiagram
     Database-->>AuthService: 15. User Updated
     AuthService-->>AuthController: 16. Email Verified
     AuthController-->>User: 17. Show Email Verified Page
-    
+
     %% Admin Approval
     AuthService->>NotificationService: 18. Notify Admin (New User Pending)
     NotificationService-->>Admin: 19. Send Notification
@@ -113,14 +117,14 @@ sequenceDiagram
     AdminController->>Database: 21. Query Pending Users
     Database-->>AdminController: 22. Return Pending Users
     AdminController-->>Admin: 23. Show Pending Users
-    
+
     Admin->>AdminController: 24. PATCH /admin/users/:userId/approve
     AdminController->>AuthService: 25. Process Approval
     AuthService->>Database: 26. Update User (status: approved)
     Database-->>AuthService: 27. User Approved
     AuthService->>EmailService: 28. Send Activation Email
     EmailService-->>User: 29. Account Activated Email
-    
+
     %% Login Flow
     User->>MobileApp: 30. Enter Credentials & Submit
     MobileApp->>AuthController: 31. POST /auth/login
@@ -129,7 +133,7 @@ sequenceDiagram
     Database-->>AuthService: 34. User Found
     AuthService->>AuthService: 35. Verify Password
     AuthService->>AuthService: 36. Check Account Status
-    
+
     alt Account Approved
         AuthService->>TokenService: 37. Generate Tokens
         TokenService-->>AuthService: 38. Tokens Generated
@@ -156,7 +160,7 @@ sequenceDiagram
     participant AuthService
     participant EmailService
     participant Database
-    
+
     %% Request Password Reset
     User->>+MobileApp: 1. Click 'Forgot Password'
     MobileApp->>+AuthService: 2. POST /auth/forgot-password
@@ -166,13 +170,13 @@ sequenceDiagram
     Database-->>-AuthService: 6. Token Created
     AuthService->>+EmailService: 7. Send Password Reset Email
     EmailService-->>-User: 8. Password Reset Email
-    
+
     %% Reset Password
     User->>+AuthService: 9. Open Reset Link
     AuthService->>+Database: 10. Validate Token
     Database-->>-AuthService: 11. Token Valid
     AuthService-->>-User: 12. Show Reset Password Form
-    
+
     User->>+AuthService: 13. Submit New Password
     AuthService->>+Database: 14. Update Password
     Database-->>-AuthService: 15. Password Updated
@@ -184,18 +188,21 @@ sequenceDiagram
 ## Service Interactions
 
 ### Auth Service
+
 - Handles user authentication
 - Manages user sessions
 - Validates tokens
 - Coordinates with Email Service
 
 ### Email Service
+
 - Sends verification emails
 - Handles password reset emails
 - Sends account status updates
 - Manages email templates
 
 ### Database
+
 - Stores user credentials
 - Manages verification tokens
 - Tracks account status

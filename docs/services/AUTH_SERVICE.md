@@ -1,6 +1,7 @@
 # Authentication Service
 
 ## Table of Contents
+
 - [Authentication Flows](#authentication-flows)
   - [Registration Flow](#registration-flow)
   - [Login Flow](#login-flow)
@@ -14,6 +15,7 @@
 ## Authentication Flows
 
 ### Registration Flow
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -22,19 +24,19 @@ sequenceDiagram
     participant EmailService
     participant Database
     participant Admin
-    
+
     User->>+Client: 1. Fill Registration Form
     Client->>+AuthService: 2. POST /auth/register
     AuthService->>+Database: 3. Create User (status: pending)
     Database-->>-AuthService: 4. User Created
     AuthService->>+EmailService: 5. Send Verification Email
     EmailService-->>+User: 6. Verification Email
-    
+
     User->>+AuthService: 7. Click Verification Link
     AuthService->>+Database: 8. Verify Email & Update Status
     Database-->>-AuthService: 9. Email Verified
     AuthService-->>-User: 10. Show Email Verified Page
-    
+
     AuthService->>+Admin: 11. Notify New User
     Admin->>+AuthService: 12. Approve User
     AuthService->>+Database: 13. Update Status (approved)
@@ -44,18 +46,19 @@ sequenceDiagram
 ```
 
 ### Login Flow
+
 ```mermaid
 sequenceDiagram
     participant User
     participant Client
     participant AuthService
     participant Database
-    
+
     User->>+Client: 1. Enter Credentials
     Client->>+AuthService: 2. POST /auth/login
     AuthService->>+Database: 3. Find User
     Database-->>-AuthService: 4. User Found
-    
+
     alt Account Approved
         AuthService->>+AuthService: 5. Verify Password
         AuthService->>+Database: 6. Create Session
@@ -69,6 +72,7 @@ sequenceDiagram
 ```
 
 ### Password Reset Flow
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -76,19 +80,19 @@ sequenceDiagram
     participant AuthService
     participant EmailService
     participant Database
-    
+
     User->>+Client: 1. Request Password Reset
     Client->>+AuthService: 2. POST /auth/forgot-password
     AuthService->>+Database: 3. Find User & Create Token
     Database-->>-AuthService: 4. Token Created
     AuthService->>+EmailService: 5. Send Reset Email
     EmailService-->>-User: 6. Password Reset Email
-    
+
     User->>+AuthService: 7. Open Reset Link
     AuthService->>+Database: 8. Validate Token
     Database-->>-AuthService: 9. Token Valid
     AuthService-->>-User: 10. Show Reset Form
-    
+
     User->>+AuthService: 11. Submit New Password
     AuthService->>+Database: 12. Update Password
     Database-->>-AuthService: 13. Password Updated
@@ -99,6 +103,7 @@ sequenceDiagram
 ## Service Interactions
 
 ### Auth Service
+
 - User authentication
 - Session management
 - Token generation/validation
@@ -106,12 +111,14 @@ sequenceDiagram
 - Password hashing/verification
 
 ### Email Service
+
 - Sends verification emails
 - Handles password reset emails
 - Sends account status updates
 - Manages email templates
 
 ### Database
+
 - User credentials storage
 - Session management
 - Token storage
@@ -123,16 +130,19 @@ sequenceDiagram
 - [Security Considerations](#security-considerations)
 
 ## Overview
+
 The Authentication Service handles user authentication and account management, including registration, login, password recovery, and account approval workflows.
 
 ## Endpoints
 
 ### 1. Register User
+
 ```http
 POST /api/v1/auth/register
 ```
 
 **Request Body**
+
 ```json
 {
   "email": "user@example.com",
@@ -142,6 +152,7 @@ POST /api/v1/auth/register
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -154,11 +165,13 @@ POST /api/v1/auth/register
 ```
 
 ### 2. Login
+
 ```http
 POST /api/v1/auth/login
 ```
 
 **Request Body**
+
 ```json
 {
   "email": "user@example.com",
@@ -167,6 +180,7 @@ POST /api/v1/auth/login
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -183,11 +197,13 @@ POST /api/v1/auth/login
 ```
 
 ### 3. Forgot Password
+
 ```http
 POST /api/v1/auth/forgot-password
 ```
 
 **Request Body**
+
 ```json
 {
   "email": "user@example.com"
@@ -195,6 +211,7 @@ POST /api/v1/auth/forgot-password
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -203,11 +220,13 @@ POST /api/v1/auth/forgot-password
 ```
 
 ### 4. Reset Password
+
 ```http
 POST /api/v1/auth/reset-password
 ```
 
 **Request Body**
+
 ```json
 {
   "token": "reset-token-from-email",
@@ -216,6 +235,7 @@ POST /api/v1/auth/reset-password
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -224,16 +244,19 @@ POST /api/v1/auth/reset-password
 ```
 
 ### 5. Approve User (Admin)
+
 ```http
 PATCH /api/v1/auth/users/{userId}/approve
 ```
 
 **Headers**
+
 ```
 Authorization: Bearer <admin-token>
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -251,6 +274,7 @@ Authorization: Bearer <admin-token>
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -265,6 +289,7 @@ Authorization: Bearer <admin-token>
 ```
 
 #### 401 Unauthorized
+
 ```json
 {
   "success": false,

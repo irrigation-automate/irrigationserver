@@ -1,13 +1,3 @@
-/**
- * @file Test suite for UserPassword model
- * @description
- * Validates the `UserPassword` schema rules, including:
- * - Required fields
- * - Password hashing with bcrypt
- * - Automatic timestamp updates
- * Uses `mongodb-memory-server` for an isolated in-memory database.
- */
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import bcrypt from 'bcryptjs';
@@ -15,49 +5,45 @@ import UserPassword from '../../src/Models/user/user.password';
 import { IUserPasswordSchema } from '../../src/interface/interfaces/models';
 
 /**
- * Test suite for the `UserPassword` schema and model.
+ * __UserPassword Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create user passwords with valid data
+ * - Ensure passwords are hashed securely before persistence
+ * - Validate required field constraints (password is mandatory)
+ * - Verify default timestamp assignment for last_update
+ * - Confirm password updates trigger hashing and timestamp refresh
+ * - Ensure password is not re-hashed unnecessarily when unmodified
+ * - Test data integrity and persistence in MongoDB
  */
 describe('UserPassword Model', () => {
   let mongoServer: MongoMemoryServer;
 
-  /**
-   * @constant {Partial<IUserPasswordSchema>} validPassword
-   * @description A valid password object used for positive test cases.
-   */
   const validPassword: Partial<IUserPasswordSchema> = {
     password: 'Test@1234',
   };
 
-  /**
-   * @lifecycle beforeAll
-   * @description Setup: Start in-memory MongoDB and connect before all tests.
-   */
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
   });
 
-  /**
-   * @lifecycle afterEach
-   * @description Cleanup: Remove all password documents after each test to ensure isolation.
-   */
   afterEach(async () => {
     await UserPassword.deleteMany({});
   });
 
-  /**
-   * @lifecycle afterAll
-   * @description Teardown: Disconnect database and stop the in-memory server after all tests finish.
-   */
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
   });
 
   /**
-   * @test
-   * @description Should create and save a password document successfully, hashing the password.
+   * __Valid User Password Creation
+   * Acceptance case (scenario)
+   * - Create user password with required field
+   * - Verify persistence in MongoDB with ObjectId
+   * - Ensure password is hashed securely before saving
+   * - Confirm last_update timestamp is automatically set
    */
   it('should create and save a user password successfully', async () => {
     const password = new UserPassword(validPassword);
@@ -72,8 +58,11 @@ describe('UserPassword Model', () => {
   });
 
   /**
-   * @test
-   * @description Should fail validation if password field is missing.
+   * __Required Field Validation
+   * Acceptance case (scenario)
+   * - Attempt to create user password without password field
+   * - Verify validation error is raised
+   * - Ensure schema enforces data completeness
    */
   it('should fail when password is not provided', async () => {
     const password = new UserPassword({});
@@ -90,8 +79,11 @@ describe('UserPassword Model', () => {
   });
 
   /**
-   * @test
-   * @description Should hash the password before saving to the database.
+   * __Password Hashing Before Save
+   * Acceptance case (scenario)
+   * - Save user password with plaintext value
+   * - Verify password is automatically hashed before persistence
+   * - Ensure stored value does not equal original plaintext
    */
   it('should hash the password before saving', async () => {
     const password = new UserPassword(validPassword);
@@ -104,8 +96,11 @@ describe('UserPassword Model', () => {
   });
 
   /**
-   * @test
-   * @description Should update the `last_update` timestamp when the password is modified.
+   * __Timestamp Update on Password Change
+   * Acceptance case (scenario)
+   * - Save initial user password and record last_update
+   * - Modify password and save document again
+   * - Verify new hash is generated and last_update timestamp increases
    */
   it('should update last_update timestamp on save', async () => {
     const password = new UserPassword(validPassword);
@@ -120,8 +115,11 @@ describe('UserPassword Model', () => {
   });
 
   /**
-   * @test
-   * @description Should not rehash the password if it has not been modified.
+   * __Avoid Unnecessary Rehashing
+   * Acceptance case (scenario)
+   * - Save initial user password and record hash
+   * - Modify only non-password field and save
+   * - Ensure password hash remains unchanged
    */
   it('should not rehash the password if it was not modified', async () => {
     const password = new UserPassword(validPassword);

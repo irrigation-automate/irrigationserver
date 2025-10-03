@@ -1,6 +1,7 @@
 # User Service
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Data Models](#data-models)
 - [Endpoints](#endpoints)
@@ -12,59 +13,65 @@
 - [Error Handling](#error-handling)
 
 ## Overview
+
 The User Service manages user profiles, including personal information, authentication, and account settings. It handles user data across multiple related collections for better data organization and security.
 
 ## Data Models
 
 ### 1. User (IUserSchema)
+
 ```typescript
 interface IUserSchema {
   _id: string;
   address?: Schema.Types.ObjectId | IUserAddressSchema['_id'];
-  blocked: boolean;  // Account status
+  blocked: boolean; // Account status
   contact: Schema.Types.ObjectId | IUserContactSchema['_id'];
   creation_date: Date;
   password: Schema.Types.ObjectId | IUserPasswordSchema['_id'];
-  weather?: Schema.Types.ObjectId | string;  // Weather preferences
-  reglage?: Schema.Types.ObjectId | string;  // User settings
+  weather?: Schema.Types.ObjectId | string; // Weather preferences
+  reglage?: Schema.Types.ObjectId | string; // User settings
 }
 ```
 
 ### 2. User Contact (IUserContactSchema)
+
 ```typescript
 interface IUserContactSchema {
   _id: string;
-  email: string;           // Unique email address
-  firstName: string;       // User's first name
-  lastName: string;        // User's last name
-  last_update: Date;       // Last update timestamp
+  email: string; // Unique email address
+  firstName: string; // User's first name
+  lastName: string; // User's last name
+  last_update: Date; // Last update timestamp
 }
 ```
 
 ### 3. User Address (IUserAddressSchema)
+
 ```typescript
 interface IUserAddressSchema {
   _id: string;
-  city: string;            // City of residence
-  street: string;          // Street address
-  country: string;         // Default: "Tunisia"
-  codeZip: number;         // Postal/ZIP code
-  last_update: Date;       // Last update timestamp
+  city: string; // City of residence
+  street: string; // Street address
+  country: string; // Default: "Tunisia"
+  codeZip: number; // Postal/ZIP code
+  last_update: Date; // Last update timestamp
 }
 ```
 
 ### 4. User Password (IUserPasswordSchema)
+
 ```typescript
 interface IUserPasswordSchema {
   _id: string;
-  password: string;        // Hashed password
-  last_update: Date;       // Last password change
+  password: string; // Hashed password
+  last_update: Date; // Last password change
 }
 ```
 
 ## Endpoints
 
 ### 1. Get User Profile
+
 Retrieves the authenticated user's complete profile information.
 
 ```http
@@ -72,6 +79,7 @@ GET /api/v1/users/me
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -93,6 +101,7 @@ GET /api/v1/users/me
 ```
 
 ### 2. Update User Information
+
 Updates the user's contact information.
 
 ```http
@@ -100,6 +109,7 @@ PATCH /api/v1/users/me
 ```
 
 **Request Body**
+
 ```json
 {
   "firstName": "John",
@@ -108,6 +118,7 @@ PATCH /api/v1/users/me
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -122,6 +133,7 @@ PATCH /api/v1/users/me
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -136,11 +148,13 @@ PATCH /api/v1/users/me
 ```
 
 ### 3. Update Password
+
 ```http
 PATCH /api/v1/users/me/password
 ```
 
 **Request Body**
+
 ```json
 {
   "currentPassword": "OldSecurePass123!",
@@ -149,6 +163,7 @@ PATCH /api/v1/users/me/password
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -157,18 +172,22 @@ PATCH /api/v1/users/me/password
 ```
 
 ### 4. Upload Profile Picture
+
 ```http
 POST /api/v1/users/me/avatar
 Content-Type: multipart/form-data
 ```
 
 **Form Data**
+
 ```
 avatar: [binary file]
 ```
 
 **Response**
+
 ### 3. Change Password
+
 Updates the user's password.
 
 ```http
@@ -176,6 +195,7 @@ PATCH /api/v1/users/me/password
 ```
 
 **Request Body**
+
 ```json
 {
   "currentPassword": "oldSecurePassword123",
@@ -184,6 +204,7 @@ PATCH /api/v1/users/me/password
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -193,6 +214,7 @@ PATCH /api/v1/users/me/password
 ```
 
 ### 4. Update Address
+
 Updates the user's address information.
 
 ```http
@@ -200,6 +222,7 @@ PATCH /api/v1/users/me/address
 ```
 
 **Request Body**
+
 ```json
 {
   "street": "456 New Street",
@@ -209,6 +232,7 @@ PATCH /api/v1/users/me/address
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -223,6 +247,7 @@ PATCH /api/v1/users/me/address
 ```
 
 ### 5. Deactivate Account
+
 Deactivates the user's account.
 
 ```http
@@ -230,6 +255,7 @@ DELETE /api/v1/users/me
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -242,6 +268,7 @@ DELETE /api/v1/users/me
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -256,6 +283,7 @@ DELETE /api/v1/users/me
 ```
 
 #### 401 Unauthorized
+
 ```json
 {
   "success": false,
@@ -267,6 +295,7 @@ DELETE /api/v1/users/me
 ```
 
 #### 403 Forbidden
+
 ```json
 {
   "success": false,
@@ -278,6 +307,7 @@ DELETE /api/v1/users/me
 ```
 
 #### 404 Not Found
+
 ```json
 {
   "success": false,
@@ -298,7 +328,8 @@ DELETE /api/v1/users/me
    - Password history check
 4. **Rate Limiting**: Protection against brute force attacks
 5. **Data Validation**: All inputs are validated before processing
-```
+
+````
 
 ### Change Password DTO
 ```typescript
@@ -306,11 +337,12 @@ interface ChangePasswordDto {
   currentPassword: string;
   newPassword: string;
 }
-```
+````
 
 ## Error Handling
 
 ### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -322,6 +354,7 @@ interface ChangePasswordDto {
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "success": false,
@@ -333,6 +366,7 @@ interface ChangePasswordDto {
 ```
 
 ### 413 Payload Too Large
+
 ```json
 {
   "success": false,
@@ -344,5 +378,6 @@ interface ChangePasswordDto {
 ```
 
 ## Rate Limiting
+
 - 10 requests per minute per endpoint
 - Stricter limits for password-related endpoints

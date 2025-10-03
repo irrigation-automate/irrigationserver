@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
+
 - Project initialization and setup
 - Basic project structure and documentation
 - Development environment configuration
@@ -14,20 +16,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Testing framework setup
 
 ## [1.0.0] - Planned Release
+
 ### Phase 1: Core Infrastructure (Sprint 1)
+
 - [x] Project setup and configuration
   - [x] Initialize Node.js project with TypeScript
   - [x] Set up ESLint, Prettier, and Husky
   - [x] Configure Jest for testing
   - [x] Set up CI/CD pipeline
 
-- [ ] Database schema design
-  - [ ] User management models
-  - [ ] Pump and zone schemas
-  - [ ] Scheduling system models
-  - [ ] Notification system models
+- [x] Database schema design
+  - [x] User management models
+  - [x] User preferences models
+  - [x] Session management models
+  - [x] Pump and zone schemas
+  - [x] Scheduling system models
+  - [x] Notification system models
+  - [x] Water usage tracking models
 
 ### Phase 2: Authentication & User Management (Sprint 2)
+
 - [ ] User authentication
   - [ ] Registration with email verification
   - [ ] Login/logout functionality
@@ -40,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] User preferences
 
 ### Phase 3: Pump & Zone Management (Sprint 3)
+
 - [ ] Pump control system
   - [ ] Pump status monitoring
   - [ ] Manual pump control
@@ -51,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Zone status monitoring
 
 ### Phase 4: Scheduling System (Sprint 4)
+
 - [ ] Basic scheduling
   - [ ] One-time schedules
   - [ ] Recurring schedules
@@ -62,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Water conservation features
 
 ### Phase 5: Notification System (Sprint 5)
+
 - [ ] Notification center
   - [ ] In-app notifications
   - [ ] Email notifications
@@ -73,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Leak detection alerts
 
 ### Phase 6: Analytics & Reporting (Sprint 6)
+
 - [ ] Water usage analytics
   - [ ] Daily/weekly/monthly reports
   - [ ] Water conservation metrics
@@ -84,6 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Maintenance scheduling
 
 ### Phase 7: Mobile & Web Interfaces (Sprint 7)
+
 - [ ] Web dashboard
   - [ ] Real-time monitoring
   - [ ] Control panel
@@ -95,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Quick actions
 
 ### Phase 8: Integration & API (Sprint 8)
+
 - [ ] Public API
   - [ ] RESTful endpoints
   - [ ] WebSocket support
@@ -106,6 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] IFTTT/Zapier
 
 ### Phase 9: Testing & Quality Assurance (Sprint 9)
+
 - [ ] Unit testing
   - [ ] Core services
   - [ ] API endpoints
@@ -122,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Optimization
 
 ### Phase 10: Deployment & Documentation (Sprint 10)
+
 - [ ] Deployment
   - [ ] Staging environment
   - [ ] Production deployment

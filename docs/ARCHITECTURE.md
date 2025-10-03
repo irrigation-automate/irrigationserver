@@ -19,24 +19,28 @@ graph TD
 ## Components
 
 ### 1. API Gateway
+
 - Entry point for all client requests
 - Request routing and load balancing
 - Rate limiting and request validation
 - Authentication middleware
 
 ### 2. Auth Service
+
 - User authentication and authorization
 - JWT token management
 - Session handling
 - OAuth2 integration
 
 ### 3. User Service
+
 - User profile management
 - Role-based access control
 - Account status management
 - Audit logging
 
 ### 4. Irrigation Service
+
 - Schedule management
 - Zone control
 - Weather integration
@@ -58,16 +62,19 @@ graph TD
 ## Technology Stack
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Language**: TypeScript
 
 ### Database
+
 - **Primary**: MongoDB (Document Store)
 - **Cache**: Redis
 - **ORM**: Mongoose
 
 ### Infrastructure
+
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes (optional)
 - **CI/CD**: GitHub Actions
