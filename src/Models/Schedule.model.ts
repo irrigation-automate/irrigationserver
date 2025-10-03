@@ -6,6 +6,7 @@
  *
  * @module models/Schedule
  */
+import { regex } from '@/validations/regex';
 import { Model, model, Schema, Document } from 'mongoose';
 
 /**
@@ -85,14 +86,14 @@ const ScheduleSchema = new Schema<ISchedule>(
     startTime: {
       type: String,
       required: true,
-      match: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+      match: regex.time24HourRegex,
     },
 
     duration: {
       type: Number,
       required: true,
       min: 1,
-      max: 1440, // Maximum 24 hours
+      max: 1440,
     },
 
     enabled: {
