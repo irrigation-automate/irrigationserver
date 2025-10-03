@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [x] Session management models
   - [x] Pump and zone schemas
   - [x] Scheduling system models
-  - [ ] Notification system models
+  - [x] Notification system models
   - [ ] Water usage tracking models
 
 ### Phase 2: Authentication & User Management (Sprint 2)
