@@ -167,16 +167,14 @@ describe('Pump Model', () => {
       const pumpData = { ...validPumpData, status: undefined };
 
       const pump = new PumpModel(pumpData);
-
       let error: any;
       try {
         await pump.save();
       } catch (err) {
         error = err;
+        expect(error).toBeDefined();
+        expect(error.errors.status).toBeDefined();
       }
-
-      expect(error).toBeDefined();
-      expect(error.errors.status).toBeDefined();
     });
 
     /**
