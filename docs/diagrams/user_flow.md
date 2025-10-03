@@ -10,7 +10,7 @@ sequenceDiagram
     participant UserController
     participant UserService
     participant Database
-    
+
     User->>Client: 1. View Profile
     Client->>+AuthMiddleware: 2. GET /api/v1/users/me
     AuthMiddleware->>AuthMiddleware: 3. Verify JWT Token
@@ -33,7 +33,7 @@ sequenceDiagram
     participant UserController
     participant UserService
     participant Database
-    
+
     User->>Client: 1. Edit Profile
     Client->>+AuthMiddleware: 2. PATCH /api/v1/users/me
     AuthMiddleware->>AuthMiddleware: 3. Verify JWT Token
@@ -57,7 +57,7 @@ sequenceDiagram
     participant UserService
     participant StorageService
     participant Database
-    
+
     User->>Client: 1. Select New Photo
     Client->>+AuthMiddleware: 2. POST /api/v1/users/me/avatar
     AuthMiddleware->>AuthMiddleware: 3. Verify JWT Token
@@ -83,7 +83,7 @@ sequenceDiagram
     participant UserService
     participant AuthService
     participant Database
-    
+
     User->>Client: 1. Request Account Deletion
     Client->>+AuthMiddleware: 2. DELETE /api/v1/users/me
     AuthMiddleware->>AuthMiddleware: 3. Verify JWT Token
@@ -109,7 +109,7 @@ sequenceDiagram
     participant UserController
     participant UserService
     participant Database
-    
+
     User->>Client: 1. Submit Password Change
     Client->>+AuthMiddleware: 2. PATCH /api/v1/users/me/password
     AuthMiddleware->>AuthMiddleware: 3. Verify JWT Token
@@ -129,6 +129,7 @@ sequenceDiagram
 ## Error Handling
 
 ### Invalid Password Change
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -136,7 +137,7 @@ sequenceDiagram
     participant UserController
     participant UserService
     participant Database
-    
+
     User->>Client: 1. Submit Wrong Password
     Client->>UserController: 2. changePassword()
     UserController->>UserService: 3. changePassword()
@@ -149,12 +150,13 @@ sequenceDiagram
 ```
 
 ### Unauthorized Access
+
 ```mermaid
 sequenceDiagram
     participant Attacker
     participant Client
     participant AuthMiddleware
-    
+
     Attacker->>Client: 1. Try to Access /users/me
     Client->>+AuthMiddleware: 2. Request without Token
     AuthMiddleware->>AuthMiddleware: 3. Token Validation (FAILS)
@@ -165,6 +167,7 @@ sequenceDiagram
 ## Data Flow
 
 ### Profile Update Data Flow
+
 ```mermaid
 flowchart LR
     A[User] -->|1. Submit Form| B[Client]
@@ -179,6 +182,7 @@ flowchart LR
 ```
 
 ### File Upload Flow
+
 ```mermaid
 flowchart LR
     A[User] -->|1. Select File| B[Client]
@@ -202,7 +206,7 @@ flowchart LR
 1. **Authentication**: All endpoints require valid JWT token
 2. **Authorization**: Users can only modify their own data
 3. **Input Validation**: All inputs are validated
-4. **Password Security**: 
+4. **Password Security**:
    - Passwords are hashed with bcrypt
    - Minimum length and complexity requirements
    - Password history check

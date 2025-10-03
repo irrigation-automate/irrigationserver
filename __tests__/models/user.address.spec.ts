@@ -1,21 +1,33 @@
 /**
- * @file Test suite for UserAddress model
- * @description Unit tests for the UserAddress schema, including validation,
- * default values, and update hooks.
+ * __UserAddress Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create user addresses with valid location data
+ * - Validate field type constraints
+ * - Test default country assignment
+ * - Verify timestamp updates on modifications
+ * - Handle partial address information
+ * - Test data integrity and persistence
+ * - Validate numeric field type enforcement
  */
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import UserAddress from '../../src/Models/user/User.adress';
 import { IUserAddressSchema } from '../../src/interface/interfaces/models';
 
+/**
+ * __UserAddress Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create user addresses with valid location data
+ * - Validate field type constraints
+ * - Test default country assignment
+ * - Verify timestamp updates on modifications
+ * - Handle partial address information
+ * - Test data integrity and persistence
+ * - Validate numeric field type enforcement
+ */
 describe('UserAddress Model', () => {
   let mongoServer: MongoMemoryServer;
 
-  /**
-   * @constant {Partial<IUserAddressSchema>} validAddress
-   * @description A valid address object used for testing schema persistence.
-   */
   const validAddress: Partial<IUserAddressSchema> = {
     city: 'Tunis',
     street: 'Habib Bourguiba Avenue',
@@ -23,32 +35,26 @@ describe('UserAddress Model', () => {
   };
 
   beforeAll(async () => {
-    /**
-     * @description Start an in-memory MongoDB instance before all tests.
-     */
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
   });
 
   afterEach(async () => {
-    /**
-     * @description Clean up test data after each test.
-     */
     await UserAddress.deleteMany({});
   });
 
   afterAll(async () => {
-    /**
-     * @description Disconnect from MongoDB and stop in-memory server after tests complete.
-     */
     await mongoose.disconnect();
     await mongoServer.stop();
   });
 
   /**
-   * @test
-   * @description Should create and save a valid user address successfully.
+   * __Valid Address Creation
+   * Acceptance case (scenario)
+   * - Create address with complete location data
+   * - Verify saved document contains valid values
+   * - Ensure default country and timestamp generation
    */
   it('should create and save a user address successfully', async () => {
     const address = new UserAddress(validAddress);
@@ -58,13 +64,16 @@ describe('UserAddress Model', () => {
     expect(savedAddress.city).toBe(validAddress.city);
     expect(savedAddress.street).toBe(validAddress.street);
     expect(savedAddress.codeZip).toBe(validAddress.codeZip);
-    expect(savedAddress.country).toBe('Tunisia'); // Default value
+    expect(savedAddress.country).toBe('Tunisia');
     expect(savedAddress.last_update).toBeDefined();
   });
 
   /**
-   * @test
-   * @description Should set country to "Tunisia" by default if not provided.
+   * __Default Country Assignment
+   * Acceptance case (scenario)
+   * - Create address without explicit country field
+   * - Verify default country is set to "Tunisia"
+   * - Ensure regional default behavior
    */
   it('should set default country to "Tunisia" when not provided', async () => {
     const addressData = { ...validAddress };
@@ -77,8 +86,11 @@ describe('UserAddress Model', () => {
   });
 
   /**
-   * @test
-   * @description Should update the `last_update` timestamp whenever the document is modified.
+   * __Timestamp Update on Modification
+   * Acceptance case (scenario)
+   * - Modify existing address data
+   * - Verify last_update timestamp is refreshed
+   * - Ensure change tracking mechanism
    */
   it('should update last_update timestamp on save', async () => {
     const address = new UserAddress(validAddress);
@@ -93,8 +105,11 @@ describe('UserAddress Model', () => {
   });
 
   /**
-   * @test
-   * @description Should allow saving an address with only partial information (e.g., only city).
+   * __Partial Address Information
+   * Acceptance case (scenario)
+   * - Create address with minimal required fields
+   * - Verify partial data is accepted
+   * - Ensure flexible address storage
    */
   it('should allow partial address information', async () => {
     const partialAddress = { city: 'Sousse' };
@@ -108,18 +123,20 @@ describe('UserAddress Model', () => {
   });
 
   /**
-   * @test
-   * @description Should throw validation error when `codeZip` is not a number.
+   * __CodeZip Numeric Type Validation
+   * Acceptance case (scenario)
+   * - Attempt to save non-numeric codeZip value
+   * - Verify validation error is thrown
+   * - Ensure postal code data integrity
    */
   it('should validate codeZip as a number', async () => {
     const invalidAddress = {
       ...validAddress,
       codeZip: 'not-a-number',
     };
-
     const address = new UserAddress(invalidAddress);
 
-    let error;
+    let error: any;
     try {
       await address.validate();
     } catch (e) {

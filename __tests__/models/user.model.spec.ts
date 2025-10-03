@@ -1,23 +1,17 @@
 /**
- * @file Test suite for the User model
- * @description
- * Contains unit tests for the `User` schema, covering:
- * - Required fields and schema validation
- * - References to other models (`UserContact`, `UserAddress`, `UserPassword`)
- * - Default values
- * - JWT token generation via the `generateAuthToken` method
- * - Document updates
- *
- * Uses `mongodb-memory-server` to provide an isolated in-memory MongoDB instance
- * for testing without affecting a real database.
- *
- * @module tests/models/user/User.model.test
+ * __User Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create users with valid reference data
+ * - Validate required field constraints for contact, address, and password
+ * - Test default values for blocked status and creation date
+ * - Verify JWT token generation functionality
+ * - Test user document updates
+ * - Handle missing JWT secret scenarios
+ * - Ensure data integrity and persistence
+ * - Validate reference relationships to related models
  */
 
-// Define the mock JWT secret first
 const mockJWTSecret = 'test-secret-key';
-
-// Mock environment variables before importing the User model
 jest.mock('../../src/configs/envirementVariables', () => ({
   enirementVariables: {
     JWTConfig: {
@@ -26,29 +20,31 @@ jest.mock('../../src/configs/envirementVariables', () => ({
   },
 }));
 
-// Import required modules after setting up mocks
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import jwt from 'jsonwebtoken';
 import User from '../../src/Models/user/User.model';
-
-/** Mock the referenced models */
 jest.mock('../../src/Models/user/user.contact');
 jest.mock('../../src/Models/user/User.adress');
 jest.mock('../../src/Models/user/user.password');
 
 /**
- * Test suite for the `User` model.
+ * __User Model Unit Tests
+ * Acceptance case (scenario)
+ * - Create users with valid reference data
+ * - Validate required field constraints for contact, address, and password
+ * - Test default values for blocked status and creation date
+ * - Verify JWT token generation functionality
+ * - Test user document updates
+ * - Handle missing JWT secret scenarios
+ * - Ensure data integrity and persistence
+ * - Validate reference relationships to related models
  */
 describe('User Model', () => {
   let mongoServer: MongoMemoryServer;
 
-  /** Test data for creating a valid user */
   let validUser: any;
 
-  /**
-   * Setup: Start in-memory MongoDB and connect before all tests
-   */
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
@@ -66,16 +62,10 @@ describe('User Model', () => {
     };
   });
 
-  /**
-   * Cleanup: Remove all documents after each test to keep tests isolated
-   */
   afterEach(async () => {
     await User.deleteMany({});
   });
 
-  /**
-   * Teardown: Disconnect and stop in-memory MongoDB after all tests
-   */
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
@@ -83,8 +73,12 @@ describe('User Model', () => {
   });
 
   /**
-   * @test
-   * Should create and save a user successfully with all required fields
+   * __Valid User Creation
+   * Acceptance case (scenario)
+   * - Create user with all required reference fields
+   * - Verify saved document contains valid ObjectId references
+   * - Ensure timestamps and default values are generated
+   * - Validate optional fields remain undefined
    */
   it('should create and save a user successfully', async () => {
     const user = new User(validUser);
@@ -101,13 +95,16 @@ describe('User Model', () => {
   });
 
   /**
-   * @test
-   * Should throw a validation error when required fields are missing
+   * __Required Field Validation
+   * Acceptance case (scenario)
+   * - Attempt to create user without required references
+   * - Verify validation errors for contact, address, and password
+   * - Ensure user data completeness and referential integrity
    */
   it('should fail when required fields are missing', async () => {
     const user = new User({});
 
-    let error;
+    let error: any;
     try {
       await user.validate();
     } catch (e) {
@@ -121,8 +118,11 @@ describe('User Model', () => {
   });
 
   /**
-   * @test
-   * Should set default values correctly when fields are not provided
+   * __Default Values Assignment
+   * Acceptance case (scenario)
+   * - Create user without explicit blocked status
+   * - Verify default blocked value is set to true
+   * - Ensure automatic creation_date timestamp generation
    */
   it('should set default values correctly', async () => {
     const contactId = new mongoose.Types.ObjectId();
@@ -138,17 +138,25 @@ describe('User Model', () => {
     const user = new User(userData);
     const savedUser = await user.save();
 
-    expect(savedUser.blocked).toBe(true); // Default value from schema
+    expect(savedUser.blocked).toBe(true);
     expect(savedUser.creation_date).toBeDefined();
   });
 
   /**
-   * Test suite for `generateAuthToken` method
+   * __JWT Token Generation
+   * Acceptance case (scenario)
+   * - Test authentication token generation functionality
+   * - Verify token validity and structure
+   * - Handle missing JWT secret configuration
+   * - Ensure secure token creation for user authentication
    */
   describe('generateAuthToken', () => {
     /**
-     * @test
-     * Should generate a valid JWT token containing the user's `_id`
+     * __Generate Valid JWT Token
+     * Acceptance case (scenario)
+     * - Generate authentication token for user
+     * - Verify token is a valid JWT string
+     * - Ensure token contains user ID and expiration
      */
     it('should generate a valid JWT token', () => {
       const user = new User(validUser);
@@ -163,8 +171,11 @@ describe('User Model', () => {
     });
 
     /**
-     * @test
-     * Should return null if JWT secret is missing
+     * __Handle Missing JWT Secret
+     * Acceptance case (scenario)
+     * - Attempt token generation without JWT secret
+     * - Verify null token is returned
+     * - Ensure graceful handling of configuration errors
      */
     it('should handle missing JWT secret', () => {
       const originalJWTConfig = require('../../src/configs/envirementVariables').enirementVariables
@@ -186,8 +197,11 @@ describe('User Model', () => {
   });
 
   /**
-   * @test
-   * Should update user document fields correctly
+   * __User Document Updates
+   * Acceptance case (scenario)
+   * - Update existing user fields
+   * - Verify changes are persisted correctly
+   * - Ensure reference updates maintain data integrity
    */
   it('should update the user document correctly', async () => {
     const user = new User(validUser);
