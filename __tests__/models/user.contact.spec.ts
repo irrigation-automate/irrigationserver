@@ -11,7 +11,7 @@
  */
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import UserContact from "../../src/Models/user/user.contact";
+import UserContact from "../../src/Models/user/user-contact.model";
 import { IUserContactSchema } from "../../src/interface/interfaces/models";
 
 /**

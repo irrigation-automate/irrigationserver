@@ -42,7 +42,7 @@ describe("Environment Variables Configuration", () => {
 
   describe("with valid environment variables", () => {
     const testEnv = {
-      PORT: "5001",
+      PORT: "5000",
       mongoDbUserName: "testuser",
       mongoDbPassword: "testpass",
       mongoDbDatabase: "testdb",
@@ -52,7 +52,7 @@ describe("Environment Variables Configuration", () => {
     it("should correctly parse server configuration", () => {
       const { enirementVariables } = setupTestEnvironment(testEnv);
       expect(enirementVariables.serverConfig).toEqual({
-        PORT: 5001,
+        PORT: 5000,
       });
     });
 

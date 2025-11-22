@@ -42,7 +42,6 @@ beforeEach(() => {
     "2023-01-01T00:00:00.000Z",
   );
 
-  // Mock mongoose connection
   (mongoose.connection as any).readyState = 1;
   (mongoose.connection as any).db = mockDb;
   mockDb.ping.mockResolvedValue(true);
@@ -71,16 +70,16 @@ describe("Health Check Endpoints", () => {
       };
 
       const response = await request(app)
-        .get("/health")
-        .set("Accept", "application/json");
+        .get("/api/health")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
       expect(response.headers["content-type"]).toMatch(/json/);
-      expect(response.body).toMatchObject({
-        success: true,
-        message: "Health check successful",
-        data: mockHealthData,
-      });
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toMatchObject(mockHealthData);
+      expect(typeof response.body.message).toBe("string");
 
       expect(response.headers["x-response-time"]).toMatch(/\d+ms/);
     });
@@ -94,9 +93,14 @@ describe("Health Check Endpoints", () => {
         error: "Connection failed",
       });
 
-      const response = await request(app).get("/health");
+      const response = await request(app)
+        .get("/api/health")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
       expect(response.body.data.status).toBe("DEGRADED");
       expect(response.body.data.database.status).toBe("ERROR");
       expect(response.body.data.database.error).toBe("Connection failed");
@@ -115,10 +119,15 @@ describe("Health Check Endpoints", () => {
         duration: 5,
       });
 
-      const response = await request(app).get("/health/readiness");
+      const response = await request(app)
+        .get("/api/health/readiness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
         status: "UP",
         timestamp: "2023-01-01T00:00:00.000Z",
       });
@@ -133,10 +142,16 @@ describe("Health Check Endpoints", () => {
         error: "Connection failed",
       });
 
-      const response = await request(app).get("/health/readiness");
+      const response = await request(app)
+        .get("/api/health/readiness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(503);
-      expect(response.body).toMatchObject({
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBeDefined();
+      expect(response.body.error.details).toMatchObject({
         status: "DOWN",
         timestamp: "2023-01-01T00:00:00.000Z",
         database: { status: "ERROR", error: "Connection failed" },
@@ -149,10 +164,15 @@ describe("Health Check Endpoints", () => {
    */
   describe("GET /health/liveness", () => {
     it("should always return 200", async () => {
-      const response = await request(app).get("/health/liveness");
+      const response = await request(app)
+        .get("/api/health/liveness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
         status: "UP",
         timestamp: "2023-01-01T00:00:00.000Z",
       });

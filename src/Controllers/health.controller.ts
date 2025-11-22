@@ -1,8 +1,4 @@
 import { Request, Response } from "express";
-import {
-  createSuccessResponse,
-  createErrorResponse,
-} from "../utils/responseHelpers";
 import healthService from "../Services/health.service";
 import { HealthCheckResponse } from "../interface/interfaces/health.interface";
 
@@ -12,7 +8,7 @@ class HealthController {
    * @description Health check endpoint
    * @access Public
    */
-  public async getHealth(req: Request, res: Response): Promise<void> {
+  public async getHealth(req: Request, res: Response) {
     const startTime = Date.now();
 
     const dbCheck = await healthService.checkDatabaseConnection();
@@ -37,14 +33,7 @@ class HealthController {
     const responseTime = Date.now() - startTime;
     res.setHeader("X-Response-Time", `${responseTime}ms`);
 
-    res
-      .status(200)
-      .json(
-        createSuccessResponse(
-          healthData,
-          req.t("success.health_ok", { ns: "health" }),
-        ),
-      );
+    return res.success(healthData, req.t("success", { ns: "health" }));
   }
 
   /**
@@ -52,25 +41,24 @@ class HealthController {
    * @description Readiness probe
    * @access Public
    */
-  public async getReadiness(req: Request, res: Response): Promise<void> {
+  public async getReadiness(req: Request, res: Response) {
     const dbCheck = await healthService.checkDatabaseConnection();
 
     if (!dbCheck.connected) {
-      res
-        .status(503)
-        .json(
-          createErrorResponse(
-            req.t("errors.db_disconnected", { ns: "health" }),
-            503,
-          ),
-        );
-      return;
+      return res.error(req.t("readiness_down", { ns: "health" }), 503, {
+        status: "DOWN",
+        timestamp: healthService.getCurrentTimestamp(),
+        database: { status: "ERROR", error: dbCheck.error },
+      });
     }
 
-    res.status(200).json({
-      status: "UP",
-      timestamp: healthService.getCurrentTimestamp(),
-    });
+    return res.success(
+      {
+        status: "UP",
+        timestamp: healthService.getCurrentTimestamp(),
+      },
+      req.t("readiness_up", { ns: "health" }),
+    );
   }
 
   /**
@@ -78,11 +66,11 @@ class HealthController {
    * @description Liveness probe
    * @access Public
    */
-  public getLiveness(_req: Request, res: Response): void {
-    res.status(200).json({
-      status: "UP",
-      timestamp: healthService.getCurrentTimestamp(),
-    });
+  public getLiveness(req: Request, res: Response) {
+    return res.success(
+      { status: "UP", timestamp: healthService.getCurrentTimestamp() },
+      req.t("liveness_ok", { ns: "health" }),
+    );
   }
 }
 

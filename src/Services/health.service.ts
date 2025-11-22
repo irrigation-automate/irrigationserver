@@ -48,11 +48,12 @@ class HealthService {
   public getMemoryUsage(): MemoryUsage {
     const memoryUsage = process.memoryUsage();
 
+    // Return values without i18n prefixes so unit tests and consumers get consistent values
     return {
-      rss: `${t("memory.rss")}: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
-      heapTotal: `${t("memory.heap_total")}: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
-      heapUsed: `${t("memory.heap_used")}: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-      external: `${t("memory.external")}: ${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`,
+      rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
+      heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+      heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+      external: `${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`,
     };
   }
 

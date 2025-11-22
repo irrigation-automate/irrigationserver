@@ -27,3 +27,18 @@ declare module "@/configs/envirementVariables" {
     };
   };
 }
+
+declare namespace Express {
+  export interface Response {
+    success: <T>(data: T, message?: string) => Response;
+    error: (message: string, status?: number, details?: any) => Response;
+    validationError: (errors: Record<string, string[]>) => Response;
+    paginated: <T>(
+      items: T[],
+      total: number,
+      page: number,
+      limit: number,
+      message?: string,
+    ) => Response;
+  }
+}

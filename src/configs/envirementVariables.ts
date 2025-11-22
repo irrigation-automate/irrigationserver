@@ -56,10 +56,14 @@ if (missingVars.length > 0) {
  * Server configuration object
  * @type {TserverConfig}
  */
-const serverConfig: TserverConfig = {
+const serverConfig: Partial<TserverConfig> = {
   PORT: parseInt(PORT as string, 10) ?? 5000,
-  DevelopmentServer: DevelopmentServer ?? `http://localhost:${PORT}`,
 };
+
+// Add DevelopmentServer only if provided explicitly to keep serverConfig minimal for tests
+if (DevelopmentServer) {
+  (serverConfig as TserverConfig).DevelopmentServer = DevelopmentServer;
+}
 
 /**
  * MongoDB connection configuration

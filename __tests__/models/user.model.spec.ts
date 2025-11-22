@@ -23,10 +23,10 @@ jest.mock("../../src/configs/envirementVariables", () => ({
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import jwt from "jsonwebtoken";
-import User from "../../src/Models/user/User.model";
-jest.mock("../../src/Models/user/user.contact");
-jest.mock("../../src/Models/user/User.adress");
-jest.mock("../../src/Models/user/user.password");
+import User from "../../src/Models/user/user.model";
+jest.mock("../../src/Models/user/user-contact.model");
+jest.mock("../../src/Models/user/user-adress.model");
+jest.mock("../../src/Models/user/user-password.model");
 
 /**
  * __User Model Unit Tests
@@ -187,7 +187,7 @@ describe("User Model", () => {
         };
 
       const UserWithMockedConfig =
-        require("../../src/Models/user/User.model").default;
+        require("../../src/Models/user/user.model").default;
       const user = new UserWithMockedConfig(validUser);
 
       const token = user.generateAuthToken();

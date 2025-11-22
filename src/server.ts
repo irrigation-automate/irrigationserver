@@ -25,7 +25,6 @@ export async function startServer(
     if (!success || !db || !client) {
       throw new Error(`Failed to connect to MongoDB: ${message}`);
     }
-
     console.log("✅", message);
 
     const serverPort = port || enirementVariables.serverConfig.PORT;

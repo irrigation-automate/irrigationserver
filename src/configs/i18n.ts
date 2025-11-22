@@ -3,7 +3,6 @@ import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 
-// Ensure the fs-backend uses an absolute path based on this file's directory.
 const localesPath = path.join(__dirname, "../locales/{{lng}}/{{ns}}.json");
 
 i18next
@@ -13,7 +12,7 @@ i18next
     {
       fallbackLng: "en",
       preload: ["en", "fr", "ar"],
-      ns: ["auth", "health"],
+      ns: ["auth", "health", "translation"],
       defaultNS: "auth",
       backend: {
         loadPath: localesPath,

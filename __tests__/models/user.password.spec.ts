@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import bcrypt from "bcryptjs";
-import UserPassword from "../../src/Models/user/user.password";
+import UserPassword from "../../src/Models/user/user-password.model";
 import { IUserPasswordSchema } from "../../src/interface/interfaces/models";
 
 /**

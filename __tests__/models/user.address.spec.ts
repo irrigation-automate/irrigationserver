@@ -11,7 +11,7 @@
  */
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import UserAddress from "../../src/Models/user/User.adress";
+import UserAddress from "../../src/Models/user/user-adress.model";
 import { IUserAddressSchema } from "../../src/interface/interfaces/models";
 
 /**

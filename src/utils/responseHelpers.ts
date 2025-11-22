@@ -2,6 +2,7 @@
  * @module utils/responseHelpers
  * @description Utility functions for creating consistent API responses.
  */
+import { Response, Request, NextFunction } from "express";
 
 /**
  * Interface for error details
@@ -164,3 +165,25 @@ export function createPaginatedResponse<T>(
 export function isError(error: unknown): error is Error {
   return error instanceof Error;
 }
+
+export const responseMiddleware = (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  res.success = (data: any, message?: string, status = 200) => {
+    return res.status(status).json(createSuccessResponse(data, message));
+  };
+
+  res.error = (message: string, status = 500, details?: any) => {
+    return res
+      .status(status)
+      .json(createErrorResponse(message, status, details));
+  };
+
+  res.validationError = (errors: Record<string, string[]>) => {
+    return res.status(400).json(createValidationErrorResponse(errors));
+  };
+
+  next();
+};
