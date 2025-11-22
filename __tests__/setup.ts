@@ -5,10 +5,10 @@
  */
 
 /** Set the environment to 'test' to differentiate from development or production */
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = "test";
 
 /** Set a fixed timezone to ensure consistent date/time results across tests */
-process.env.TZ = 'UTC';
+process.env.TZ = "UTC";
 
 /** Increase Jest default timeout for long-running tests (e.g., integration tests) */
 jest.setTimeout(15000); // 15 seconds

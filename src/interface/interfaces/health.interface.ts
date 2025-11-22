@@ -94,3 +94,120 @@ export interface DatabaseCheckResult {
    */
   error?: string;
 }
+
+/**
+ * @swagger
+ * components:
+ *   responses:
+ *     HealthCheckResponse:
+ *       description: Full health check response containing system status, timestamp, uptime and dependency details.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               timestamp:
+ *                 type: string
+ *                 format: date-time
+ *               uptime:
+ *                 type: number
+ *               database:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                   responseTime:
+ *                     type: number
+ *                   error:
+ *                     type: string
+ *               memory:
+ *                 type: object
+ *                 properties:
+ *                   rss:
+ *                     type: string
+ *                   heapTotal:
+ *                     type: string
+ *                   heapUsed:
+ *                     type: string
+ *                   external:
+ *                     type: string
+ *     DatabaseCheckResultResponse:
+ *       description: Raw database connectivity check result.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               connected:
+ *                 type: boolean
+ *               duration:
+ *                 type: number
+ *               error:
+ *                 type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     DatabaseCheckResult:
+ *       type: object
+ *       properties:
+ *         connected:
+ *           type: boolean
+ *         duration:
+ *           type: number
+ *         error:
+ *           type: string
+ *     HealthCheckResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *         timestamp:
+ *           type: string
+ *           format: date-time
+ *         uptime:
+ *           type: number
+ *         database:
+ *           $ref: '#/components/schemas/DatabaseCheckResult'
+ *         memory:
+ *           type: object
+ *           properties:
+ *             rss:
+ *               type: string
+ *             heapTotal:
+ *               type: string
+ *             heapUsed:
+ *               type: string
+ *             external:
+ *               type: string
+ *   examples:
+ *     DBUp:
+ *       summary: Database is reachable
+ *       value:
+ *         connected: true
+ *         duration: 12
+ *     DBDown:
+ *       summary: Database is unreachable
+ *       value:
+ *         connected: false
+ *         duration: 0
+ *         error: "Connection refused"
+ *     HealthOK:
+ *       summary: Full system healthy example
+ *       value:
+ *         status: "healthy"
+ *         timestamp: "2025-11-22T00:00:00.000Z"
+ *         uptime: 12345
+ *         database:
+ *           connected: true
+ *           duration: 12
+ *         memory:
+ *           rss: "50 MB"
+ *           heapTotal: "60 MB"
+ *           heapUsed: "30 MB"
+ *           external: "5 MB"
+ */

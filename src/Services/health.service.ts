@@ -1,5 +1,9 @@
-import mongoose from 'mongoose';
-import { DatabaseCheckResult, MemoryUsage } from '../interface/interfaces/health.interface';
+import mongoose from "mongoose";
+import {
+  DatabaseCheckResult,
+  MemoryUsage,
+} from "../interface/interfaces/health.interface";
+import { t } from "i18next";
 
 /**
  * Service for handling health check related operations
@@ -25,13 +29,14 @@ class HealthService {
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: 'Mongoose not connected',
+        error: "Mongoose not connected",
       };
     } catch (error) {
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown database error',
+        error:
+          error instanceof Error ? error.message : t("database.unknown_error"),
       };
     }
   }
@@ -43,6 +48,7 @@ class HealthService {
   public getMemoryUsage(): MemoryUsage {
     const memoryUsage = process.memoryUsage();
 
+    // Return values without i18n prefixes so unit tests and consumers get consistent values
     return {
       rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
       heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,

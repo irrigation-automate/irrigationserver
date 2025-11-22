@@ -1,25 +1,24 @@
-import { Request, Response } from 'express';
-import { createSuccessResponse } from '../utils/responseHelpers';
-import healthService from '../Services/health.service';
-import { HealthCheckResponse } from '../interface/interfaces/health.interface';
+import { Request, Response } from "express";
+import healthService from "../Services/health.service";
+import { HealthCheckResponse } from "../interface/interfaces/health.interface";
 
 class HealthController {
   /**
    * @route GET /health
-   * @description Health check endpoint that returns the status of the service and its dependencies
+   * @description Health check endpoint
    * @access Public
    */
-  public async getHealth(_req: Request, res: Response): Promise<void> {
+  public async getHealth(req: Request, res: Response) {
     const startTime = Date.now();
 
     const dbCheck = await healthService.checkDatabaseConnection();
 
     const healthData: HealthCheckResponse = {
-      status: 'UP',
+      status: "UP",
       timestamp: healthService.getCurrentTimestamp(),
       uptime: healthService.getUptime(),
       database: {
-        status: dbCheck.connected ? 'CONNECTED' : 'DISCONNECTED',
+        status: dbCheck.connected ? "CONNECTED" : "DISCONNECTED",
         responseTime: dbCheck.duration,
         ...(dbCheck.error && { error: dbCheck.error }),
       },
@@ -27,53 +26,51 @@ class HealthController {
     };
 
     if (!dbCheck.connected) {
-      healthData.status = 'DEGRADED';
-      healthData.database.status = 'ERROR';
+      healthData.status = "DEGRADED";
+      healthData.database.status = "ERROR";
     }
 
     const responseTime = Date.now() - startTime;
+    res.setHeader("X-Response-Time", `${responseTime}ms`);
 
-    res.setHeader('X-Response-Time', `${responseTime}ms`);
-
-    res.status(200).json(createSuccessResponse(healthData, 'Health check successful'));
+    return res.success(healthData, req.t("success", { ns: "health" }));
   }
 
   /**
    * @route GET /health/readiness
-   * @description Readiness probe for Kubernetes
+   * @description Readiness probe
    * @access Public
    */
-  public async getReadiness(_req: Request, res: Response): Promise<void> {
+  public async getReadiness(req: Request, res: Response) {
     const dbCheck = await healthService.checkDatabaseConnection();
 
     if (!dbCheck.connected) {
-      res.status(503).json({
-        status: 'DOWN',
+      return res.error(req.t("readiness_down", { ns: "health" }), 503, {
+        status: "DOWN",
         timestamp: healthService.getCurrentTimestamp(),
-        database: {
-          status: 'ERROR',
-          error: dbCheck.error,
-        },
+        database: { status: "ERROR", error: dbCheck.error },
       });
-      return;
     }
 
-    res.status(200).json({
-      status: 'UP',
-      timestamp: healthService.getCurrentTimestamp(),
-    });
+    return res.success(
+      {
+        status: "UP",
+        timestamp: healthService.getCurrentTimestamp(),
+      },
+      req.t("readiness_up", { ns: "health" }),
+    );
   }
 
   /**
    * @route GET /health/liveness
-   * @description Liveness probe for Kubernetes
+   * @description Liveness probe
    * @access Public
    */
-  public getLiveness(_req: Request, res: Response): void {
-    res.status(200).json({
-      status: 'UP',
-      timestamp: healthService.getCurrentTimestamp(),
-    });
+  public getLiveness(req: Request, res: Response) {
+    return res.success(
+      { status: "UP", timestamp: healthService.getCurrentTimestamp() },
+      req.t("liveness_ok", { ns: "health" }),
+    );
   }
 }
 

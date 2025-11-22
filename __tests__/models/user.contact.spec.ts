@@ -9,10 +9,10 @@
  * - Ensure data integrity and persistence
  * - Handle validation errors appropriately
  */
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import UserContact from '../../src/Models/user/user.contact';
-import { IUserContactSchema } from '../../src/interface/interfaces/models';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import UserContact from "../../src/Models/user/user-contact.model";
+import { IUserContactSchema } from "../../src/interface/interfaces/models";
 
 /**
  * __UserContact Model Unit Tests
@@ -25,13 +25,13 @@ import { IUserContactSchema } from '../../src/interface/interfaces/models';
  * - Ensure data integrity and persistence
  * - Handle validation errors appropriately
  */
-describe('UserContact Model', () => {
+describe("UserContact Model", () => {
   let mongoServer: MongoMemoryServer;
 
   const validContact: Partial<IUserContactSchema> = {
-    email: 'test@example.com',
-    firstName: 'John',
-    lastName: 'Doe',
+    email: "test@example.com",
+    firstName: "John",
+    lastName: "Doe",
   };
 
   beforeAll(async () => {
@@ -56,7 +56,7 @@ describe('UserContact Model', () => {
    * - Verify saved document contains valid values
    * - Ensure automatic timestamp generation
    */
-  it('should create and save a user contact successfully', async () => {
+  it("should create and save a user contact successfully", async () => {
     const contact = new UserContact(validContact);
     const savedContact = await contact.save();
 
@@ -74,7 +74,7 @@ describe('UserContact Model', () => {
    * - Verify validation errors for email, firstName, and lastName
    * - Ensure contact data completeness
    */
-  it('should fail when required fields are missing', async () => {
+  it("should fail when required fields are missing", async () => {
     const contact = new UserContact({});
     let error: any;
 
@@ -97,10 +97,10 @@ describe('UserContact Model', () => {
    * - Verify validation error is thrown
    * - Ensure email address integrity
    */
-  it('should fail when email is invalid', async () => {
+  it("should fail when email is invalid", async () => {
     const contact = new UserContact({
       ...validContact,
-      email: 'invalid-email',
+      email: "invalid-email",
     });
     let error: any;
 
@@ -121,13 +121,13 @@ describe('UserContact Model', () => {
    * - Verify duplicate key error is thrown
    * - Ensure email uniqueness across system
    */
-  it('should enforce unique email constraint', async () => {
+  it("should enforce unique email constraint", async () => {
     const contact1 = new UserContact(validContact);
     await contact1.save();
 
     const contact2 = new UserContact({
       ...validContact,
-      firstName: 'Jane',
+      firstName: "Jane",
     });
     let error: any;
 
@@ -148,15 +148,15 @@ describe('UserContact Model', () => {
    * - Verify last_update timestamp is refreshed
    * - Ensure change tracking mechanism
    */
-  it('should update last_update timestamp on save', async () => {
+  it("should update last_update timestamp on save", async () => {
     const contact = new UserContact(validContact);
     const savedContact = await contact.save();
     const initialUpdateTime = savedContact.last_update;
 
-    savedContact.firstName = 'Updated';
+    savedContact.firstName = "Updated";
     const updatedContact = await savedContact.save();
 
-    expect(updatedContact.firstName).toBe('Updated');
+    expect(updatedContact.firstName).toBe("Updated");
     expect(updatedContact.last_update).toBeDefined();
     expect(updatedContact.last_update).not.toBe(initialUpdateTime);
   });

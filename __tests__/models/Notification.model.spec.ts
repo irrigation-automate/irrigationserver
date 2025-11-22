@@ -13,11 +13,11 @@
  * - Verify notification categorization and priority handling
  */
 
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import NotificationModel from '../../src/Models/Notification.model';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import NotificationModel from "../../src/Models/Notification.model";
 
-describe('Notification Model', () => {
+describe("Notification Model", () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -36,14 +36,14 @@ describe('Notification Model', () => {
   });
 
   const validNotificationData = {
-    moduleName: 'IrrigationService',
-    action: 'schedule_completed',
-    status: 'pending' as const,
+    moduleName: "IrrigationService",
+    action: "schedule_completed",
+    status: "pending" as const,
     payload: {
-      title: 'Irrigation Completed',
-      message: 'Zone North Garden has completed its scheduled irrigation.',
-      priority: 'normal' as const,
-      category: 'irrigation',
+      title: "Irrigation Completed",
+      message: "Zone North Garden has completed its scheduled irrigation.",
+      priority: "normal" as const,
+      category: "irrigation",
     },
   };
 
@@ -55,7 +55,7 @@ describe('Notification Model', () => {
    * - Test payload structure handling
    * - Validate priority level assignments
    */
-  describe('Valid Notification Creation', () => {
+  describe("Valid Notification Creation", () => {
     /**
      * __Create Basic System Notification
      * Acceptance case (scenario)
@@ -63,18 +63,28 @@ describe('Notification Model', () => {
      * - Verify document is saved with correct data
      * - Check timestamps are generated
      */
-    it('should create a notification with valid data', async () => {
+    it("should create a notification with valid data", async () => {
       const notification = new NotificationModel(validNotificationData);
       const savedNotification = await notification.save();
 
       expect(savedNotification._id).toBeDefined();
-      expect(savedNotification.moduleName).toBe(validNotificationData.moduleName);
+      expect(savedNotification.moduleName).toBe(
+        validNotificationData.moduleName,
+      );
       expect(savedNotification.action).toBe(validNotificationData.action);
       expect(savedNotification.status).toBe(validNotificationData.status);
-      expect(savedNotification.payload.title).toBe(validNotificationData.payload.title);
-      expect(savedNotification.payload.message).toBe(validNotificationData.payload.message);
-      expect(savedNotification.payload.priority).toBe(validNotificationData.payload.priority);
-      expect(savedNotification.payload.category).toBe(validNotificationData.payload.category);
+      expect(savedNotification.payload.title).toBe(
+        validNotificationData.payload.title,
+      );
+      expect(savedNotification.payload.message).toBe(
+        validNotificationData.payload.message,
+      );
+      expect(savedNotification.payload.priority).toBe(
+        validNotificationData.payload.priority,
+      );
+      expect(savedNotification.payload.category).toBe(
+        validNotificationData.payload.category,
+      );
       expect(savedNotification.createdAt).toBeDefined();
       expect(savedNotification.updatedAt).toBeDefined();
     });
@@ -86,19 +96,19 @@ describe('Notification Model', () => {
      * - Verify priority escalation handling
      * - Test critical system alert scenarios
      */
-    it('should create a notification with high priority', async () => {
+    it("should create a notification with high priority", async () => {
       const highPriorityNotification = {
         ...validNotificationData,
         payload: {
           ...validNotificationData.payload,
-          priority: 'urgent' as const,
+          priority: "urgent" as const,
         },
       };
 
       const notification = new NotificationModel(highPriorityNotification);
       const savedNotification = await notification.save();
 
-      expect(savedNotification.payload.priority).toBe('urgent');
+      expect(savedNotification.payload.priority).toBe("urgent");
     });
   });
 
@@ -109,7 +119,7 @@ describe('Notification Model', () => {
    * - Verify validation errors are thrown for missing fields
    * - Ensure notification integrity by enforcing field requirements
    */
-  describe('Required Field Validation', () => {
+  describe("Required Field Validation", () => {
     /**
      * __Validate Required moduleName Field
      * Acceptance case (scenario)
@@ -117,8 +127,11 @@ describe('Notification Model', () => {
      * - Verify validation error is thrown
      * - Ensure notification source identification
      */
-    it('should require moduleName field', async () => {
-      const notificationData = { ...validNotificationData, moduleName: undefined };
+    it("should require moduleName field", async () => {
+      const notificationData = {
+        ...validNotificationData,
+        moduleName: undefined,
+      };
 
       const notification = new NotificationModel(notificationData);
 
@@ -140,7 +153,7 @@ describe('Notification Model', () => {
      * - Verify validation error is thrown
      * - Ensure notification event identification
      */
-    it('should require action field', async () => {
+    it("should require action field", async () => {
       const notificationData = { ...validNotificationData, action: undefined };
 
       const notification = new NotificationModel(notificationData);
@@ -165,7 +178,7 @@ describe('Notification Model', () => {
    * - Validate payload structure requirements
    * - Ensure data quality for notification content
    */
-  describe('Field Constraints', () => {
+  describe("Field Constraints", () => {
     /**
      * __Validate moduleName Maximum Length
      * Acceptance case (scenario)
@@ -173,9 +186,12 @@ describe('Notification Model', () => {
      * - Verify excessively long names are rejected
      * - Ensure reasonable identifier lengths
      */
-    it('should enforce moduleName maxlength constraint', async () => {
-      const longName = 'A'.repeat(101);
-      const notificationData = { ...validNotificationData, moduleName: longName };
+    it("should enforce moduleName maxlength constraint", async () => {
+      const longName = "A".repeat(101);
+      const notificationData = {
+        ...validNotificationData,
+        moduleName: longName,
+      };
 
       const notification = new NotificationModel(notificationData);
 
@@ -197,8 +213,8 @@ describe('Notification Model', () => {
      * - Verify excessively long actions are rejected
      * - Ensure reasonable event description lengths
      */
-    it('should enforce action maxlength constraint', async () => {
-      const longAction = 'A'.repeat(101);
+    it("should enforce action maxlength constraint", async () => {
+      const longAction = "A".repeat(101);
       const notificationData = { ...validNotificationData, action: longAction };
 
       const notification = new NotificationModel(notificationData);
@@ -221,8 +237,8 @@ describe('Notification Model', () => {
      * - Verify excessively long titles are rejected
      * - Ensure readable notification titles
      */
-    it('should enforce title maxlength constraint', async () => {
-      const longTitle = 'A'.repeat(201);
+    it("should enforce title maxlength constraint", async () => {
+      const longTitle = "A".repeat(201);
       const notificationData = {
         ...validNotificationData,
         payload: {
@@ -241,7 +257,7 @@ describe('Notification Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['payload.title']).toBeDefined();
+      expect(error.errors["payload.title"]).toBeDefined();
     });
 
     /**
@@ -251,8 +267,8 @@ describe('Notification Model', () => {
      * - Verify excessively long messages are rejected
      * - Ensure readable notification content
      */
-    it('should enforce message maxlength constraint', async () => {
-      const longMessage = 'A'.repeat(1001);
+    it("should enforce message maxlength constraint", async () => {
+      const longMessage = "A".repeat(1001);
       const notificationData = {
         ...validNotificationData,
         payload: {
@@ -271,7 +287,7 @@ describe('Notification Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['payload.message']).toBeDefined();
+      expect(error.errors["payload.message"]).toBeDefined();
     });
 
     /**
@@ -281,8 +297,8 @@ describe('Notification Model', () => {
      * - Verify excessively long categories are rejected
      * - Ensure organized notification categorization
      */
-    it('should enforce category maxlength constraint', async () => {
-      const longCategory = 'A'.repeat(51);
+    it("should enforce category maxlength constraint", async () => {
+      const longCategory = "A".repeat(51);
       const notificationData = {
         ...validNotificationData,
         payload: {
@@ -301,7 +317,7 @@ describe('Notification Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['payload.category']).toBeDefined();
+      expect(error.errors["payload.category"]).toBeDefined();
     });
   });
 
@@ -313,7 +329,7 @@ describe('Notification Model', () => {
    * - Ensure only valid enumerated values are accepted
    * - Maintain data consistency with predefined options
    */
-  describe('Enum Validation', () => {
+  describe("Enum Validation", () => {
     /**
      * __Validate Status Enum Constraint
      * Acceptance case (scenario)
@@ -321,8 +337,11 @@ describe('Notification Model', () => {
      * - Verify only valid status values are accepted
      * - Ensure notification state consistency
      */
-    it('should enforce status enum constraint', async () => {
-      const notificationData = { ...validNotificationData, status: 'invalid_status' };
+    it("should enforce status enum constraint", async () => {
+      const notificationData = {
+        ...validNotificationData,
+        status: "invalid_status",
+      };
 
       const notification = new NotificationModel(notificationData);
 
@@ -344,12 +363,12 @@ describe('Notification Model', () => {
      * - Verify only valid priority levels are accepted
      * - Ensure notification urgency classification
      */
-    it('should enforce priority enum constraint', async () => {
+    it("should enforce priority enum constraint", async () => {
       const notificationData = {
         ...validNotificationData,
         payload: {
           ...validNotificationData.payload,
-          priority: 'invalid_priority' as any,
+          priority: "invalid_priority" as any,
         },
       };
 
@@ -363,7 +382,7 @@ describe('Notification Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['payload.priority']).toBeDefined();
+      expect(error.errors["payload.priority"]).toBeDefined();
     });
   });
 
@@ -375,7 +394,7 @@ describe('Notification Model', () => {
    * - Validate default priority assignment
    * - Ensure default payload data structure
    */
-  describe('Default Values', () => {
+  describe("Default Values", () => {
     /**
      * __Verify Default Status Assignment
      * Acceptance case (scenario)
@@ -383,13 +402,13 @@ describe('Notification Model', () => {
      * - Verify default status is automatically set
      * - Ensure new notifications start in pending state
      */
-    it('should set default status to pending', async () => {
+    it("should set default status to pending", async () => {
       const notificationData = { ...validNotificationData, status: undefined };
 
       const notification = new NotificationModel(notificationData);
       const savedNotification = await notification.save();
 
-      expect(savedNotification.status).toBe('pending');
+      expect(savedNotification.status).toBe("pending");
     });
 
     /**
@@ -399,19 +418,19 @@ describe('Notification Model', () => {
      * - Verify default priority is automatically set
      * - Ensure notifications have appropriate default urgency
      */
-    it('should set default priority to normal', async () => {
+    it("should set default priority to normal", async () => {
       const notificationData = {
         ...validNotificationData,
         payload: {
-          title: 'Test',
-          message: 'Test message',
+          title: "Test",
+          message: "Test message",
         },
       };
 
       const notification = new NotificationModel(notificationData);
       const savedNotification = await notification.save();
 
-      expect(savedNotification.payload.priority).toBe('normal');
+      expect(savedNotification.payload.priority).toBe("normal");
     });
 
     /**
@@ -421,12 +440,12 @@ describe('Notification Model', () => {
      * - Verify default empty object is assigned
      * - Ensure payload structure integrity
      */
-    it('should set default payload data to empty object', async () => {
+    it("should set default payload data to empty object", async () => {
       const notificationData = {
         ...validNotificationData,
         payload: {
-          title: 'Test',
-          message: 'Test message',
+          title: "Test",
+          message: "Test message",
         },
       };
 
@@ -443,13 +462,15 @@ describe('Notification Model', () => {
      * - Verify createdAt and updatedAt are generated
      * - Ensure timestamp consistency on creation
      */
-    it('should set timestamps', async () => {
+    it("should set timestamps", async () => {
       const notification = new NotificationModel(validNotificationData);
       const savedNotification = await notification.save();
 
       expect(savedNotification.createdAt).toBeInstanceOf(Date);
       expect(savedNotification.updatedAt).toBeInstanceOf(Date);
-      expect(savedNotification.createdAt.getTime()).toBe(savedNotification.updatedAt.getTime());
+      expect(savedNotification.createdAt.getTime()).toBe(
+        savedNotification.updatedAt.getTime(),
+      );
     });
   });
 });

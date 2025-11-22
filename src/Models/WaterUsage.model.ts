@@ -6,7 +6,7 @@
  *
  * @module models/WaterUsage
  */
-import { Model, model, Schema, Document } from 'mongoose';
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for WaterUsage document.
@@ -39,17 +39,59 @@ export interface IWaterUsage extends Document {
 }
 
 /**
- * WaterUsage Schema.
- *
- * Represents the structure of the `WaterUsage` collection in MongoDB.
- * Tracks detailed water consumption records for irrigation activities.
+ * @swagger
+ * components:
+ *   schemas:
+ *     WaterUsage:
+ *       type: object
+ *       required:
+ *         - zoneId
+ *         - startDate
+ *         - endDate
+ *         - waterUsedLiters
+ *         - durationMinutes
+ *         - averageFlowRate
+ *       properties:
+ *         id:
+ *           type: string
+ *         zoneId:
+ *           type: string
+ *         startDate:
+ *           type: string
+ *           format: date-time
+ *         endDate:
+ *           type: string
+ *           format: date-time
+ *         waterUsedLiters:
+ *           type: number
+ *         durationMinutes:
+ *           type: number
+ *         averageFlowRate:
+ *           type: number
+ *         weatherConditions:
+ *           type: object
+ *           properties:
+ *             temperature:
+ *               type: number
+ *             humidity:
+ *               type: number
+ *             windSpeed:
+ *               type: number
+ *             precipitation:
+ *               type: number
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const WaterUsageSchema = new Schema<IWaterUsage>(
   {
     zoneId: {
       type: String,
       required: true,
-      ref: 'Zone',
+      ref: "Zone",
     },
 
     startDate: {
@@ -112,6 +154,9 @@ const WaterUsageSchema = new Schema<IWaterUsage>(
  *
  * The compiled Mongoose model for WaterUsage based on the schema.
  */
-const WaterUsageModel: Model<IWaterUsage> = model<IWaterUsage>('WaterUsage', WaterUsageSchema);
+const WaterUsageModel: Model<IWaterUsage> = model<IWaterUsage>(
+  "WaterUsage",
+  WaterUsageSchema,
+);
 
 export default WaterUsageModel;

@@ -13,9 +13,9 @@
  * - Handle edge cases with various configurations
  */
 
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import UserPreferencesModel from '../../src/Models/UserPreferences.model';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import UserPreferencesModel from "../../src/Models/UserPreferences.model";
 
 /**
  * __UserPreferences Model Unit Tests
@@ -31,7 +31,7 @@ import UserPreferencesModel from '../../src/Models/UserPreferences.model';
  * - Validate business logic for preferences management
  * - Handle edge cases with various configurations
  */
-describe('UserPreferences Model', () => {
+describe("UserPreferences Model", () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -50,9 +50,9 @@ describe('UserPreferences Model', () => {
   });
 
   const validUserPreferencesData = {
-    userId: '507f1f77bcf86cd799439011',
-    language: 'en',
-    timezone: 'America/New_York',
+    userId: "507f1f77bcf86cd799439011",
+    language: "en",
+    timezone: "America/New_York",
     emailNotifications: {
       enabled: true,
       scheduleUpdates: true,
@@ -67,7 +67,7 @@ describe('UserPreferences Model', () => {
       maintenanceReminders: true,
     },
     dashboard: {
-      defaultView: 'overview' as const,
+      defaultView: "overview" as const,
       refreshInterval: 60,
       showWeather: true,
       showWaterUsage: true,
@@ -82,7 +82,7 @@ describe('UserPreferences Model', () => {
    * - Verify persistence and data integrity
    * - Ensure correct schema mapping
    */
-  describe('Valid UserPreferences Creation', () => {
+  describe("Valid UserPreferences Creation", () => {
     /**
      * __Create UserPreferences with Valid Data
      * Acceptance case (scenario)
@@ -91,21 +91,29 @@ describe('UserPreferences Model', () => {
      * - Ensure timestamps are generated
      * - Validate nested object persistence
      */
-    it('should create user preferences with valid data', async () => {
-      const userPreferences = new UserPreferencesModel(validUserPreferencesData);
+    it("should create user preferences with valid data", async () => {
+      const userPreferences = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences._id).toBeDefined();
       expect(savedUserPreferences.userId).toBe(validUserPreferencesData.userId);
-      expect(savedUserPreferences.language).toBe(validUserPreferencesData.language);
-      expect(savedUserPreferences.timezone).toBe(validUserPreferencesData.timezone);
+      expect(savedUserPreferences.language).toBe(
+        validUserPreferencesData.language,
+      );
+      expect(savedUserPreferences.timezone).toBe(
+        validUserPreferencesData.timezone,
+      );
       expect(savedUserPreferences.emailNotifications).toEqual(
         validUserPreferencesData.emailNotifications,
       );
       expect(savedUserPreferences.pushNotifications).toEqual(
         validUserPreferencesData.pushNotifications,
       );
-      expect(savedUserPreferences.dashboard).toEqual(validUserPreferencesData.dashboard);
+      expect(savedUserPreferences.dashboard).toEqual(
+        validUserPreferencesData.dashboard,
+      );
       expect(savedUserPreferences.createdAt).toBeDefined();
       expect(savedUserPreferences.updatedAt).toBeDefined();
     });
@@ -117,18 +125,18 @@ describe('UserPreferences Model', () => {
      * - Verify default values are applied
      * - Ensure complete preference structure
      */
-    it('should create user preferences with minimal data using defaults', async () => {
+    it("should create user preferences with minimal data using defaults", async () => {
       const minimalData = {
-        userId: '507f1f77bcf86cd799439012',
+        userId: "507f1f77bcf86cd799439012",
       };
 
       const userPreferences = new UserPreferencesModel(minimalData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.language).toBe('en');
-      expect(savedUserPreferences.timezone).toBe('UTC');
+      expect(savedUserPreferences.language).toBe("en");
+      expect(savedUserPreferences.timezone).toBe("UTC");
       expect(savedUserPreferences.emailNotifications.enabled).toBe(true);
-      expect(savedUserPreferences.dashboard.defaultView).toBe('overview');
+      expect(savedUserPreferences.dashboard.defaultView).toBe("overview");
     });
   });
 
@@ -139,7 +147,7 @@ describe('UserPreferences Model', () => {
    * - Verify validation errors are thrown for missing fields
    * - Ensure user preference association
    */
-  describe('Required Field Validation', () => {
+  describe("Required Field Validation", () => {
     /**
      * __Validate Required userId Field
      * Acceptance case (scenario)
@@ -147,8 +155,11 @@ describe('UserPreferences Model', () => {
      * - Verify validation error is thrown
      * - Ensure user association requirement
      */
-    it('should require userId field', async () => {
-      const userPreferencesData = { ...validUserPreferencesData, userId: undefined };
+    it("should require userId field", async () => {
+      const userPreferencesData = {
+        ...validUserPreferencesData,
+        userId: undefined,
+      };
 
       const userPreferences = new UserPreferencesModel(userPreferencesData);
 
@@ -172,7 +183,7 @@ describe('UserPreferences Model', () => {
    * - Test dashboard view enum constraints
    * - Ensure data quality and valid configuration
    */
-  describe('Field Constraints', () => {
+  describe("Field Constraints", () => {
     /**
      * __Language Enum Constraint
      * Acceptance case (scenario)
@@ -180,8 +191,11 @@ describe('UserPreferences Model', () => {
      * - Verify validation error is thrown
      * - Ensure supported language restrictions
      */
-    it('should enforce language enum constraint', async () => {
-      const userPreferencesData = { ...validUserPreferencesData, language: 'invalid_language' };
+    it("should enforce language enum constraint", async () => {
+      const userPreferencesData = {
+        ...validUserPreferencesData,
+        language: "invalid_language",
+      };
 
       const userPreferences = new UserPreferencesModel(userPreferencesData);
 
@@ -203,8 +217,8 @@ describe('UserPreferences Model', () => {
      * - Verify each language is accepted
      * - Ensure multilingual support
      */
-    it('should accept valid language values', async () => {
-      const validLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt'];
+    it("should accept valid language values", async () => {
+      const validLanguages = ["en", "es", "fr", "de", "it", "pt"];
 
       for (const language of validLanguages) {
         const userPreferencesData = {
@@ -226,7 +240,7 @@ describe('UserPreferences Model', () => {
      * - Verify validation error is thrown
      * - Ensure reasonable refresh rate limits
      */
-    it('should enforce refreshInterval min constraint', async () => {
+    it("should enforce refreshInterval min constraint", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
@@ -245,7 +259,7 @@ describe('UserPreferences Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['dashboard.refreshInterval']).toBeDefined();
+      expect(error.errors["dashboard.refreshInterval"]).toBeDefined();
     });
 
     /**
@@ -255,7 +269,7 @@ describe('UserPreferences Model', () => {
      * - Verify validation error is thrown
      * - Ensure performance-friendly limits
      */
-    it('should enforce refreshInterval max constraint', async () => {
+    it("should enforce refreshInterval max constraint", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
@@ -274,7 +288,7 @@ describe('UserPreferences Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['dashboard.refreshInterval']).toBeDefined();
+      expect(error.errors["dashboard.refreshInterval"]).toBeDefined();
     });
 
     /**
@@ -284,7 +298,7 @@ describe('UserPreferences Model', () => {
      * - Verify values within valid range are accepted
      * - Ensure flexible refresh configuration
      */
-    it('should accept valid refreshInterval values', async () => {
+    it("should accept valid refreshInterval values", async () => {
       const validIntervals = [30, 60, 120, 300];
 
       for (const interval of validIntervals) {
@@ -310,12 +324,12 @@ describe('UserPreferences Model', () => {
      * - Verify validation error is thrown
      * - Ensure supported view restrictions
      */
-    it('should enforce dashboard defaultView enum constraint', async () => {
+    it("should enforce dashboard defaultView enum constraint", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
           ...validUserPreferencesData.dashboard,
-          defaultView: 'invalid_view' as any,
+          defaultView: "invalid_view" as any,
         },
       };
 
@@ -329,7 +343,7 @@ describe('UserPreferences Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['dashboard.defaultView']).toBeDefined();
+      expect(error.errors["dashboard.defaultView"]).toBeDefined();
     });
 
     /**
@@ -339,8 +353,8 @@ describe('UserPreferences Model', () => {
      * - Verify each view type is accepted
      * - Ensure flexible dashboard navigation
      */
-    it('should accept valid dashboard defaultView values', async () => {
-      const validViews = ['overview', 'zones', 'pumps', 'schedules'];
+    it("should accept valid dashboard defaultView values", async () => {
+      const validViews = ["overview", "zones", "pumps", "schedules"];
 
       for (const view of validViews) {
         const userPreferencesData = {
@@ -367,7 +381,7 @@ describe('UserPreferences Model', () => {
    * - Test dashboard configuration structure
    * - Ensure nested object integrity
    */
-  describe('Nested Object Validation', () => {
+  describe("Nested Object Validation", () => {
     /**
      * __Validate EmailNotifications Structure
      * Acceptance case (scenario)
@@ -375,7 +389,7 @@ describe('UserPreferences Model', () => {
      * - Verify all notification flags are persisted
      * - Ensure granular email control
      */
-    it('should validate emailNotifications structure', async () => {
+    it("should validate emailNotifications structure", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         emailNotifications: {
@@ -391,9 +405,13 @@ describe('UserPreferences Model', () => {
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences.emailNotifications.enabled).toBe(true);
-      expect(savedUserPreferences.emailNotifications.scheduleUpdates).toBe(false);
+      expect(savedUserPreferences.emailNotifications.scheduleUpdates).toBe(
+        false,
+      );
       expect(savedUserPreferences.emailNotifications.systemAlerts).toBe(true);
-      expect(savedUserPreferences.emailNotifications.maintenanceReminders).toBe(false);
+      expect(savedUserPreferences.emailNotifications.maintenanceReminders).toBe(
+        false,
+      );
       expect(savedUserPreferences.emailNotifications.weeklyReports).toBe(true);
     });
 
@@ -404,7 +422,7 @@ describe('UserPreferences Model', () => {
      * - Verify all notification flags are persisted
      * - Ensure granular push control
      */
-    it('should validate pushNotifications structure', async () => {
+    it("should validate pushNotifications structure", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         pushNotifications: {
@@ -419,9 +437,13 @@ describe('UserPreferences Model', () => {
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences.pushNotifications.enabled).toBe(false);
-      expect(savedUserPreferences.pushNotifications.scheduleUpdates).toBe(false);
+      expect(savedUserPreferences.pushNotifications.scheduleUpdates).toBe(
+        false,
+      );
       expect(savedUserPreferences.pushNotifications.systemAlerts).toBe(true);
-      expect(savedUserPreferences.pushNotifications.maintenanceReminders).toBe(false);
+      expect(savedUserPreferences.pushNotifications.maintenanceReminders).toBe(
+        false,
+      );
     });
 
     /**
@@ -431,11 +453,11 @@ describe('UserPreferences Model', () => {
      * - Verify all dashboard options are persisted
      * - Ensure personalized dashboard experience
      */
-    it('should validate dashboard structure', async () => {
+    it("should validate dashboard structure", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
-          defaultView: 'zones' as const,
+          defaultView: "zones" as const,
           refreshInterval: 120,
           showWeather: false,
           showWaterUsage: false,
@@ -445,7 +467,7 @@ describe('UserPreferences Model', () => {
       const userPreferences = new UserPreferencesModel(userPreferencesData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.dashboard.defaultView).toBe('zones');
+      expect(savedUserPreferences.dashboard.defaultView).toBe("zones");
       expect(savedUserPreferences.dashboard.refreshInterval).toBe(120);
       expect(savedUserPreferences.dashboard.showWeather).toBe(false);
       expect(savedUserPreferences.dashboard.showWaterUsage).toBe(false);
@@ -460,7 +482,7 @@ describe('UserPreferences Model', () => {
    * - Validate default notification settings
    * - Ensure proper default behavior for new preferences
    */
-  describe('Default Values', () => {
+  describe("Default Values", () => {
     /**
      * __Default Language to English
      * Acceptance case (scenario)
@@ -468,12 +490,15 @@ describe('UserPreferences Model', () => {
      * - Verify default language is set to 'en'
      * - Ensure consistent language fallback
      */
-    it('should set default language to en', async () => {
-      const userPreferencesData = { ...validUserPreferencesData, language: undefined };
+    it("should set default language to en", async () => {
+      const userPreferencesData = {
+        ...validUserPreferencesData,
+        language: undefined,
+      };
       const userPreferences = new UserPreferencesModel(userPreferencesData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.language).toBe('en');
+      expect(savedUserPreferences.language).toBe("en");
     });
 
     /**
@@ -483,12 +508,15 @@ describe('UserPreferences Model', () => {
      * - Verify default timezone is set to 'UTC'
      * - Ensure neutral timezone fallback
      */
-    it('should set default timezone to UTC', async () => {
-      const userPreferencesData = { ...validUserPreferencesData, timezone: undefined };
+    it("should set default timezone to UTC", async () => {
+      const userPreferencesData = {
+        ...validUserPreferencesData,
+        timezone: undefined,
+      };
       const userPreferences = new UserPreferencesModel(userPreferencesData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.timezone).toBe('UTC');
+      expect(savedUserPreferences.timezone).toBe("UTC");
     });
 
     /**
@@ -498,7 +526,7 @@ describe('UserPreferences Model', () => {
      * - Verify default notification flags
      * - Ensure opt-in notification strategy
      */
-    it('should set default emailNotifications values', async () => {
+    it("should set default emailNotifications values", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         emailNotifications: {
@@ -514,9 +542,13 @@ describe('UserPreferences Model', () => {
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences.emailNotifications.enabled).toBe(true);
-      expect(savedUserPreferences.emailNotifications.scheduleUpdates).toBe(true);
+      expect(savedUserPreferences.emailNotifications.scheduleUpdates).toBe(
+        true,
+      );
       expect(savedUserPreferences.emailNotifications.systemAlerts).toBe(true);
-      expect(savedUserPreferences.emailNotifications.maintenanceReminders).toBe(true);
+      expect(savedUserPreferences.emailNotifications.maintenanceReminders).toBe(
+        true,
+      );
       expect(savedUserPreferences.emailNotifications.weeklyReports).toBe(false);
     });
 
@@ -527,7 +559,7 @@ describe('UserPreferences Model', () => {
      * - Verify default notification flags
      * - Ensure opt-in push strategy
      */
-    it('should set default pushNotifications values', async () => {
+    it("should set default pushNotifications values", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         pushNotifications: {
@@ -544,7 +576,9 @@ describe('UserPreferences Model', () => {
       expect(savedUserPreferences.pushNotifications.enabled).toBe(true);
       expect(savedUserPreferences.pushNotifications.scheduleUpdates).toBe(true);
       expect(savedUserPreferences.pushNotifications.systemAlerts).toBe(true);
-      expect(savedUserPreferences.pushNotifications.maintenanceReminders).toBe(true);
+      expect(savedUserPreferences.pushNotifications.maintenanceReminders).toBe(
+        true,
+      );
     });
 
     /**
@@ -554,7 +588,7 @@ describe('UserPreferences Model', () => {
      * - Verify default view and refresh rate
      * - Ensure user-friendly dashboard defaults
      */
-    it('should set default dashboard values', async () => {
+    it("should set default dashboard values", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
@@ -568,7 +602,7 @@ describe('UserPreferences Model', () => {
       const userPreferences = new UserPreferencesModel(userPreferencesData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.dashboard.defaultView).toBe('overview');
+      expect(savedUserPreferences.dashboard.defaultView).toBe("overview");
       expect(savedUserPreferences.dashboard.refreshInterval).toBe(60);
       expect(savedUserPreferences.dashboard.showWeather).toBe(true);
       expect(savedUserPreferences.dashboard.showWaterUsage).toBe(true);
@@ -581,8 +615,10 @@ describe('UserPreferences Model', () => {
      * - Verify createdAt and updatedAt are generated
      * - Ensure timestamp consistency on creation
      */
-    it('should set timestamps', async () => {
-      const userPreferences = new UserPreferencesModel(validUserPreferencesData);
+    it("should set timestamps", async () => {
+      const userPreferences = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences.createdAt).toBeInstanceOf(Date);
@@ -600,7 +636,7 @@ describe('UserPreferences Model', () => {
    * - Verify user preference lookup functionality
    * - Ensure one preference set per user
    */
-  describe('Unique Constraint', () => {
+  describe("Unique Constraint", () => {
     /**
      * __Handle UserId Field Properly
      * Acceptance case (scenario)
@@ -608,18 +644,24 @@ describe('UserPreferences Model', () => {
      * - Verify userId-based queries work correctly
      * - Ensure user preference association
      */
-    it('should handle userId field properly', async () => {
-      const userPreferences1 = new UserPreferencesModel(validUserPreferencesData);
+    it("should handle userId field properly", async () => {
+      const userPreferences1 = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences1 = await userPreferences1.save();
 
-      expect(savedUserPreferences1.userId).toBe(validUserPreferencesData.userId);
+      expect(savedUserPreferences1.userId).toBe(
+        validUserPreferencesData.userId,
+      );
 
       const foundUserPreferences = await UserPreferencesModel.findOne({
         userId: validUserPreferencesData.userId,
       });
 
       expect(foundUserPreferences).toBeTruthy();
-      expect(foundUserPreferences!.userId).toBe(validUserPreferencesData.userId);
+      expect(foundUserPreferences!.userId).toBe(
+        validUserPreferencesData.userId,
+      );
     });
   });
 
@@ -631,7 +673,7 @@ describe('UserPreferences Model', () => {
    * - Handle complex nested object updates
    * - Ensure createdAt immutability
    */
-  describe('Data Integrity', () => {
+  describe("Data Integrity", () => {
     /**
      * __Maintain Data Consistency Across Updates
      * Acceptance case (scenario)
@@ -639,19 +681,23 @@ describe('UserPreferences Model', () => {
      * - Verify all changes are persisted
      * - Ensure createdAt remains unchanged
      */
-    it('should maintain data consistency across updates', async () => {
-      const userPreferences = new UserPreferencesModel(validUserPreferencesData);
+    it("should maintain data consistency across updates", async () => {
+      const userPreferences = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
-      savedUserPreferences.language = 'es';
+      savedUserPreferences.language = "es";
       savedUserPreferences.dashboard.refreshInterval = 120;
       savedUserPreferences.emailNotifications.weeklyReports = true;
 
       const updatedUserPreferences = await savedUserPreferences.save();
 
-      expect(updatedUserPreferences.language).toBe('es');
+      expect(updatedUserPreferences.language).toBe("es");
       expect(updatedUserPreferences.dashboard.refreshInterval).toBe(120);
-      expect(updatedUserPreferences.emailNotifications.weeklyReports).toBe(true);
+      expect(updatedUserPreferences.emailNotifications.weeklyReports).toBe(
+        true,
+      );
       expect(updatedUserPreferences.createdAt.getTime()).toBe(
         savedUserPreferences.createdAt.getTime(),
       );
@@ -664,18 +710,22 @@ describe('UserPreferences Model', () => {
      * - Verify updatedAt is refreshed
      * - Ensure change tracking mechanism
      */
-    it('should update updatedAt on save', async () => {
-      const userPreferences = new UserPreferencesModel(validUserPreferencesData);
+    it("should update updatedAt on save", async () => {
+      const userPreferences = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
       const originalUpdatedAt = savedUserPreferences.updatedAt.getTime();
 
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      savedUserPreferences.language = 'fr';
+      savedUserPreferences.language = "fr";
       await savedUserPreferences.save();
 
-      expect(savedUserPreferences.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt);
+      expect(savedUserPreferences.updatedAt.getTime()).toBeGreaterThan(
+        originalUpdatedAt,
+      );
     });
 
     /**
@@ -685,8 +735,10 @@ describe('UserPreferences Model', () => {
      * - Verify all nested changes are persisted
      * - Ensure atomic nested object updates
      */
-    it('should handle complex nested updates', async () => {
-      const userPreferences = new UserPreferencesModel(validUserPreferencesData);
+    it("should handle complex nested updates", async () => {
+      const userPreferences = new UserPreferencesModel(
+        validUserPreferencesData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
       savedUserPreferences.emailNotifications = {
@@ -698,14 +750,16 @@ describe('UserPreferences Model', () => {
       };
 
       savedUserPreferences.pushNotifications.enabled = false;
-      savedUserPreferences.dashboard.defaultView = 'pumps';
+      savedUserPreferences.dashboard.defaultView = "pumps";
 
       const updatedUserPreferences = await savedUserPreferences.save();
 
       expect(updatedUserPreferences.emailNotifications.enabled).toBe(false);
-      expect(updatedUserPreferences.emailNotifications.weeklyReports).toBe(true);
+      expect(updatedUserPreferences.emailNotifications.weeklyReports).toBe(
+        true,
+      );
       expect(updatedUserPreferences.pushNotifications.enabled).toBe(false);
-      expect(updatedUserPreferences.dashboard.defaultView).toBe('pumps');
+      expect(updatedUserPreferences.dashboard.defaultView).toBe("pumps");
     });
   });
 
@@ -717,7 +771,7 @@ describe('UserPreferences Model', () => {
    * - Handle various timezone formats
    * - Ensure realistic preference scenarios
    */
-  describe('Business Logic', () => {
+  describe("Business Logic", () => {
     /**
      * __Handle Disabled Notifications Correctly
      * Acceptance case (scenario)
@@ -725,7 +779,7 @@ describe('UserPreferences Model', () => {
      * - Verify opt-out notification strategy
      * - Ensure user control over communications
      */
-    it('should handle disabled notifications correctly', async () => {
+    it("should handle disabled notifications correctly", async () => {
       const disabledNotificationsData = {
         ...validUserPreferencesData,
         emailNotifications: {
@@ -743,7 +797,9 @@ describe('UserPreferences Model', () => {
         },
       };
 
-      const userPreferences = new UserPreferencesModel(disabledNotificationsData);
+      const userPreferences = new UserPreferencesModel(
+        disabledNotificationsData,
+      );
       const savedUserPreferences = await userPreferences.save();
 
       expect(savedUserPreferences.emailNotifications.enabled).toBe(false);
@@ -757,11 +813,11 @@ describe('UserPreferences Model', () => {
      * - Verify all dashboard settings are applied
      * - Ensure personalized user experience
      */
-    it('should handle custom dashboard configuration', async () => {
+    it("should handle custom dashboard configuration", async () => {
       const customDashboardData = {
         ...validUserPreferencesData,
         dashboard: {
-          defaultView: 'schedules' as const,
+          defaultView: "schedules" as const,
           refreshInterval: 300,
           showWeather: false,
           showWaterUsage: false,
@@ -771,7 +827,7 @@ describe('UserPreferences Model', () => {
       const userPreferences = new UserPreferencesModel(customDashboardData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.dashboard.defaultView).toBe('schedules');
+      expect(savedUserPreferences.dashboard.defaultView).toBe("schedules");
       expect(savedUserPreferences.dashboard.refreshInterval).toBe(300);
       expect(savedUserPreferences.dashboard.showWeather).toBe(false);
       expect(savedUserPreferences.dashboard.showWaterUsage).toBe(false);
@@ -784,8 +840,13 @@ describe('UserPreferences Model', () => {
      * - Verify all timezone formats are accepted
      * - Ensure global timezone support
      */
-    it('should handle different timezone formats', async () => {
-      const timezoneFormats = ['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+    it("should handle different timezone formats", async () => {
+      const timezoneFormats = [
+        "UTC",
+        "America/New_York",
+        "Europe/London",
+        "Asia/Tokyo",
+      ];
 
       for (const timezone of timezoneFormats) {
         const userPreferencesData = {
@@ -808,7 +869,7 @@ describe('UserPreferences Model', () => {
    * - Handle minimum and maximum constraints
    * - Ensure robust edge case handling
    */
-  describe('Edge Cases', () => {
+  describe("Edge Cases", () => {
     /**
      * __Handle Valid Timezone Values
      * Acceptance case (scenario)
@@ -816,16 +877,16 @@ describe('UserPreferences Model', () => {
      * - Verify timezone persistence
      * - Ensure timezone validation
      */
-    it('should handle empty strings for optional fields', async () => {
+    it("should handle empty strings for optional fields", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
-        timezone: 'America/New_York',
+        timezone: "America/New_York",
       };
 
       const userPreferences = new UserPreferencesModel(userPreferencesData);
       const savedUserPreferences = await userPreferences.save();
 
-      expect(savedUserPreferences.timezone).toBe('America/New_York');
+      expect(savedUserPreferences.timezone).toBe("America/New_York");
     });
 
     /**
@@ -835,7 +896,7 @@ describe('UserPreferences Model', () => {
      * - Verify boundary value is accepted
      * - Ensure minimum constraint handling
      */
-    it('should handle minimum refresh interval', async () => {
+    it("should handle minimum refresh interval", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {
@@ -857,7 +918,7 @@ describe('UserPreferences Model', () => {
      * - Verify boundary value is accepted
      * - Ensure maximum constraint handling
      */
-    it('should handle maximum refresh interval', async () => {
+    it("should handle maximum refresh interval", async () => {
       const userPreferencesData = {
         ...validUserPreferencesData,
         dashboard: {

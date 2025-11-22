@@ -12,11 +12,11 @@
  * - Handle edge cases with various pump configurations
  */
 
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import PumpModel from '../../src/Models/Pump.model';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import PumpModel from "../../src/Models/Pump.model";
 
-describe('Pump Model', () => {
+describe("Pump Model", () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -35,9 +35,9 @@ describe('Pump Model', () => {
   });
 
   const validPumpData = {
-    name: 'Main Irrigation Pump',
-    type: 'centrifugal',
-    status: 'active' as const,
+    name: "Main Irrigation Pump",
+    type: "centrifugal",
+    status: "active" as const,
     flowRate: 1000,
     pressure: 50,
   };
@@ -49,7 +49,7 @@ describe('Pump Model', () => {
    * - Verify pump creation with required fields
    * - Ensure proper data validation
    */
-  describe('Valid Pump Creation', () => {
+  describe("Valid Pump Creation", () => {
     /**
      * __Create Pump with Valid Data
      * Acceptance case (scenario)
@@ -57,7 +57,7 @@ describe('Pump Model', () => {
      * - Verify pump creation with valid data
      * - Ensure proper data validation
      */
-    it('should create a pump with valid data', async () => {
+    it("should create a pump with valid data", async () => {
       const pump = new PumpModel(validPumpData);
       const savedPump = await pump.save();
 
@@ -78,15 +78,15 @@ describe('Pump Model', () => {
      * - Verify health metrics validation
      * - Ensure proper health metrics assignment
      */
-    it('should create a pump with health metrics', async () => {
+    it("should create a pump with health metrics", async () => {
       const pumpDataWithHealth = {
         ...validPumpData,
         health: {
           temperature: 25,
           vibration: 0.5,
           efficiency: 85,
-          lastMaintenance: new Date('2023-01-01'),
-          maintenanceDue: new Date('2023-07-01'),
+          lastMaintenance: new Date("2023-01-01"),
+          maintenanceDue: new Date("2023-07-01"),
         },
       };
 
@@ -97,8 +97,8 @@ describe('Pump Model', () => {
       expect(savedPump.health!.temperature).toBe(25);
       expect(savedPump.health!.vibration).toBe(0.5);
       expect(savedPump.health!.efficiency).toBe(85);
-      expect(savedPump.health!.lastMaintenance).toEqual(new Date('2023-01-01'));
-      expect(savedPump.health!.maintenanceDue).toEqual(new Date('2023-07-01'));
+      expect(savedPump.health!.lastMaintenance).toEqual(new Date("2023-01-01"));
+      expect(savedPump.health!.maintenanceDue).toEqual(new Date("2023-07-01"));
     });
   });
 
@@ -109,7 +109,7 @@ describe('Pump Model', () => {
    * - Verify validation errors are thrown for missing fields
    * - Ensure pump integrity by enforcing field requirements
    */
-  describe('Required Field Validation', () => {
+  describe("Required Field Validation", () => {
     /**
      * __Validate Required name Field
      * Acceptance case (scenario)
@@ -117,7 +117,7 @@ describe('Pump Model', () => {
      * - Verify validation error is thrown
      * - Ensure pump identification
      */
-    it('should require name field', async () => {
+    it("should require name field", async () => {
       const pumpData = { ...validPumpData, name: undefined };
 
       const pump = new PumpModel(pumpData);
@@ -140,7 +140,7 @@ describe('Pump Model', () => {
      * - Verify validation error is thrown
      * - Ensure pump type classification
      */
-    it('should require type field', async () => {
+    it("should require type field", async () => {
       const pumpData = { ...validPumpData, type: undefined };
 
       const pump = new PumpModel(pumpData);
@@ -163,7 +163,7 @@ describe('Pump Model', () => {
      * - Verify validation error is thrown
      * - Ensure pump operational status tracking
      */
-    it('should require status field', async () => {
+    it("should require status field", async () => {
       const pumpData = { ...validPumpData, status: undefined };
 
       const pump = new PumpModel(pumpData);
@@ -184,7 +184,7 @@ describe('Pump Model', () => {
      * - Verify validation error is thrown
      * - Ensure pump performance specification
      */
-    it('should require flowRate field', async () => {
+    it("should require flowRate field", async () => {
       const pumpData = { ...validPumpData, flowRate: undefined };
 
       const pump = new PumpModel(pumpData);
@@ -207,7 +207,7 @@ describe('Pump Model', () => {
      * - Verify validation error is thrown
      * - Ensure pump operating pressure specification
      */
-    it('should require pressure field', async () => {
+    it("should require pressure field", async () => {
       const pumpData = { ...validPumpData, pressure: undefined };
 
       const pump = new PumpModel(pumpData);
@@ -224,9 +224,9 @@ describe('Pump Model', () => {
     });
   });
 
-  describe('Field Constraints', () => {
-    it('should enforce name maxlength constraint', async () => {
-      const longName = 'a'.repeat(101);
+  describe("Field Constraints", () => {
+    it("should enforce name maxlength constraint", async () => {
+      const longName = "a".repeat(101);
       const pumpData = { ...validPumpData, name: longName };
 
       const pump = new PumpModel(pumpData);
@@ -242,7 +242,7 @@ describe('Pump Model', () => {
       expect(error.errors.name).toBeDefined();
     });
 
-    it('should enforce flowRate min constraint', async () => {
+    it("should enforce flowRate min constraint", async () => {
       const pumpData = { ...validPumpData, flowRate: -1 };
 
       const pump = new PumpModel(pumpData);
@@ -265,7 +265,7 @@ describe('Pump Model', () => {
      * - Verify extremely high flow rates are rejected
      * - Ensure realistic pump performance values
      */
-    it('should enforce flowRate max constraint', async () => {
+    it("should enforce flowRate max constraint", async () => {
       const pumpData = { ...validPumpData, flowRate: 15000 };
 
       const pump = new PumpModel(pumpData);
@@ -288,7 +288,7 @@ describe('Pump Model', () => {
      * - Verify zero or negative pressure values are rejected
      * - Ensure positive pump operating pressure
      */
-    it('should enforce pressure min constraint', async () => {
+    it("should enforce pressure min constraint", async () => {
       const pumpData = { ...validPumpData, pressure: -1 };
 
       const pump = new PumpModel(pumpData);
@@ -311,7 +311,7 @@ describe('Pump Model', () => {
      * - Verify extremely high pressure values are rejected
      * - Ensure safe pump operating pressure
      */
-    it('should enforce pressure max constraint', async () => {
+    it("should enforce pressure max constraint", async () => {
       const pumpData = { ...validPumpData, pressure: 250 };
 
       const pump = new PumpModel(pumpData);
@@ -336,7 +336,7 @@ describe('Pump Model', () => {
    * - Maintain data consistency with predefined options
    * - Ensure proper pump classification
    */
-  describe('Enum Validation', () => {
+  describe("Enum Validation", () => {
     /**
      * __Validate Type Enum Constraint
      * Acceptance case (scenario)
@@ -344,8 +344,8 @@ describe('Pump Model', () => {
      * - Verify only valid pump types are accepted
      * - Ensure proper pump classification
      */
-    it('should enforce type enum constraint', async () => {
-      const pumpData = { ...validPumpData, type: 'invalid_type' };
+    it("should enforce type enum constraint", async () => {
+      const pumpData = { ...validPumpData, type: "invalid_type" };
 
       const pump = new PumpModel(pumpData);
 
@@ -367,8 +367,8 @@ describe('Pump Model', () => {
      * - Verify only valid pump statuses are accepted
      * - Ensure proper operational status tracking
      */
-    it('should enforce status enum constraint', async () => {
-      const pumpData = { ...validPumpData, status: 'invalid_status' };
+    it("should enforce status enum constraint", async () => {
+      const pumpData = { ...validPumpData, status: "invalid_status" };
 
       const pump = new PumpModel(pumpData);
 
@@ -392,7 +392,7 @@ describe('Pump Model', () => {
    * - Validate pump health monitoring data
    * - Ensure pump diagnostic data quality
    */
-  describe('Health Metrics Validation', () => {
+  describe("Health Metrics Validation", () => {
     /**
      * __Validate Health Temperature Range
      * Acceptance case (scenario)
@@ -400,7 +400,7 @@ describe('Pump Model', () => {
      * - Verify overheating conditions are flagged
      * - Ensure pump temperature monitoring accuracy
      */
-    it('should validate health temperature range', async () => {
+    it("should validate health temperature range", async () => {
       const pumpData = {
         ...validPumpData,
         health: { temperature: 150 },
@@ -416,7 +416,7 @@ describe('Pump Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['health.temperature']).toBeDefined();
+      expect(error.errors["health.temperature"]).toBeDefined();
     });
 
     /**
@@ -426,7 +426,7 @@ describe('Pump Model', () => {
      * - Verify unrealistic efficiency values are rejected
      * - Ensure pump performance monitoring accuracy
      */
-    it('should validate health efficiency range', async () => {
+    it("should validate health efficiency range", async () => {
       const pumpData = {
         ...validPumpData,
         health: { efficiency: 150 },
@@ -442,7 +442,7 @@ describe('Pump Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['health.efficiency']).toBeDefined();
+      expect(error.errors["health.efficiency"]).toBeDefined();
     });
 
     /**
@@ -452,7 +452,7 @@ describe('Pump Model', () => {
      * - Verify negative vibration values are rejected
      * - Ensure pump mechanical health monitoring
      */
-    it('should validate health vibration minimum', async () => {
+    it("should validate health vibration minimum", async () => {
       const pumpData = {
         ...validPumpData,
         health: { vibration: -1 },
@@ -468,18 +468,18 @@ describe('Pump Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['health.vibration']).toBeDefined();
+      expect(error.errors["health.vibration"]).toBeDefined();
     });
   });
 
-  describe('Default Values', () => {
-    it('should set default status to inactive', async () => {
+  describe("Default Values", () => {
+    it("should set default status to inactive", async () => {
       const pumpData = { ...validPumpData, status: undefined };
 
       const pump = new PumpModel(pumpData);
       const savedPump = await pump.save();
 
-      expect(savedPump.status).toBe('inactive');
+      expect(savedPump.status).toBe("inactive");
     });
   });
 });

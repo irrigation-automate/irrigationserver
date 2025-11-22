@@ -148,7 +148,13 @@
           },
           "required": {
             "type": "array",
-            "example": ["address", "blocked", "contact", "password", "creation_date"],
+            "example": [
+              "address",
+              "blocked",
+              "contact",
+              "password",
+              "creation_date"
+            ],
             "items": {
               "type": "string"
             }

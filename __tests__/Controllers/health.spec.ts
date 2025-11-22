@@ -1,12 +1,12 @@
-import request from 'supertest';
-import app from '../../src/index';
-import mongoose from 'mongoose';
-import healthService from '../../src/Services/health.service';
+import request from "supertest";
+import app from "../../src/index";
+import mongoose from "mongoose";
+import healthService from "../../src/Services/health.service";
 
 /**
  * Mock the health service methods to control their behavior during tests.
  */
-jest.mock('../../src/Services/health.service', () => ({
+jest.mock("../../src/Services/health.service", () => ({
   checkDatabaseConnection: jest.fn(),
   getMemoryUsage: jest.fn(),
   getUptime: jest.fn(),
@@ -31,16 +31,17 @@ beforeEach(() => {
   });
 
   (healthService.getMemoryUsage as jest.Mock).mockReturnValue({
-    rss: '100.00 MB',
-    heapTotal: '50.00 MB',
-    heapUsed: '30.00 MB',
-    external: '20.00 MB',
+    rss: "100.00 MB",
+    heapTotal: "50.00 MB",
+    heapUsed: "30.00 MB",
+    external: "20.00 MB",
   });
 
   (healthService.getUptime as jest.Mock).mockReturnValue(3600);
-  (healthService.getCurrentTimestamp as jest.Mock).mockReturnValue('2023-01-01T00:00:00.000Z');
+  (healthService.getCurrentTimestamp as jest.Mock).mockReturnValue(
+    "2023-01-01T00:00:00.000Z",
+  );
 
-  // Mock mongoose connection
   (mongoose.connection as any).readyState = 1;
   (mongoose.connection as any).db = mockDb;
   mockDb.ping.mockResolvedValue(true);
@@ -49,87 +50,111 @@ beforeEach(() => {
 /**
  * Test suite for health check endpoints.
  */
-describe('Health Check Endpoints', () => {
+describe("Health Check Endpoints", () => {
   /**
    * Tests for the `/health` endpoint.
    */
-  describe('GET /health', () => {
-    it('should return 200 and detailed health information', async () => {
+  describe("GET /health", () => {
+    it("should return 200 and detailed health information", async () => {
       const mockHealthData = {
-        status: 'UP',
-        timestamp: '2023-01-01T00:00:00.000Z',
+        status: "UP",
+        timestamp: "2023-01-01T00:00:00.000Z",
         uptime: 3600,
-        database: { status: 'CONNECTED', responseTime: 10 },
+        database: { status: "CONNECTED", responseTime: 10 },
         memory: {
-          rss: '100.00 MB',
-          heapTotal: '50.00 MB',
-          heapUsed: '30.00 MB',
-          external: '20.00 MB',
+          rss: "100.00 MB",
+          heapTotal: "50.00 MB",
+          heapUsed: "30.00 MB",
+          external: "20.00 MB",
         },
       };
 
-      const response = await request(app).get('/health').set('Accept', 'application/json');
+      const response = await request(app)
+        .get("/api/health")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.headers['content-type']).toMatch(/json/);
-      expect(response.body).toMatchObject({
-        success: true,
-        message: 'Health check successful',
-        data: mockHealthData,
-      });
+      expect(response.headers["content-type"]).toMatch(/json/);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toMatchObject(mockHealthData);
+      expect(typeof response.body.message).toBe("string");
 
-      expect(response.headers['x-response-time']).toMatch(/\d+ms/);
+      expect(response.headers["x-response-time"]).toMatch(/\d+ms/);
     });
 
-    it('should return DEGRADED status when database is down', async () => {
-      (healthService.checkDatabaseConnection as jest.Mock).mockResolvedValueOnce({
+    it("should return DEGRADED status when database is down", async () => {
+      (
+        healthService.checkDatabaseConnection as jest.Mock
+      ).mockResolvedValueOnce({
         connected: false,
         duration: 0,
-        error: 'Connection failed',
+        error: "Connection failed",
       });
 
-      const response = await request(app).get('/health');
+      const response = await request(app)
+        .get("/api/health")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.body.data.status).toBe('DEGRADED');
-      expect(response.body.data.database.status).toBe('ERROR');
-      expect(response.body.data.database.error).toBe('Connection failed');
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.status).toBe("DEGRADED");
+      expect(response.body.data.database.status).toBe("ERROR");
+      expect(response.body.data.database.error).toBe("Connection failed");
     });
   });
 
   /**
    * Tests for the `/health/readiness` endpoint.
    */
-  describe('GET /health/readiness', () => {
-    it('should return 200 when service is ready', async () => {
-      (healthService.checkDatabaseConnection as jest.Mock).mockResolvedValueOnce({
+  describe("GET /health/readiness", () => {
+    it("should return 200 when service is ready", async () => {
+      (
+        healthService.checkDatabaseConnection as jest.Mock
+      ).mockResolvedValueOnce({
         connected: true,
         duration: 5,
       });
 
-      const response = await request(app).get('/health/readiness');
+      const response = await request(app)
+        .get("/api/health/readiness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        status: 'UP',
-        timestamp: '2023-01-01T00:00:00.000Z',
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
+        status: "UP",
+        timestamp: "2023-01-01T00:00:00.000Z",
       });
     });
 
-    it('should return 503 when database is not connected', async () => {
-      (healthService.checkDatabaseConnection as jest.Mock).mockResolvedValueOnce({
+    it("should return 503 when database is not connected", async () => {
+      (
+        healthService.checkDatabaseConnection as jest.Mock
+      ).mockResolvedValueOnce({
         connected: false,
         duration: 0,
-        error: 'Connection failed',
+        error: "Connection failed",
       });
 
-      const response = await request(app).get('/health/readiness');
+      const response = await request(app)
+        .get("/api/health/readiness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(503);
-      expect(response.body).toMatchObject({
-        status: 'DOWN',
-        timestamp: '2023-01-01T00:00:00.000Z',
-        database: { status: 'ERROR', error: 'Connection failed' },
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBeDefined();
+      expect(response.body.error.details).toMatchObject({
+        status: "DOWN",
+        timestamp: "2023-01-01T00:00:00.000Z",
+        database: { status: "ERROR", error: "Connection failed" },
       });
     });
   });
@@ -137,14 +162,19 @@ describe('Health Check Endpoints', () => {
   /**
    * Tests for the `/health/liveness` endpoint.
    */
-  describe('GET /health/liveness', () => {
-    it('should always return 200', async () => {
-      const response = await request(app).get('/health/liveness');
+  describe("GET /health/liveness", () => {
+    it("should always return 200", async () => {
+      const response = await request(app)
+        .get("/api/health/liveness")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .set("Accept-Language", "en");
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        status: 'UP',
-        timestamp: '2023-01-01T00:00:00.000Z',
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
+        status: "UP",
+        timestamp: "2023-01-01T00:00:00.000Z",
       });
     });
   });
@@ -152,10 +182,10 @@ describe('Health Check Endpoints', () => {
   /**
    * Performance test: response time.
    */
-  describe('Response Time', () => {
-    it('should respond within 200ms', async () => {
+  describe("Response Time", () => {
+    it("should respond within 200ms", async () => {
       const start = Date.now();
-      await request(app).get('/health');
+      await request(app).get("/health");
       const duration = Date.now() - start;
 
       expect(duration).toBeLessThan(200);

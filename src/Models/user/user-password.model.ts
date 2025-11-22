@@ -7,43 +7,54 @@
  *
  * @module models/Password
  */
-import { Model, model, Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
-import { IUserPasswordSchema } from '../../interface/interfaces/models';
+import { Model, model, Schema } from "mongoose";
+import bcrypt from "bcryptjs";
+import { IUserPasswordSchema } from "../../interface/interfaces/models";
 
 /**
- * User Password Schema.
- *
- * Represents the structure of the `Password` collection in MongoDB.
- * Stores a hashed user password and keeps track of the last update timestamp.
- *
- * @type {Schema<IUserPasswordSchema>}
+ * @swagger
+ * components:
+ *   schemas:
+ *     Password:
+ *       type: object
+ *       required:
+ *         - password
+ *       properties:
+ *         id:
+ *           type: string
+ *         password:
+ *           type: string
+ *           description: Hashed password
+ *         last_update:
+ *           type: string
+ *           format: date-time
  */
-const PasswordSchema: Schema<IUserPasswordSchema> = new Schema<IUserPasswordSchema>({
-  /**
-   * Hashed user password.
-   * This field is required and automatically hashed before saving using bcrypt.
-   *
-   * @example
-   * "$2a$10$E6J7H9KjZ1jPZs9xK7bZbO2KZHg4D1y3YFlRMGN7wJhvZ4YHz8QeK"
-   */
-  password: {
-    type: String,
-    required: true,
-  },
+const PasswordSchema: Schema<IUserPasswordSchema> =
+  new Schema<IUserPasswordSchema>({
+    /**
+     * Hashed user password.
+     * This field is required and automatically hashed before saving using bcrypt.
+     *
+     * @example
+     * "$2a$10$E6J7H9KjZ1jPZs9xK7bZbO2KZHg4D1y3YFlRMGN7wJhvZ4YHz8QeK"
+     */
+    password: {
+      type: String,
+      required: true,
+    },
 
-  /**
-   * Date when the password was last updated.
-   * Defaults to the current date/time.
-   *
-   * @example
-   * new Date("2025-10-01T12:00:00Z")
-   */
-  last_update: {
-    type: Date,
-    default: Date.now,
-  },
-});
+    /**
+     * Date when the password was last updated.
+     * Defaults to the current date/time.
+     *
+     * @example
+     * new Date("2025-10-01T12:00:00Z")
+     */
+    last_update: {
+      type: Date,
+      default: Date.now,
+    },
+  });
 
 /**
  * Mongoose pre-save middleware.
@@ -54,8 +65,8 @@ const PasswordSchema: Schema<IUserPasswordSchema> = new Schema<IUserPasswordSche
  * @function
  * @param {Function} next - Callback to proceed with the save operation.
  */
-PasswordSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+PasswordSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
 
@@ -88,6 +99,9 @@ PasswordSchema.pre('save', async function (next) {
  * const found = await Password.findById(pwd._id);
  * ```
  */
-const Password: Model<IUserPasswordSchema> = model<IUserPasswordSchema>('Password', PasswordSchema);
+const Password: Model<IUserPasswordSchema> = model<IUserPasswordSchema>(
+  "Password",
+  PasswordSchema,
+);
 
 export default Password;

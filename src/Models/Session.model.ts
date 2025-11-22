@@ -6,7 +6,8 @@
  *
  * @module models/Session
  */
-import { Model, model, Schema, Document } from 'mongoose';
+
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for Session document.
@@ -32,17 +33,44 @@ export interface ISession extends Document {
 }
 
 /**
- * Session Schema.
- *
- * Represents the structure of the `Session` collection in MongoDB.
- * Manages user authentication sessions with refresh tokens.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Session:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - refreshToken
+ *         - expiresAt
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         refreshToken:
+ *           type: string
+ *         userAgent:
+ *           type: string
+ *         ipAddress:
+ *           type: string
+ *         expiresAt:
+ *           type: string
+ *           format: date-time
+ *         isValid:
+ *           type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const SessionSchema = new Schema<ISession>(
   {
     userId: {
       type: String,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
 
     refreshToken: {
@@ -82,6 +110,6 @@ const SessionSchema = new Schema<ISession>(
  *
  * The compiled Mongoose model for Sessions based on the schema.
  */
-const SessionModel: Model<ISession> = model<ISession>('Session', SessionSchema);
+const SessionModel: Model<ISession> = model<ISession>("Session", SessionSchema);
 
 export default SessionModel;

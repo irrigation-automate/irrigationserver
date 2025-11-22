@@ -426,7 +426,7 @@ POST /api/v1/irrigation/schedules
 interface Pump {
   id: string;
   name: string;
-  status: 'offline' | 'idle' | 'priming' | 'pumping' | 'error';
+  status: "offline" | "idle" | "priming" | "pumping" | "error";
   flowRate: number; // L/min
   pressure: number; // PSI
   powerConsumption: number; // Watts
@@ -491,7 +491,7 @@ interface Zone {
   id: string;
   name: string;
   pumpId: string;
-  status: 'idle' | 'starting' | 'irrigating' | 'stopping' | 'error';
+  status: "idle" | "starting" | "irrigating" | "stopping" | "error";
   area: number; // m²
   flowRate: number; // L/min
   pressure: number; // PSI
@@ -513,7 +513,7 @@ interface Schedule {
   id: string;
   name: string;
   zoneId: string;
-  type: 'one-time' | 'recurring';
+  type: "one-time" | "recurring";
   days: number[]; // 0-6 (Sun-Sat)
   startTime: string; // HH:MM
   duration: number; // seconds

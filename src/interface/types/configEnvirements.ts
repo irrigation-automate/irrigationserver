@@ -32,6 +32,12 @@ export type TserverConfig = {
    * @example 5000
    */
   PORT: number;
+
+  /**
+   * Development server URL.
+   * @example "http://dev.example.com"
+   */
+  DevelopmentServer: string;
 };
 
 /**

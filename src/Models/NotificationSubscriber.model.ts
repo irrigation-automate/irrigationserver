@@ -6,7 +6,8 @@
  *
  * @module models/NotificationSubscriber
  */
-import { Model, model, Schema, Document } from 'mongoose';
+
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for NotificationSubscriber document.
@@ -19,7 +20,7 @@ export interface INotificationSubscriber extends Document {
   /** Reference to the user who should receive the notification */
   userId: string;
   /** Subscription channel (email, push, sms, etc.) */
-  channel: 'email' | 'push' | 'sms' | 'webhook';
+  channel: "email" | "push" | "sms" | "webhook";
   /** Whether the notification was seen by the user */
   seen: boolean;
   /** When the notification was seen (if applicable) */
@@ -32,29 +33,58 @@ export interface INotificationSubscriber extends Document {
 }
 
 /**
- * NotificationSubscriber Schema.
- *
- * Represents the structure of the `NotificationSubscriber` collection in MongoDB.
- * Manages user subscriptions to notifications and delivery tracking.
+ * @swagger
+ * components:
+ *   schemas:
+ *     NotificationSubscriber:
+ *       type: object
+ *       required:
+ *         - notificationId
+ *         - userId
+ *         - channel
+ *       properties:
+ *         id:
+ *           type: string
+ *         notificationId:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         channel:
+ *           type: string
+ *           enum: [email, push, sms, webhook]
+ *         seen:
+ *           type: boolean
+ *         seenAt:
+ *           type: string
+ *           format: date-time
+ *         sentAt:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const NotificationSubscriberSchema = new Schema<INotificationSubscriber>(
   {
     notificationId: {
       type: String,
       required: true,
-      ref: 'Notification',
+      ref: "Notification",
     },
 
     userId: {
       type: String,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
 
     channel: {
       type: String,
       required: true,
-      enum: ['email', 'push', 'sms', 'webhook'],
+      enum: ["email", "push", "sms", "webhook"],
     },
 
     seen: {
@@ -77,9 +107,10 @@ const NotificationSubscriberSchema = new Schema<INotificationSubscriber>(
  *
  * The compiled Mongoose model for NotificationSubscribers based on the schema.
  */
-const NotificationSubscriberModel: Model<INotificationSubscriber> = model<INotificationSubscriber>(
-  'NotificationSubscriber',
-  NotificationSubscriberSchema,
-);
+const NotificationSubscriberModel: Model<INotificationSubscriber> =
+  model<INotificationSubscriber>(
+    "NotificationSubscriber",
+    NotificationSubscriberSchema,
+  );
 
 export default NotificationSubscriberModel;

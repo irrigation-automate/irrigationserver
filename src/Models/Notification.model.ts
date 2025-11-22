@@ -6,7 +6,7 @@
  *
  * @module models/Notification
  */
-import { Model, model, Schema, Document } from 'mongoose';
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for Notification document.
@@ -19,13 +19,13 @@ export interface INotification extends Document {
   /** Action or event that triggered the notification */
   action: string;
   /** Current status of the notification */
-  status: 'pending' | 'sent' | 'failed' | 'cancelled';
+  status: "pending" | "sent" | "failed" | "cancelled";
   /** Notification payload data */
   payload: {
     title: string;
     message: string;
     data?: Record<string, any>;
-    priority?: 'low' | 'normal' | 'high' | 'urgent';
+    priority?: "low" | "normal" | "high" | "urgent";
     category?: string;
   };
   /** Timestamps */
@@ -34,10 +34,50 @@ export interface INotification extends Document {
 }
 
 /**
- * Notification Schema.
- *
- * Represents the structure of the `Notification` collection in MongoDB.
- * Stores notifications with their content, status, and metadata.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Notification:
+ *       type: object
+ *       required:
+ *         - moduleName
+ *         - action
+ *         - status
+ *         - payload
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated ID of the notification
+ *         moduleName:
+ *           type: string
+ *           description: Name of the module that generated the notification
+ *         action:
+ *           type: string
+ *           description: Action or event that triggered the notification
+ *         status:
+ *           type: string
+ *           enum: [pending, sent, failed, cancelled]
+ *           description: Current status of the notification
+ *         payload:
+ *           type: object
+ *           properties:
+ *             title:
+ *               type: string
+ *             message:
+ *               type: string
+ *             data:
+ *               type: object
+ *             priority:
+ *               type: string
+ *               enum: [low, normal, high, urgent]
+ *             category:
+ *               type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const NotificationSchema = new Schema<INotification>(
   {
@@ -58,8 +98,8 @@ const NotificationSchema = new Schema<INotification>(
     status: {
       type: String,
       required: true,
-      enum: ['pending', 'sent', 'failed', 'cancelled'],
-      default: 'pending',
+      enum: ["pending", "sent", "failed", "cancelled"],
+      default: "pending",
     },
 
     payload: {
@@ -81,8 +121,8 @@ const NotificationSchema = new Schema<INotification>(
       },
       priority: {
         type: String,
-        enum: ['low', 'normal', 'high', 'urgent'],
-        default: 'normal',
+        enum: ["low", "normal", "high", "urgent"],
+        default: "normal",
       },
       category: {
         type: String,
@@ -102,7 +142,7 @@ const NotificationSchema = new Schema<INotification>(
  * The compiled Mongoose model for Notifications based on the schema.
  */
 const NotificationModel: Model<INotification> = model<INotification>(
-  'Notification',
+  "Notification",
   NotificationSchema,
 );
 

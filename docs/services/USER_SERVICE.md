@@ -23,11 +23,11 @@ The User Service manages user profiles, including personal information, authenti
 ```typescript
 interface IUserSchema {
   _id: string;
-  address?: Schema.Types.ObjectId | IUserAddressSchema['_id'];
+  address?: Schema.Types.ObjectId | IUserAddressSchema["_id"];
   blocked: boolean; // Account status
-  contact: Schema.Types.ObjectId | IUserContactSchema['_id'];
+  contact: Schema.Types.ObjectId | IUserContactSchema["_id"];
   creation_date: Date;
-  password: Schema.Types.ObjectId | IUserPasswordSchema['_id'];
+  password: Schema.Types.ObjectId | IUserPasswordSchema["_id"];
   weather?: Schema.Types.ObjectId | string; // Weather preferences
   reglage?: Schema.Types.ObjectId | string; // User settings
 }

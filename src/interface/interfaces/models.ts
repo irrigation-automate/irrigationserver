@@ -1,4 +1,5 @@
-import { Document, Schema } from 'mongoose';
+import { Document, Schema } from "mongoose";
+import { UserRole } from "./enum";
 
 /**
  * Contact information for a user.
@@ -103,9 +104,14 @@ export interface IUserSchema extends Document {
   _id: string;
 
   /**
+   * User Role (e.g., admin, user, guest).
+   */
+  role: UserRole;
+
+  /**
    * Reference to the user address document (optional).
    */
-  address?: Schema.Types.ObjectId | IUserAddressSchema['_id'];
+  address?: Schema.Types.ObjectId | IUserAddressSchema["_id"];
 
   /**
    * Indicates whether the user is blocked from the system.
@@ -116,7 +122,7 @@ export interface IUserSchema extends Document {
   /**
    * Reference to the user contact document.
    */
-  contact: Schema.Types.ObjectId | IUserContactSchema['_id'];
+  contact: Schema.Types.ObjectId | IUserContactSchema["_id"];
 
   /**
    * Date when the user account was created.
@@ -126,7 +132,7 @@ export interface IUserSchema extends Document {
   /**
    * Reference to the user password document.
    */
-  password: Schema.Types.ObjectId | IUserPasswordSchema['_id'];
+  password: Schema.Types.ObjectId | IUserPasswordSchema["_id"];
 
   /**
    * Reference to the user weather preferences (if configured).
@@ -144,3 +150,72 @@ export interface IUserSchema extends Document {
    */
   generateAuthToken: () => string | null;
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserContact:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         email:
+ *           type: string
+ *           format: email
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         last_update:
+ *           type: string
+ *           format: date-time
+ *     UserAddress:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         city:
+ *           type: string
+ *         street:
+ *           type: string
+ *         country:
+ *           type: string
+ *         codeZip:
+ *           type: number
+ *         last_update:
+ *           type: string
+ *           format: date-time
+ *     Password:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         password:
+ *           type: string
+ *         last_update:
+ *           type: string
+ *           format: date-time
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         role:
+ *           $ref: '#/components/schemas/UserRole'
+ *         address:
+ *           type: string
+ *         blocked:
+ *           type: boolean
+ *         contact:
+ *           type: string
+ *         creation_date:
+ *           type: string
+ *           format: date-time
+ *         password:
+ *           type: string
+ *         weather:
+ *           type: string
+ *         reglage:
+ *           type: string
+ */

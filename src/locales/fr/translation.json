@@ -1,0 +1,10 @@
+{
+  "response": {
+    "success": "Succès",
+    "not_found": "Ressource introuvable",
+    "server_error": "Erreur interne du serveur",
+    "validation_error": "Échec de la validation",
+    "unauthorized": "Accès non autorisé",
+    "forbidden": "Vous n'avez pas l'autorisation pour effectuer cette action"
+  }
+}

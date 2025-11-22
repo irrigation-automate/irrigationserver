@@ -79,9 +79,9 @@ yarn test:coverage
 
 ```typescript
 const testUser = {
-  email: 'test@example.com',
-  password: 'TestPass123!',
-  name: 'Test User',
+  email: "test@example.com",
+  password: "TestPass123!",
+  name: "Test User",
 };
 ```
 
@@ -96,7 +96,7 @@ const testUser = {
 ### Example: Mocking an Email Service
 
 ```typescript
-jest.mock('../../src/services/email.service', () => ({
+jest.mock("../../src/services/email.service", () => ({
   sendWelcomeEmail: jest.fn().mockResolvedValue(true),
   sendPasswordResetEmail: jest.fn().mockResolvedValue(true),
 }));
@@ -127,13 +127,13 @@ coverage/lcov-report/index.html
 
    ```typescript
    // Arrange
-   const userData = { email: 'test@example.com', password: 'pass123' };
+   const userData = { email: "test@example.com", password: "pass123" };
 
    // Act
    const result = await authService.register(userData);
 
    // Assert
-   expect(result).toHaveProperty('id');
+   expect(result).toHaveProperty("id");
    expect(result.email).toBe(userData.email);
    ```
 
@@ -142,7 +142,7 @@ coverage/lcov-report/index.html
    - Follow pattern: `should [expected behavior] when [condition]`
 
    ```typescript
-   it('should throw error when email is already registered', async () => {
+   it("should throw error when email is already registered", async () => {
      // test implementation
    });
    ```
@@ -171,17 +171,17 @@ Tests are automatically run on:
 ### Example k6 Script
 
 ```javascript
-import http from 'k6/http';
-import { check, sleep } from 'k6';
+import http from "k6/http";
+import { check, sleep } from "k6";
 
 export const options = {
   vus: 10,
-  duration: '30s',
+  duration: "30s",
 };
 
 export default function () {
-  const res = http.get('http://localhost:3000/api/health');
-  check(res, { 'status was 200': (r) => r.status == 200 });
+  const res = http.get("http://localhost:3000/api/health");
+  check(res, { "status was 200": (r) => r.status == 200 });
   sleep(1);
 }
 ```

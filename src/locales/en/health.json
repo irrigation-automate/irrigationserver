@@ -1,0 +1,6 @@
+{
+  "success": "Health check successful",
+  "readiness_up": "Service is ready",
+  "readiness_down": "Service is not ready",
+  "liveness_ok": "Service is alive"
+}

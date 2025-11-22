@@ -1,0 +1,6 @@
+{
+  "success": "Vérification de santé réussie",
+  "readiness_up": "Le service est prêt",
+  "readiness_down": "Le service n'est pas prêt",
+  "liveness_ok": "Le service est en ligne"
+}

@@ -4,15 +4,16 @@
  * This module handles the connection to MongoDB Atlas and provides a reusable client.
  */
 
-import { MongoClient, MongoClientOptions, Db } from 'mongodb';
-import { enirementVariables } from './envirementVariables';
+import { MongoClient, MongoClientOptions, Db } from "mongodb";
+import { enirementVariables } from "./envirementVariables";
 
 /**
  * MongoDB connection URL constructed from environment variables
  * @constant
  * @type {string}
  */
-const { mongoDbDatabase, mongoDbPassword, mongoDbUserName } = enirementVariables.mongoDbConfig;
+const { mongoDbDatabase, mongoDbPassword, mongoDbUserName } =
+  enirementVariables.mongoDbConfig;
 const url = `mongodb+srv://${mongoDbUserName}:${mongoDbPassword}@cluster0.ywnsq.mongodb.net/${mongoDbDatabase}?retryWrites=true&w=majority`;
 
 /**
@@ -26,7 +27,7 @@ const clientOptions: MongoClientOptions = {
   serverSelectionTimeoutMS: 30000,
   maxPoolSize: 10,
   retryWrites: true,
-  w: 'majority',
+  w: "majority",
 };
 
 /**
@@ -59,22 +60,23 @@ export async function connectToMongoDB(): Promise<{
 
     return {
       success: true,
-      message: 'Successfully connected to MongoDB',
+      message: "Successfully connected to MongoDB",
       db: client.db(mongoDbDatabase),
       client,
     };
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error("MongoDB connection error:", error);
 
     try {
       await client.close();
     } catch (closeError) {
-      console.error('Error closing MongoDB connection:', closeError);
+      console.error("Error closing MongoDB connection:", closeError);
     }
 
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to connect to MongoDB',
+      message:
+        error instanceof Error ? error.message : "Failed to connect to MongoDB",
     };
   }
 }

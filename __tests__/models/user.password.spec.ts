@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import bcrypt from 'bcryptjs';
-import UserPassword from '../../src/Models/user/user.password';
-import { IUserPasswordSchema } from '../../src/interface/interfaces/models';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import bcrypt from "bcryptjs";
+import UserPassword from "../../src/Models/user/user-password.model";
+import { IUserPasswordSchema } from "../../src/interface/interfaces/models";
 
 /**
  * __UserPassword Model Unit Tests
@@ -15,11 +15,11 @@ import { IUserPasswordSchema } from '../../src/interface/interfaces/models';
  * - Ensure password is not re-hashed unnecessarily when unmodified
  * - Test data integrity and persistence in MongoDB
  */
-describe('UserPassword Model', () => {
+describe("UserPassword Model", () => {
   let mongoServer: MongoMemoryServer;
 
   const validPassword: Partial<IUserPasswordSchema> = {
-    password: 'Test@1234',
+    password: "Test@1234",
   };
 
   beforeAll(async () => {
@@ -45,7 +45,7 @@ describe('UserPassword Model', () => {
    * - Ensure password is hashed securely before saving
    * - Confirm last_update timestamp is automatically set
    */
-  it('should create and save a user password successfully', async () => {
+  it("should create and save a user password successfully", async () => {
     const password = new UserPassword(validPassword);
     const savedPassword = await password.save();
 
@@ -53,7 +53,10 @@ describe('UserPassword Model', () => {
     expect(savedPassword.password).not.toBe(validPassword.password);
     expect(savedPassword.last_update).toBeDefined();
 
-    const isMatch = await bcrypt.compare(validPassword.password!, savedPassword.password);
+    const isMatch = await bcrypt.compare(
+      validPassword.password!,
+      savedPassword.password,
+    );
     expect(isMatch).toBe(true);
   });
 
@@ -64,7 +67,7 @@ describe('UserPassword Model', () => {
    * - Verify validation error is raised
    * - Ensure schema enforces data completeness
    */
-  it('should fail when password is not provided', async () => {
+  it("should fail when password is not provided", async () => {
     const password = new UserPassword({});
 
     let error: mongoose.Error.ValidationError | undefined;
@@ -85,13 +88,16 @@ describe('UserPassword Model', () => {
    * - Verify password is automatically hashed before persistence
    * - Ensure stored value does not equal original plaintext
    */
-  it('should hash the password before saving', async () => {
+  it("should hash the password before saving", async () => {
     const password = new UserPassword(validPassword);
     await password.save();
 
     expect(password.password).not.toBe(validPassword.password);
 
-    const isMatch = await bcrypt.compare(validPassword.password!, password.password);
+    const isMatch = await bcrypt.compare(
+      validPassword.password!,
+      password.password,
+    );
     expect(isMatch).toBe(true);
   });
 
@@ -102,16 +108,18 @@ describe('UserPassword Model', () => {
    * - Modify password and save document again
    * - Verify new hash is generated and last_update timestamp increases
    */
-  it('should update last_update timestamp on save', async () => {
+  it("should update last_update timestamp on save", async () => {
     const password = new UserPassword(validPassword);
     const savedPassword = await password.save();
     const initialUpdateTime = savedPassword.last_update;
 
-    savedPassword.password = 'NewPassword@123';
+    savedPassword.password = "NewPassword@123";
     const updatedPassword = await savedPassword.save();
 
-    expect(updatedPassword.password).not.toBe('NewPassword@123');
-    expect(updatedPassword.last_update.getTime()).toBeGreaterThan(initialUpdateTime.getTime());
+    expect(updatedPassword.password).not.toBe("NewPassword@123");
+    expect(updatedPassword.last_update.getTime()).toBeGreaterThan(
+      initialUpdateTime.getTime(),
+    );
   });
 
   /**
@@ -121,12 +129,12 @@ describe('UserPassword Model', () => {
    * - Modify only non-password field and save
    * - Ensure password hash remains unchanged
    */
-  it('should not rehash the password if it was not modified', async () => {
+  it("should not rehash the password if it was not modified", async () => {
     const password = new UserPassword(validPassword);
     const savedPassword = await password.save();
     const initialHash = savedPassword.password;
 
-    savedPassword.markModified('last_update');
+    savedPassword.markModified("last_update");
     await savedPassword.save();
 
     expect(savedPassword.password).toBe(initialHash);

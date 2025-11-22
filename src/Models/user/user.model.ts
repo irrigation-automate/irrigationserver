@@ -7,26 +7,59 @@
  *
  * @module models/User
  */
-import { Model, model, Schema } from 'mongoose';
-import jwt from 'jsonwebtoken';
-import { enirementVariables } from '../../configs/envirementVariables';
-import { IUserSchema } from '../../interface/interfaces/models';
-import UserAddress from './User.adress';
-import UserContact from './user.contact';
-import UserPassword from './user.password';
+import { Model, model, Schema } from "mongoose";
+import jwt from "jsonwebtoken";
+import { enirementVariables } from "../../configs/envirementVariables";
+import { IUserSchema } from "../../interface/interfaces/models";
+import UserAddress from "./user-adress.model";
+import UserContact from "./user-contact.model";
+import UserPassword from "./user-password.model";
 
 // Get JWT secret
 const getJWTSecret = () => enirementVariables.JWTConfig.JWTSecret;
 
 /**
- * User Schema.
- *
- * Represents the structure of the `User` collection in MongoDB.
- * Each user is linked to address, contact, and password sub-documents.
- *
- * @type {Schema<IUserSchema>}
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         role:
+ *           type: string
+ *           enum: [ADMIN, FARMER, GUEST]
+ *         address:
+ *           type: string
+ *           description: ObjectId reference to UserAddress
+ *         blocked:
+ *           type: boolean
+ *         contact:
+ *           type: string
+ *           description: ObjectId reference to UserContact
+ *         creation_date:
+ *           type: string
+ *           format: date-time
+ *         password:
+ *           type: string
+ *           description: ObjectId reference to Password document
+ *         weather:
+ *           type: string
+ *         reglage:
+ *           type: string
  */
-const UserSchema = new Schema<IUserSchema>({
+const UserSchema: Schema<IUserSchema> = new Schema<IUserSchema>({
+  /**
+   * User Role (e.g., ADMIN, USER, GUEST).
+   */
+  role: {
+    type: String,
+    enum: ["ADMIN", "FARMER", "GUEST"],
+    required: false,
+    default: "FARMER",
+  },
+
   /**
    * Reference to the user's address.
    * Each user has a unique address document.
@@ -83,7 +116,7 @@ const UserSchema = new Schema<IUserSchema>({
    */
   weather: {
     type: Schema.Types.ObjectId,
-    ref: 'Weather',
+    ref: "Weather",
   },
 
   /**
@@ -91,7 +124,7 @@ const UserSchema = new Schema<IUserSchema>({
    */
   reglage: {
     type: Schema.Types.ObjectId,
-    ref: 'Reglage',
+    ref: "Reglage",
   },
 });
 
@@ -111,7 +144,7 @@ const UserSchema = new Schema<IUserSchema>({
 UserSchema.methods.generateAuthToken = function (): string | null {
   const secret = getJWTSecret();
   if (secret) {
-    return jwt.sign({ _id: this._id }, secret, { expiresIn: '10h' });
+    return jwt.sign({ _id: this._id }, secret, { expiresIn: "10h" });
   }
   return null;
 };
@@ -138,6 +171,6 @@ UserSchema.methods.generateAuthToken = function (): string | null {
  * const token = newUser.generateAuthToken();
  * ```
  */
-const UserModel: Model<IUserSchema> = model<IUserSchema>('User', UserSchema);
+const UserModel: Model<IUserSchema> = model<IUserSchema>("User", UserSchema);
 
 export default UserModel;

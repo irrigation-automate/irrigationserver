@@ -221,26 +221,26 @@ interface INotificationSubscriber {
 
 // Enum Definitions
 enum ModuleName {
-  USER = 'USER',
-  AUTH = 'AUTH',
-  IRRIGATION = 'IRRIGATION',
-  SYSTEM = 'SYSTEM',
+  USER = "USER",
+  AUTH = "AUTH",
+  IRRIGATION = "IRRIGATION",
+  SYSTEM = "SYSTEM",
 }
 
 enum ActionType {
-  CREATED = 'CREATED',
-  UPDATED = 'UPDATED',
-  DELETED = 'DELETED',
-  APPROVAL_REQUIRED = 'APPROVAL_REQUIRED',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
+  CREATED = "CREATED",
+  UPDATED = "UPDATED",
+  DELETED = "DELETED",
+  APPROVAL_REQUIRED = "APPROVAL_REQUIRED",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
 }
 
 enum NotificationStatus {
-  PENDING = 'PENDING', // Notification created but not yet processed
-  SENT = 'SENT', // Notification sent to all subscribers
-  READ = 'READ', // All subscribers have read the notification
-  ARCHIVED = 'ARCHIVED', // Notification archived
+  PENDING = "PENDING", // Notification created but not yet processed
+  SENT = "SENT", // Notification sent to all subscribers
+  READ = "READ", // All subscribers have read the notification
+  ARCHIVED = "ARCHIVED", // Notification archived
 }
 ```
 
@@ -293,7 +293,7 @@ interface IDeviceRegistration {
 
   // Push Notification Tokens
   token: string; // Device push token
-  platform: 'ios' | 'android' | 'web';
+  platform: "ios" | "android" | "web";
 
   // Metadata
   userAgent?: string; // Device/browser information
@@ -345,7 +345,7 @@ interface INotificationTemplate {
   message: string; // Can include template variables
 
   // Configuration
-  channels: Array<'email' | 'push' | 'sms' | 'in-app'>;
+  channels: Array<"email" | "push" | "sms" | "in-app">;
 
   // Localization
   locale: string; // e.g., "en-US", "fr-FR"
