@@ -1,0 +1,18 @@
+{
+  "success": {
+    "health_ok": "Vérification de santé réussie"
+  },
+  "errors": {
+    "db_disconnected": "Échec de la connexion à la base de données"
+  },
+  "database": {
+    "not_connected": "La base de données n'est pas connectée.",
+    "unknown_error": "Une erreur de base de données inconnue s'est produite."
+  },
+  "memory": {
+    "rss": "Taille de la mémoire résidente",
+    "heap_total": "Taille totale du tas alloué",
+    "heap_used": "Tas utilisé",
+    "external": "Mémoire externe"
+  }
+}

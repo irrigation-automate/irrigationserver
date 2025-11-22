@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import ZoneModel from '../../src/Models/Zone.model';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import ZoneModel from "../../src/Models/Zone.model";
 
 /**
  * __Zone Model Unit Tests
@@ -15,7 +15,7 @@ import ZoneModel from '../../src/Models/Zone.model';
  * - Test business logic for zone management
  * - Handle edge cases with various zone configurations
  */
-describe('Zone Model', () => {
+describe("Zone Model", () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -34,12 +34,12 @@ describe('Zone Model', () => {
   });
 
   const validZoneData = {
-    name: 'North Garden Zone',
-    pumpId: '507f1f77bcf86cd799439011',
-    status: 'active' as const,
+    name: "North Garden Zone",
+    pumpId: "507f1f77bcf86cd799439011",
+    status: "active" as const,
     area: 500,
-    vegetationType: 'grass',
-    soilType: 'loam',
+    vegetationType: "grass",
+    soilType: "loam",
     coordinates: [
       { latitude: 40.7128, longitude: -74.006 },
       { latitude: 40.713, longitude: -74.0055 },
@@ -56,7 +56,7 @@ describe('Zone Model', () => {
    * - Validate automatic timestamp generation
    * - Test optional lastWatered field functionality
    */
-  describe('Valid Zone Creation', () => {
+  describe("Valid Zone Creation", () => {
     /**
      * __Complete Zone Data Creation
      * Acceptance case (scenario)
@@ -65,7 +65,7 @@ describe('Zone Model', () => {
      * - Ensure geographic coordinates maintain precision
      * - Validate automatic timestamp assignment
      */
-    it('should create a zone with valid data', async () => {
+    it("should create a zone with valid data", async () => {
       const zone = new ZoneModel(validZoneData);
       const savedZone = await zone.save();
 
@@ -76,11 +76,21 @@ describe('Zone Model', () => {
       expect(savedZone.area).toBe(validZoneData.area);
       expect(savedZone.vegetationType).toBe(validZoneData.vegetationType);
       expect(savedZone.soilType).toBe(validZoneData.soilType);
-      expect(savedZone.coordinates).toHaveLength(validZoneData.coordinates.length);
-      expect(savedZone.coordinates[0].latitude).toBe(validZoneData.coordinates[0].latitude);
-      expect(savedZone.coordinates[0].longitude).toBe(validZoneData.coordinates[0].longitude);
-      expect(savedZone.coordinates[1].latitude).toBe(validZoneData.coordinates[1].latitude);
-      expect(savedZone.coordinates[1].longitude).toBe(validZoneData.coordinates[1].longitude);
+      expect(savedZone.coordinates).toHaveLength(
+        validZoneData.coordinates.length,
+      );
+      expect(savedZone.coordinates[0].latitude).toBe(
+        validZoneData.coordinates[0].latitude,
+      );
+      expect(savedZone.coordinates[0].longitude).toBe(
+        validZoneData.coordinates[0].longitude,
+      );
+      expect(savedZone.coordinates[1].latitude).toBe(
+        validZoneData.coordinates[1].latitude,
+      );
+      expect(savedZone.coordinates[1].longitude).toBe(
+        validZoneData.coordinates[1].longitude,
+      );
       expect(savedZone.createdAt).toBeDefined();
       expect(savedZone.updatedAt).toBeDefined();
     });
@@ -92,16 +102,16 @@ describe('Zone Model', () => {
      * - Verify custom timestamp is correctly stored
      * - Ensure optional field doesn't affect required validation
      */
-    it('should create a zone with lastWatered timestamp', async () => {
+    it("should create a zone with lastWatered timestamp", async () => {
       const zoneDataWithLastWatered = {
         ...validZoneData,
-        lastWatered: new Date('2023-06-15T10:30:00Z'),
+        lastWatered: new Date("2023-06-15T10:30:00Z"),
       };
 
       const zone = new ZoneModel(zoneDataWithLastWatered);
       const savedZone = await zone.save();
 
-      expect(savedZone.lastWatered).toEqual(new Date('2023-06-15T10:30:00Z'));
+      expect(savedZone.lastWatered).toEqual(new Date("2023-06-15T10:30:00Z"));
     });
   });
 
@@ -113,7 +123,7 @@ describe('Zone Model', () => {
    * - Ensure data completeness for zone operations
    * - Validate schema enforcement for critical fields
    */
-  describe('Required Field Validation', () => {
+  describe("Required Field Validation", () => {
     /**
      * __Name Field Requirement
      * Acceptance case (scenario)
@@ -121,7 +131,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing name field
      * - Ensure zone identification integrity
      */
-    it('should require name field', async () => {
+    it("should require name field", async () => {
       const zoneData = { ...validZoneData, name: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -144,7 +154,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing pumpId
      * - Ensure equipment association integrity
      */
-    it('should require pumpId field', async () => {
+    it("should require pumpId field", async () => {
       const zoneData = { ...validZoneData, pumpId: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -167,7 +177,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing area
      * - Ensure irrigation calculation data completeness
      */
-    it('should require area field', async () => {
+    it("should require area field", async () => {
       const zoneData = { ...validZoneData, area: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -190,7 +200,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing vegetationType
      * - Ensure water requirement calculation integrity
      */
-    it('should require vegetationType field', async () => {
+    it("should require vegetationType field", async () => {
       const zoneData = { ...validZoneData, vegetationType: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -213,7 +223,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing soilType
      * - Ensure irrigation absorption rate calculation integrity
      */
-    it('should require soilType field', async () => {
+    it("should require soilType field", async () => {
       const zoneData = { ...validZoneData, soilType: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -236,7 +246,7 @@ describe('Zone Model', () => {
      * - Verify validation error for missing coordinates
      * - Ensure spatial data completeness for zone mapping
      */
-    it('should require coordinates field', async () => {
+    it("should require coordinates field", async () => {
       const zoneData = { ...validZoneData, coordinates: undefined };
 
       const zone = new ZoneModel(zoneData);
@@ -261,7 +271,7 @@ describe('Zone Model', () => {
    * - Ensure data quality through schema validation
    * - Handle edge cases for numeric and string fields
    */
-  describe('Field Constraints', () => {
+  describe("Field Constraints", () => {
     /**
      * __Name Length Constraint
      * Acceptance case (scenario)
@@ -269,8 +279,8 @@ describe('Zone Model', () => {
      * - Verify maxlength constraint enforcement
      * - Ensure database performance and UI compatibility
      */
-    it('should enforce name maxlength constraint', async () => {
-      const longName = 'a'.repeat(101);
+    it("should enforce name maxlength constraint", async () => {
+      const longName = "a".repeat(101);
       const zoneData = { ...validZoneData, name: longName };
 
       const zone = new ZoneModel(zoneData);
@@ -293,7 +303,7 @@ describe('Zone Model', () => {
      * - Verify minimum area constraint enforcement
      * - Prevent invalid irrigation calculations
      */
-    it('should enforce area min constraint', async () => {
+    it("should enforce area min constraint", async () => {
       const zoneData = { ...validZoneData, area: -1 };
 
       const zone = new ZoneModel(zoneData);
@@ -316,7 +326,7 @@ describe('Zone Model', () => {
      * - Verify maximum area constraint enforcement
      * - Ensure realistic zone sizing and system capacity
      */
-    it('should enforce area max constraint', async () => {
+    it("should enforce area max constraint", async () => {
       const zoneData = { ...validZoneData, area: 2000000 };
 
       const zone = new ZoneModel(zoneData);
@@ -341,7 +351,7 @@ describe('Zone Model', () => {
    * - Ensure data consistency across zone types
    * - Validate business logic enforcement
    */
-  describe('Enum Validation', () => {
+  describe("Enum Validation", () => {
     /**
      * __Status Enum Constraint
      * Acceptance case (scenario)
@@ -349,8 +359,8 @@ describe('Zone Model', () => {
      * - Verify status enum constraint enforcement
      * - Maintain consistent zone state management
      */
-    it('should enforce status enum constraint', async () => {
-      const zoneData = { ...validZoneData, status: 'invalid_status' };
+    it("should enforce status enum constraint", async () => {
+      const zoneData = { ...validZoneData, status: "invalid_status" };
 
       const zone = new ZoneModel(zoneData);
 
@@ -372,8 +382,8 @@ describe('Zone Model', () => {
      * - Verify vegetationType enum constraint enforcement
      * - Ensure supported plant type compatibility
      */
-    it('should enforce vegetationType enum constraint', async () => {
-      const zoneData = { ...validZoneData, vegetationType: 'invalid_type' };
+    it("should enforce vegetationType enum constraint", async () => {
+      const zoneData = { ...validZoneData, vegetationType: "invalid_type" };
 
       const zone = new ZoneModel(zoneData);
 
@@ -395,8 +405,8 @@ describe('Zone Model', () => {
      * - Verify soilType enum constraint enforcement
      * - Ensure supported soil type compatibility
      */
-    it('should enforce soilType enum constraint', async () => {
-      const zoneData = { ...validZoneData, soilType: 'invalid_type' };
+    it("should enforce soilType enum constraint", async () => {
+      const zoneData = { ...validZoneData, soilType: "invalid_type" };
 
       const zone = new ZoneModel(zoneData);
 
@@ -420,7 +430,7 @@ describe('Zone Model', () => {
    * - Ensure valid geographic boundary definitions
    * - Handle malformed coordinate data scenarios
    */
-  describe('Coordinates Validation', () => {
+  describe("Coordinates Validation", () => {
     /**
      * __Latitude Range Validation
      * Acceptance case (scenario)
@@ -428,7 +438,7 @@ describe('Zone Model', () => {
      * - Verify latitude range constraint (-90 to 90)
      * - Prevent geographically impossible zone definitions
      */
-    it('should validate latitude range', async () => {
+    it("should validate latitude range", async () => {
       const zoneData = {
         ...validZoneData,
         coordinates: [{ latitude: 100, longitude: -74.006 }],
@@ -444,7 +454,7 @@ describe('Zone Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['coordinates.0.latitude']).toBeDefined();
+      expect(error.errors["coordinates.0.latitude"]).toBeDefined();
     });
 
     /**
@@ -454,7 +464,7 @@ describe('Zone Model', () => {
      * - Verify longitude range constraint (-180 to 180)
      * - Ensure realistic geographic positioning
      */
-    it('should validate longitude range', async () => {
+    it("should validate longitude range", async () => {
       const zoneData = {
         ...validZoneData,
         coordinates: [{ latitude: 40.7128, longitude: -200 }],
@@ -470,7 +480,7 @@ describe('Zone Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['coordinates.0.longitude']).toBeDefined();
+      expect(error.errors["coordinates.0.longitude"]).toBeDefined();
     });
 
     /**
@@ -480,7 +490,7 @@ describe('Zone Model', () => {
      * - Verify both latitude and longitude are required
      * - Ensure complete geographic point definitions
      */
-    it('should require both latitude and longitude in coordinates', async () => {
+    it("should require both latitude and longitude in coordinates", async () => {
       const zoneData = {
         ...validZoneData,
         coordinates: [{ latitude: 40.7128 }],
@@ -496,7 +506,7 @@ describe('Zone Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['coordinates.0.longitude']).toBeDefined();
+      expect(error.errors["coordinates.0.longitude"]).toBeDefined();
     });
   });
 
@@ -508,7 +518,7 @@ describe('Zone Model', () => {
    * - Ensure consistent zone state initialization
    * - Validate system-generated field population
    */
-  describe('Default Values', () => {
+  describe("Default Values", () => {
     /**
      * __Default Status Assignment
      * Acceptance case (scenario)
@@ -516,13 +526,13 @@ describe('Zone Model', () => {
      * - Verify default 'active' status assignment
      * - Ensure consistent zone state initialization
      */
-    it('should set default status to active', async () => {
+    it("should set default status to active", async () => {
       const zoneData = { ...validZoneData, status: undefined };
 
       const zone = new ZoneModel(zoneData);
       const savedZone = await zone.save();
 
-      expect(savedZone.status).toBe('active');
+      expect(savedZone.status).toBe("active");
     });
 
     /**
@@ -532,7 +542,7 @@ describe('Zone Model', () => {
      * - Ensure createdAt and updatedAt are properly set
      * - Validate timestamp synchronization on creation
      */
-    it('should set timestamps', async () => {
+    it("should set timestamps", async () => {
       const zone = new ZoneModel(validZoneData);
       const savedZone = await zone.save();
 

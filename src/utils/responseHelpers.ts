@@ -49,7 +49,7 @@ interface PaginatedResponse<T> {
  */
 export function createSuccessResponse<T = unknown>(
   data: T,
-  message = 'Success',
+  message = "Success",
 ): {
   success: true;
   data: T;
@@ -103,7 +103,7 @@ export function createErrorResponse(
  */
 export function createValidationErrorResponse(
   errors: Record<string, string[]>,
-  message = 'Validation failed',
+  message = "Validation failed",
 ): {
   success: false;
   error: {
@@ -139,7 +139,7 @@ export function createPaginatedResponse<T>(
   total: number,
   page: number,
   limit: number,
-  message = 'Success',
+  message = "Success",
 ): PaginatedResponse<T> {
   const totalPages = Math.ceil(total / limit);
 

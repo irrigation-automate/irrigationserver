@@ -6,7 +6,7 @@
  *
  * @module models/Pump
  */
-import { Model, model, Schema, Document } from 'mongoose';
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for Pump document.
@@ -19,7 +19,7 @@ export interface IPump extends Document {
   /** Type of pump (e.g., 'centrifugal', 'submersible') */
   type: string;
   /** Current operational status */
-  status: 'active' | 'inactive' | 'maintenance' | 'fault';
+  status: "active" | "inactive" | "maintenance" | "fault";
   /** Flow rate in liters per minute */
   flowRate: number;
   /** Operating pressure in PSI */
@@ -40,10 +40,58 @@ export interface IPump extends Document {
 }
 
 /**
- * Pump Schema.
- *
- * Represents the structure of the `Pump` collection in MongoDB.
- * Tracks pump specifications, operational status, and health metrics.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Pump:
+ *       type: object
+ *       required:
+ *         - name
+ *         - type
+ *         - status
+ *         - flowRate
+ *         - pressure
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         type:
+ *           type: string
+ *           enum: [centrifugal, submersible, diaphragm, peristaltic]
+ *         status:
+ *           type: string
+ *           enum: [active, inactive, maintenance, fault]
+ *         flowRate:
+ *           type: number
+ *           description: Flow rate in liters per minute
+ *         pressure:
+ *           type: number
+ *           description: Operating pressure in PSI
+ *         health:
+ *           type: object
+ *           properties:
+ *             temperature:
+ *               type: number
+ *             vibration:
+ *               type: number
+ *             efficiency:
+ *               type: number
+ *             lastMaintenance:
+ *               type: string
+ *               format: date-time
+ *             maintenanceDue:
+ *               type: string
+ *               format: date-time
+ *         lastActive:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const PumpSchema = new Schema<IPump>(
   {
@@ -57,14 +105,14 @@ const PumpSchema = new Schema<IPump>(
     type: {
       type: String,
       required: true,
-      enum: ['centrifugal', 'submersible', 'diaphragm', 'peristaltic'],
+      enum: ["centrifugal", "submersible", "diaphragm", "peristaltic"],
     },
 
     status: {
       type: String,
       required: true,
-      enum: ['active', 'inactive', 'maintenance', 'fault'],
-      default: 'inactive',
+      enum: ["active", "inactive", "maintenance", "fault"],
+      default: "inactive",
     },
 
     flowRate: {
@@ -112,6 +160,6 @@ const PumpSchema = new Schema<IPump>(
  *
  * The compiled Mongoose model for Pumps based on the schema.
  */
-const PumpModel: Model<IPump> = model<IPump>('Pump', PumpSchema);
+const PumpModel: Model<IPump> = model<IPump>("Pump", PumpSchema);
 
 export default PumpModel;

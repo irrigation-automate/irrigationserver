@@ -6,7 +6,7 @@
  *
  * @module models/Zone
  */
-import { Model, model, Schema, Document } from 'mongoose';
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for coordinate points.
@@ -27,7 +27,7 @@ export interface IZone extends Document {
   /** Reference to the pump that supplies this zone */
   pumpId: string;
   /** Current operational status */
-  status: 'active' | 'inactive' | 'maintenance';
+  status: "active" | "inactive" | "maintenance";
   /** Area of the zone in square meters */
   area: number;
   /** Type of vegetation in the zone */
@@ -44,10 +44,55 @@ export interface IZone extends Document {
 }
 
 /**
- * Zone Schema.
- *
- * Represents the structure of the `Zone` collection in MongoDB.
- * Defines irrigation zones with their geographic and operational characteristics.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Zone:
+ *       type: object
+ *       required:
+ *         - name
+ *         - pumpId
+ *         - status
+ *         - area
+ *         - vegetationType
+ *         - soilType
+ *         - coordinates
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         pumpId:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [active, inactive, maintenance]
+ *         area:
+ *           type: number
+ *         vegetationType:
+ *           type: string
+ *           enum: [grass, trees, shrubs, flowers, crops, mixed]
+ *         soilType:
+ *           type: string
+ *           enum: [clay, sandy, loam, silt, peat]
+ *         coordinates:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *         lastWatered:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const ZoneSchema = new Schema<IZone>(
   {
@@ -61,14 +106,14 @@ const ZoneSchema = new Schema<IZone>(
     pumpId: {
       type: String,
       required: true,
-      ref: 'Pump',
+      ref: "Pump",
     },
 
     status: {
       type: String,
       required: true,
-      enum: ['active', 'inactive', 'maintenance'],
-      default: 'active',
+      enum: ["active", "inactive", "maintenance"],
+      default: "active",
     },
 
     area: {
@@ -81,13 +126,13 @@ const ZoneSchema = new Schema<IZone>(
     vegetationType: {
       type: String,
       required: true,
-      enum: ['grass', 'trees', 'shrubs', 'flowers', 'crops', 'mixed'],
+      enum: ["grass", "trees", "shrubs", "flowers", "crops", "mixed"],
     },
 
     soilType: {
       type: String,
       required: true,
-      enum: ['clay', 'sandy', 'loam', 'silt', 'peat'],
+      enum: ["clay", "sandy", "loam", "silt", "peat"],
     },
 
     coordinates: {
@@ -112,7 +157,7 @@ const ZoneSchema = new Schema<IZone>(
         validator: function (coordinates: any[]) {
           return coordinates && coordinates.length > 0;
         },
-        message: 'Coordinates array cannot be empty',
+        message: "Coordinates array cannot be empty",
       },
     },
 
@@ -128,6 +173,6 @@ const ZoneSchema = new Schema<IZone>(
  *
  * The compiled Mongoose model for Zones based on the schema.
  */
-const ZoneModel: Model<IZone> = model<IZone>('Zone', ZoneSchema);
+const ZoneModel: Model<IZone> = model<IZone>("Zone", ZoneSchema);
 
 export default ZoneModel;

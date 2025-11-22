@@ -7,17 +7,17 @@
  *
  * @module tests/configs/connectDb.test
  */
-import { connectToMongoDB } from '../../src/configs/connectDb';
+import { connectToMongoDB } from "../../src/configs/connectDb";
 
 /**
  * Mock environment variables for MongoDB credentials.
  */
-jest.mock('../../src/configs/envirementVariables', () => ({
+jest.mock("../../src/configs/envirementVariables", () => ({
   enirementVariables: {
     mongoDbConfig: {
-      mongoDbUserName: 'testuser',
-      mongoDbPassword: 'testpass',
-      mongoDbDatabase: 'testdb',
+      mongoDbUserName: "testuser",
+      mongoDbPassword: "testpass",
+      mongoDbDatabase: "testdb",
     },
   },
 }));
@@ -26,7 +26,7 @@ jest.mock('../../src/configs/envirementVariables', () => ({
  * Mock database object with minimal functionality.
  */
 const mockDb = {
-  databaseName: 'testdb',
+  databaseName: "testdb",
   command: jest.fn().mockResolvedValue({ ok: 1 }),
 };
 
@@ -39,7 +39,7 @@ const mockClient = {
   close: jest.fn().mockResolvedValue(undefined),
 };
 
-jest.mock('mongodb', () => ({
+jest.mock("mongodb", () => ({
   MongoClient: jest.fn().mockImplementation(() => mockClient),
 }));
 
@@ -51,7 +51,7 @@ const mockCommand = mockDb.command as jest.Mock;
 /**
  * Test suite for MongoDB connection logic.
  */
-describe('MongoDB Connection', () => {
+describe("MongoDB Connection", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -59,30 +59,30 @@ describe('MongoDB Connection', () => {
   /**
    * Unit tests for the `connectToMongoDB` function.
    */
-  describe('connectToMongoDB', () => {
+  describe("connectToMongoDB", () => {
     /**
      * Should successfully establish a connection to MongoDB and return the client + database.
      */
-    it('should successfully connect to MongoDB', async () => {
+    it("should successfully connect to MongoDB", async () => {
       mockConnect.mockResolvedValueOnce(undefined);
       mockCommand.mockResolvedValueOnce({ ok: 1 });
 
       const { success, message, db, client } = await connectToMongoDB();
 
       expect(success).toBe(true);
-      expect(message).toBe('Successfully connected to MongoDB');
+      expect(message).toBe("Successfully connected to MongoDB");
       expect(db).toBeDefined();
       expect(client).toBeDefined();
 
       expect(mockConnect).toHaveBeenCalled();
-      expect(mockDbFn).toHaveBeenCalledWith('testdb');
+      expect(mockDbFn).toHaveBeenCalledWith("testdb");
       expect(mockCommand).toHaveBeenCalledWith({ ping: 1 });
     });
 
     /**
      * Should return the database object with the expected `databaseName`.
      */
-    it('should return the database with the correct name', async () => {
+    it("should return the database with the correct name", async () => {
       mockConnect.mockResolvedValueOnce(undefined);
       mockCommand.mockResolvedValueOnce({ ok: 1 });
 
@@ -90,14 +90,14 @@ describe('MongoDB Connection', () => {
 
       expect(success).toBe(true);
       expect(db).toBeDefined();
-      expect(db?.databaseName).toBe('testdb');
+      expect(db?.databaseName).toBe("testdb");
     });
 
     /**
      * Should handle errors during connection initialization and return a failure result.
      */
-    it('should handle connection errors', async () => {
-      const mockError = new Error('Connection failed');
+    it("should handle connection errors", async () => {
+      const mockError = new Error("Connection failed");
       mockConnect.mockRejectedValueOnce(mockError);
 
       const originalError = console.error;
@@ -106,7 +106,7 @@ describe('MongoDB Connection', () => {
       const { success, message } = await connectToMongoDB();
 
       expect(success).toBe(false);
-      expect(message).toContain('Connection failed');
+      expect(message).toContain("Connection failed");
       expect(mockConnect).toHaveBeenCalled();
 
       console.error = originalError;
@@ -115,9 +115,9 @@ describe('MongoDB Connection', () => {
     /**
      * Should close the client gracefully if a connection error occurs after initial connection.
      */
-    it('should close the client on connection error', async () => {
+    it("should close the client on connection error", async () => {
       mockConnect.mockResolvedValueOnce(undefined);
-      mockCommand.mockRejectedValueOnce(new Error('Ping failed'));
+      mockCommand.mockRejectedValueOnce(new Error("Ping failed"));
 
       const originalError = console.error;
       console.error = jest.fn();

@@ -62,16 +62,20 @@ src/
 
 ```typescript
 // auth.routes.ts
-router.post('/register', validate(registerSchema), authController.register);
-router.post('/login', validate(loginSchema), authController.login);
-router.get('/verify-email/:token', authController.verifyEmail);
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword);
+router.post("/register", validate(registerSchema), authController.register);
+router.post("/login", validate(loginSchema), authController.login);
+router.get("/verify-email/:token", authController.verifyEmail);
+router.post("/forgot-password", authController.forgotPassword);
+router.post(
+  "/reset-password",
+  validate(resetPasswordSchema),
+  authController.resetPassword,
+);
 
 // admin.routes.ts
 router.use(requireAdmin);
-router.get('/users/pending', adminController.listPendingUsers);
-router.patch('/users/:userId/approve', adminController.approveUser);
+router.get("/users/pending", adminController.listPendingUsers);
+router.patch("/users/:userId/approve", adminController.approveUser);
 ```
 
 ## User Registration & Activation

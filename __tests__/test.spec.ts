@@ -1,25 +1,25 @@
-import request from 'supertest';
-import app from '../src/index';
+import request from "supertest";
+import app from "../src/index";
 
 /**
  * Test suite for basic API endpoints, primarily the `/api/test` endpoint
  * and handling of unknown routes.
  */
-describe('Test Endpoint', () => {
+describe("Test Endpoint", () => {
   /**
    * Test the `/api/test` endpoint for a successful server status response.
    */
-  it('should return a success response with server status', async () => {
-    const response = await request(app).get('/api/test');
+  it("should return a success response with server status", async () => {
+    const response = await request(app).get("/api/test");
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
       success: true,
-      message: 'Success',
+      message: "Success",
       timestamp: expect.any(String),
       data: {
         message: expect.any(String),
-        status: 'active',
+        status: "active",
         version: expect.any(String),
         timestamp: expect.any(String),
       },
@@ -30,14 +30,14 @@ describe('Test Endpoint', () => {
    * Test handling of requests to non-existent routes.
    * Should return a 404 Not Found response.
    */
-  it('should return a 404 for non-existent routes', async () => {
-    const response = await request(app).get('/api/non-existent-route');
+  it("should return a 404 for non-existent routes", async () => {
+    const response = await request(app).get("/api/non-existent-route");
 
     expect(response.status).toBe(404);
     expect(response.body).toMatchObject({
       success: false,
       error: {
-        message: 'Not Found',
+        message: "Not Found",
         status: 404,
         timestamp: expect.any(String),
       },

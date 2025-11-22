@@ -1,0 +1,18 @@
+{
+  "success": {
+    "health_ok": "Health check successful"
+  },
+  "errors": {
+    "db_disconnected": "Database connection failed"
+  },
+  "database": {
+    "not_connected": "Database is not connected.",
+    "unknown_error": "An unknown database error occurred."
+  },
+  "memory": {
+    "rss": "Resident set size",
+    "heap_total": "Total heap allocated",
+    "heap_used": "Heap used",
+    "external": "External memory"
+  }
+}

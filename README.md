@@ -133,7 +133,7 @@ Document your endpoints using JSDoc comments in your route handlers:
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-app.get('/api/users', (req, res) => {
+app.get("/api/users", (req, res) => {
   // Your route handler
 });
 ```
@@ -196,7 +196,7 @@ When adding new features, please include corresponding tests. Follow these patte
 Example test structure:
 
 ```typescript
-describe('Feature', () => {
+describe("Feature", () => {
   beforeAll(() => {
     // Setup code
   });
@@ -206,8 +206,8 @@ describe('Feature', () => {
     jest.clearAllMocks();
   });
 
-  describe('when condition', () => {
-    it('should do something', async () => {
+  describe("when condition", () => {
+    it("should do something", async () => {
       // Test implementation
       expect(result).toBe(expected);
     });
@@ -221,13 +221,13 @@ Use Jest's mocking capabilities for external dependencies:
 
 ```typescript
 // Mock external modules
-jest.mock('module-name');
+jest.mock("module-name");
 
 // Mock function implementation
 const mockFunction = jest.fn().mockResolvedValue(mockData);
 
 // Mock class
-jest.mock('class-name', () => ({
+jest.mock("class-name", () => ({
   ClassName: jest.fn().mockImplementation(() => ({
     method: jest.fn().mockResolvedValue(mockData),
   })),
@@ -508,7 +508,7 @@ __tests__/
 Example test suite:
 
 ```typescript
-describe('User Service', () => {
+describe("User Service", () => {
   beforeEach(() => {
     // Setup test data and mocks
   });
@@ -518,7 +518,7 @@ describe('User Service', () => {
     jest.clearAllMocks();
   });
 
-  it('should create a new user', async () => {
+  it("should create a new user", async () => {
     // Test implementation
   });
 });

@@ -37,26 +37,26 @@ interface INotificationSubscriber {
 
 ```typescript
 enum ModuleName {
-  USER = 'USER',
-  AUTH = 'AUTH',
-  IRRIGATION = 'IRRIGATION',
-  SYSTEM = 'SYSTEM',
+  USER = "USER",
+  AUTH = "AUTH",
+  IRRIGATION = "IRRIGATION",
+  SYSTEM = "SYSTEM",
 }
 
 enum ActionType {
-  CREATED = 'CREATED',
-  UPDATED = 'UPDATED',
-  DELETED = 'DELETED',
-  APPROVAL_REQUIRED = 'APPROVAL_REQUIRED',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
+  CREATED = "CREATED",
+  UPDATED = "UPDATED",
+  DELETED = "DELETED",
+  APPROVAL_REQUIRED = "APPROVAL_REQUIRED",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
 }
 
 enum NotificationStatus {
-  PENDING = 'PENDING',
-  SENT = 'SENT',
-  READ = 'READ',
-  ARCHIVED = 'ARCHIVED',
+  PENDING = "PENDING",
+  SENT = "SENT",
+  READ = "READ",
+  ARCHIVED = "ARCHIVED",
 }
 ```
 

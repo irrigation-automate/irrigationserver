@@ -2,10 +2,10 @@
  * @file Server test helpers
  */
 
-import { connectToMongoDB } from '../../src/configs/connectDb';
-import { enirementVariables } from '../../src/configs/envirementVariables';
+import { connectToMongoDB } from "../../src/configs/connectDb";
+import { enirementVariables } from "../../src/configs/envirementVariables";
 
-jest.mock('../../src/configs/connectDb');
+jest.mock("../../src/configs/connectDb");
 
 export const mockDb = {};
 export const mockClient = { close: jest.fn().mockResolvedValue(undefined) };
@@ -19,9 +19,11 @@ export const mockApp = {
 };
 
 // Mock process.exit
-export const mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code) => {
-  throw new Error(`Process exited with code ${code}`);
-});
+export const mockProcessExit = jest
+  .spyOn(process, "exit")
+  .mockImplementation((code) => {
+    throw new Error(`Process exited with code ${code}`);
+  });
 
 // Mock console
 export const mockConsole = {
@@ -38,7 +40,7 @@ export const setupConsoleMocks = () => {
 // Capture process signal handlers
 export const setupSignalHandlersMock = () => {
   const handlers: Record<string, () => void> = {};
-  jest.spyOn(process, 'on').mockImplementation((signal, fn) => {
+  jest.spyOn(process, "on").mockImplementation((signal, fn) => {
     handlers[signal as string] = fn as () => void;
     return process;
   });
@@ -52,14 +54,14 @@ export const flushPromises = () => new Promise(setImmediate);
 export const mockMongoSuccess = () => {
   (connectToMongoDB as jest.Mock).mockResolvedValue({
     success: true,
-    message: 'Connected to MongoDB',
+    message: "Connected to MongoDB",
     db: mockDb,
     client: mockClient,
   });
 };
 
 // Setup failed MongoDB connection
-export const mockMongoFailure = (message = 'Connection failed') => {
+export const mockMongoFailure = (message = "Connection failed") => {
   (connectToMongoDB as jest.Mock).mockResolvedValue({
     success: false,
     message,
@@ -67,7 +69,7 @@ export const mockMongoFailure = (message = 'Connection failed') => {
 };
 
 // Setup MongoDB connection error
-export const mockMongoError = (error = new Error('Connection error')) => {
+export const mockMongoError = (error = new Error("Connection error")) => {
   (connectToMongoDB as jest.Mock).mockRejectedValue(error);
 };
 

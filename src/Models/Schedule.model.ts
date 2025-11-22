@@ -6,8 +6,8 @@
  *
  * @module models/Schedule
  */
-import { regex } from '@/validations/regex';
-import { Model, model, Schema, Document } from 'mongoose';
+import { regex } from "@/validations/regex";
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for weather conditions.
@@ -29,7 +29,7 @@ export interface ISchedule extends Document {
   /** Reference to the zone this schedule applies to */
   zoneId: string;
   /** Type of schedule */
-  type: 'interval' | 'calendar' | 'weather' | 'sensor';
+  type: "interval" | "calendar" | "weather" | "sensor";
   /** Days of week (0-6, Sunday = 0) for calendar schedules */
   days?: number[];
   /** Start time in HH:MM format */
@@ -53,23 +53,78 @@ export interface ISchedule extends Document {
 }
 
 /**
- * Schedule Schema.
- *
- * Represents the structure of the `Schedule` collection in MongoDB.
- * Defines irrigation schedules with various trigger conditions and timing.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Schedule:
+ *       type: object
+ *       required:
+ *         - zoneId
+ *         - type
+ *         - startTime
+ *         - duration
+ *       properties:
+ *         id:
+ *           type: string
+ *         zoneId:
+ *           type: string
+ *         type:
+ *           type: string
+ *           enum: [interval, calendar, weather, sensor]
+ *         days:
+ *           type: array
+ *           items:
+ *             type: integer
+ *         startTime:
+ *           type: string
+ *           description: Start time in HH:MM format
+ *         duration:
+ *           type: number
+ *           description: Duration in minutes
+ *         enabled:
+ *           type: boolean
+ *         weatherConditions:
+ *           type: object
+ *           properties:
+ *             minTemperature:
+ *               type: number
+ *             maxTemperature:
+ *               type: number
+ *             maxHumidity:
+ *               type: number
+ *             maxWindSpeed:
+ *               type: number
+ *             noRain:
+ *               type: boolean
+ *         sensorThresholds:
+ *           type: object
+ *           properties:
+ *             soilMoisture:
+ *               type: number
+ *             temperature:
+ *               type: number
+ *         nextRun:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const ScheduleSchema = new Schema<ISchedule>(
   {
     zoneId: {
       type: String,
       required: true,
-      ref: 'Zone',
+      ref: "Zone",
     },
 
     type: {
       type: String,
       required: true,
-      enum: ['interval', 'calendar', 'weather', 'sensor'],
+      enum: ["interval", "calendar", "weather", "sensor"],
     },
 
     days: {
@@ -79,7 +134,7 @@ const ScheduleSchema = new Schema<ISchedule>(
           if (!days) return true;
           return days.every((day) => day >= 0 && day <= 6);
         },
-        message: 'Days must be between 0 (Sunday) and 6 (Saturday)',
+        message: "Days must be between 0 (Sunday) and 6 (Saturday)",
       },
     },
 
@@ -151,6 +206,9 @@ const ScheduleSchema = new Schema<ISchedule>(
  *
  * The compiled Mongoose model for Schedules based on the schema.
  */
-const ScheduleModel: Model<ISchedule> = model<ISchedule>('Schedule', ScheduleSchema);
+const ScheduleModel: Model<ISchedule> = model<ISchedule>(
+  "Schedule",
+  ScheduleSchema,
+);
 
 export default ScheduleModel;

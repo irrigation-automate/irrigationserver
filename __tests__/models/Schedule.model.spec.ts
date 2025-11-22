@@ -14,9 +14,9 @@
  * - Test edge cases with various scheduling scenarios
  */
 
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import ScheduleModel from '../../src/Models/Schedule.model';
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import ScheduleModel from "../../src/Models/Schedule.model";
 
 /**
  * __Schedule Model Unit Tests
@@ -33,7 +33,7 @@ import ScheduleModel from '../../src/Models/Schedule.model';
  * - Handle schedule management operations
  * - Test edge cases with various scheduling scenarios
  */
-describe('Schedule Model', () => {
+describe("Schedule Model", () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -52,9 +52,9 @@ describe('Schedule Model', () => {
   });
 
   const validScheduleData = {
-    zoneId: '507f1f77bcf86cd799439011',
-    type: 'calendar' as const,
-    startTime: '08:00',
+    zoneId: "507f1f77bcf86cd799439011",
+    type: "calendar" as const,
+    startTime: "08:00",
     duration: 30,
     enabled: true,
   };
@@ -65,9 +65,9 @@ describe('Schedule Model', () => {
   };
 
   const validWeatherSchedule = {
-    zoneId: '507f1f77bcf86cd799439011',
-    type: 'weather' as const,
-    startTime: '06:00',
+    zoneId: "507f1f77bcf86cd799439011",
+    type: "weather" as const,
+    startTime: "06:00",
     duration: 45,
     enabled: true,
     weatherConditions: {
@@ -84,7 +84,7 @@ describe('Schedule Model', () => {
    * - Verify persistence and data integrity
    * - Ensure correct schema mapping
    */
-  describe('Valid Schedule Creation', () => {
+  describe("Valid Schedule Creation", () => {
     /**
      * __Create Calendar Schedule
      * Acceptance case (scenario)
@@ -92,7 +92,7 @@ describe('Schedule Model', () => {
      * - Verify saved document contains valid values
      * - Ensure timestamps are generated
      */
-    it('should create a basic calendar schedule', async () => {
+    it("should create a basic calendar schedule", async () => {
       const schedule = new ScheduleModel(validScheduleData);
       const savedSchedule = await schedule.save();
 
@@ -112,7 +112,7 @@ describe('Schedule Model', () => {
      * - Save a schedule with specific day values
      * - Verify days array matches provided values
      */
-    it('should create a schedule with specific days', async () => {
+    it("should create a schedule with specific days", async () => {
       const schedule = new ScheduleModel(validScheduleWithDays);
       const savedSchedule = await schedule.save();
 
@@ -125,7 +125,7 @@ describe('Schedule Model', () => {
      * - Create schedule with weather conditions
      * - Verify min/max temperature and noRain fields
      */
-    it('should create a weather-based schedule', async () => {
+    it("should create a weather-based schedule", async () => {
       const schedule = new ScheduleModel(validWeatherSchedule);
       const savedSchedule = await schedule.save();
 
@@ -141,11 +141,11 @@ describe('Schedule Model', () => {
      * - Create schedule with soil moisture and temperature thresholds
      * - Verify sensorThresholds object is persisted correctly
      */
-    it('should create a sensor-based schedule', async () => {
+    it("should create a sensor-based schedule", async () => {
       const sensorSchedule = {
-        zoneId: '507f1f77bcf86cd799439011',
-        type: 'sensor' as const,
-        startTime: '07:00',
+        zoneId: "507f1f77bcf86cd799439011",
+        type: "sensor" as const,
+        startTime: "07:00",
         duration: 60,
         enabled: true,
         sensorThresholds: {
@@ -170,7 +170,7 @@ describe('Schedule Model', () => {
    * - Verify validation errors are thrown for missing fields
    * - Ensure schedule integrity by enforcing field requirements
    */
-  describe('Required Field Validation', () => {
+  describe("Required Field Validation", () => {
     /**
      * __Validate Required zoneId Field
      * Acceptance case (scenario)
@@ -178,7 +178,7 @@ describe('Schedule Model', () => {
      * - Verify validation error is thrown
      * - Ensure schedule zone association
      */
-    it('should require zoneId field', async () => {
+    it("should require zoneId field", async () => {
       const scheduleData = { ...validScheduleData, zoneId: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -201,7 +201,7 @@ describe('Schedule Model', () => {
      * - Verify validation error is thrown
      * - Ensure schedule type classification
      */
-    it('should require type field', async () => {
+    it("should require type field", async () => {
       const scheduleData = { ...validScheduleData, type: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -224,7 +224,7 @@ describe('Schedule Model', () => {
      * - Verify validation error is thrown
      * - Ensure irrigation timing specification
      */
-    it('should require startTime field', async () => {
+    it("should require startTime field", async () => {
       const scheduleData = { ...validScheduleData, startTime: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -247,7 +247,7 @@ describe('Schedule Model', () => {
      * - Verify validation error is thrown
      * - Ensure irrigation duration specification
      */
-    it('should require duration field', async () => {
+    it("should require duration field", async () => {
       const scheduleData = { ...validScheduleData, duration: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -269,14 +269,14 @@ describe('Schedule Model', () => {
    * - Ensure that default fields are properly set
    * - Validate enabled defaults to true when not provided
    */
-  describe('Default Values', () => {
+  describe("Default Values", () => {
     /**
      * __Enabled Default True__
      * Acceptance case
      * - Create schedule without enabled field
      * - Verify enabled defaults to true
      */
-    it('should set default enabled to true', async () => {
+    it("should set default enabled to true", async () => {
       const scheduleData = { ...validScheduleData, enabled: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -293,14 +293,14 @@ describe('Schedule Model', () => {
    * - Enforce duration maximum constraint
    * - Reject invalid durations outside defined range
    */
-  describe('Field Constraints', () => {
+  describe("Field Constraints", () => {
     /**
      * __Duration Minimum Constraint__
      * Acceptance case
      * - Attempt to save duration below minimum
      * - Expect validation error on duration
      */
-    it('should enforce duration min constraint', async () => {
+    it("should enforce duration min constraint", async () => {
       const scheduleData = { ...validScheduleData, duration: 0 };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -322,7 +322,7 @@ describe('Schedule Model', () => {
      * - Attempt to save duration above maximum
      * - Expect validation error on duration
      */
-    it('should enforce duration max constraint', async () => {
+    it("should enforce duration max constraint", async () => {
       const scheduleData = { ...validScheduleData, duration: 1500 };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -345,15 +345,15 @@ describe('Schedule Model', () => {
    * - Reject values not part of type enum
    * - Ensure schedule type matches allowed set
    */
-  describe('Enum Validation', () => {
+  describe("Enum Validation", () => {
     /**
      * __Type Enum Constraint__
      * Acceptance case
      * - Attempt to save invalid type value
      * - Expect validation error on type
      */
-    it('should enforce type enum constraint', async () => {
-      const scheduleData = { ...validScheduleData, type: 'invalid_type' };
+    it("should enforce type enum constraint", async () => {
+      const scheduleData = { ...validScheduleData, type: "invalid_type" };
 
       const schedule = new ScheduleModel(scheduleData);
 
@@ -376,14 +376,14 @@ describe('Schedule Model', () => {
    * - Allow valid days array
    * - Allow empty days for interval schedules
    */
-  describe('Days Validation', () => {
+  describe("Days Validation", () => {
     /**
      * __Invalid Days Range__
      * Acceptance case
      * - Attempt to save days outside range [-1,7]
      * - Expect validation error on days
      */
-    it('should validate days are within valid range', async () => {
+    it("should validate days are within valid range", async () => {
       const scheduleData = { ...validScheduleData, days: [-1, 7] };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -405,7 +405,7 @@ describe('Schedule Model', () => {
      * - Save with valid days [0,6]
      * - Expect persisted correctly
      */
-    it('should allow valid days range', async () => {
+    it("should allow valid days range", async () => {
       const scheduleData = { ...validScheduleData, days: [0, 6] };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -420,11 +420,11 @@ describe('Schedule Model', () => {
      * - Create interval schedule with empty days array
      * - Expect empty array persisted
      */
-    it('should allow empty days array for interval schedules', async () => {
+    it("should allow empty days array for interval schedules", async () => {
       const intervalSchedule = {
-        zoneId: '507f1f77bcf86cd799439011',
-        type: 'interval' as const,
-        startTime: '08:00',
+        zoneId: "507f1f77bcf86cd799439011",
+        type: "interval" as const,
+        startTime: "08:00",
         duration: 30,
         enabled: true,
         days: [],
@@ -445,7 +445,7 @@ describe('Schedule Model', () => {
    * - Handle time format constraints
    * - Ensure proper irrigation timing
    */
-  describe('Start Time Validation', () => {
+  describe("Start Time Validation", () => {
     /**
      * __Validate Start Time Format
      * Acceptance case (scenario)
@@ -453,8 +453,8 @@ describe('Schedule Model', () => {
      * - Verify 24-hour time format validation
      * - Ensure proper time specification
      */
-    it('should validate startTime format', async () => {
-      const scheduleData = { ...validScheduleData, startTime: '25:00' };
+    it("should validate startTime format", async () => {
+      const scheduleData = { ...validScheduleData, startTime: "25:00" };
 
       const schedule = new ScheduleModel(scheduleData);
 
@@ -476,8 +476,8 @@ describe('Schedule Model', () => {
      * - Verify 24-hour format acceptance
      * - Ensure flexible time specification
      */
-    it('should accept valid time formats', async () => {
-      const validTimes = ['00:00', '12:30', '23:59'];
+    it("should accept valid time formats", async () => {
+      const validTimes = ["00:00", "12:30", "23:59"];
 
       for (const time of validTimes) {
         const scheduleData = { ...validScheduleData, startTime: time };
@@ -497,7 +497,7 @@ describe('Schedule Model', () => {
    * - Validate environmental condition parameters
    * - Ensure weather-based irrigation logic
    */
-  describe('Weather Conditions Validation', () => {
+  describe("Weather Conditions Validation", () => {
     /**
      * __Validate Temperature Ranges
      * Acceptance case (scenario)
@@ -505,7 +505,7 @@ describe('Schedule Model', () => {
      * - Verify extreme temperature values are rejected
      * - Ensure safe irrigation temperature ranges
      */
-    it('should validate temperature ranges', async () => {
+    it("should validate temperature ranges", async () => {
       const scheduleData = {
         ...validWeatherSchedule,
         weatherConditions: {
@@ -524,8 +524,8 @@ describe('Schedule Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['weatherConditions.minTemperature']).toBeDefined();
-      expect(error.errors['weatherConditions.maxTemperature']).toBeDefined();
+      expect(error.errors["weatherConditions.minTemperature"]).toBeDefined();
+      expect(error.errors["weatherConditions.maxTemperature"]).toBeDefined();
     });
 
     /**
@@ -535,7 +535,7 @@ describe('Schedule Model', () => {
      * - Verify excessive humidity values are rejected
      * - Ensure realistic humidity constraints
      */
-    it('should validate humidity range', async () => {
+    it("should validate humidity range", async () => {
       const scheduleData = {
         ...validWeatherSchedule,
         weatherConditions: {
@@ -553,7 +553,7 @@ describe('Schedule Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['weatherConditions.maxHumidity']).toBeDefined();
+      expect(error.errors["weatherConditions.maxHumidity"]).toBeDefined();
     });
 
     /**
@@ -563,7 +563,7 @@ describe('Schedule Model', () => {
      * - Verify negative wind speed values are rejected
      * - Ensure positive wind speed measurements
      */
-    it('should validate wind speed range', async () => {
+    it("should validate wind speed range", async () => {
       const scheduleData = {
         ...validWeatherSchedule,
         weatherConditions: {
@@ -581,7 +581,7 @@ describe('Schedule Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['weatherConditions.maxWindSpeed']).toBeDefined();
+      expect(error.errors["weatherConditions.maxWindSpeed"]).toBeDefined();
     });
   });
 
@@ -593,7 +593,7 @@ describe('Schedule Model', () => {
    * - Validate sensor condition parameters
    * - Ensure sensor-based irrigation logic
    */
-  describe('Sensor Thresholds Validation', () => {
+  describe("Sensor Thresholds Validation", () => {
     /**
      * __Validate Soil Moisture Range
      * Acceptance case (scenario)
@@ -601,11 +601,11 @@ describe('Schedule Model', () => {
      * - Verify unrealistic moisture values are rejected
      * - Ensure realistic soil moisture constraints
      */
-    it('should validate soil moisture range', async () => {
+    it("should validate soil moisture range", async () => {
       const scheduleData = {
-        zoneId: '507f1f77bcf86cd799439011',
-        type: 'sensor' as const,
-        startTime: '07:00',
+        zoneId: "507f1f77bcf86cd799439011",
+        type: "sensor" as const,
+        startTime: "07:00",
         duration: 60,
         enabled: true,
         sensorThresholds: {
@@ -623,7 +623,7 @@ describe('Schedule Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['sensorThresholds.soilMoisture']).toBeDefined();
+      expect(error.errors["sensorThresholds.soilMoisture"]).toBeDefined();
     });
 
     /**
@@ -633,11 +633,11 @@ describe('Schedule Model', () => {
      * - Verify extreme temperature values are rejected
      * - Ensure sensor temperature monitoring accuracy
      */
-    it('should validate sensor temperature range', async () => {
+    it("should validate sensor temperature range", async () => {
       const scheduleData = {
-        zoneId: '507f1f77bcf86cd799439011',
-        type: 'sensor' as const,
-        startTime: '07:00',
+        zoneId: "507f1f77bcf86cd799439011",
+        type: "sensor" as const,
+        startTime: "07:00",
         duration: 60,
         enabled: true,
         sensorThresholds: {
@@ -655,7 +655,7 @@ describe('Schedule Model', () => {
       }
 
       expect(error).toBeDefined();
-      expect(error.errors['sensorThresholds.temperature']).toBeDefined();
+      expect(error.errors["sensorThresholds.temperature"]).toBeDefined();
     });
   });
 
@@ -667,7 +667,7 @@ describe('Schedule Model', () => {
    * - Validate automatic timestamp generation
    * - Ensure proper default behavior for new schedules
    */
-  describe('Default Values', () => {
+  describe("Default Values", () => {
     /**
      * __Verify Default Enabled Status Assignment
      * Acceptance case (scenario)
@@ -675,7 +675,7 @@ describe('Schedule Model', () => {
      * - Verify default enabled status is automatically set
      * - Ensure new schedules are active by default
      */
-    it('should set default enabled to true', async () => {
+    it("should set default enabled to true", async () => {
       const scheduleData = { ...validScheduleData, enabled: undefined };
 
       const schedule = new ScheduleModel(scheduleData);
@@ -691,13 +691,15 @@ describe('Schedule Model', () => {
      * - Verify createdAt and updatedAt are generated
      * - Ensure timestamp consistency on creation
      */
-    it('should set timestamps', async () => {
+    it("should set timestamps", async () => {
       const schedule = new ScheduleModel(validScheduleData);
       const savedSchedule = await schedule.save();
 
       expect(savedSchedule.createdAt).toBeInstanceOf(Date);
       expect(savedSchedule.updatedAt).toBeInstanceOf(Date);
-      expect(savedSchedule.createdAt.getTime()).toBe(savedSchedule.updatedAt.getTime());
+      expect(savedSchedule.createdAt.getTime()).toBe(
+        savedSchedule.updatedAt.getTime(),
+      );
     });
   });
 });

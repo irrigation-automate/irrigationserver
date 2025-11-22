@@ -62,10 +62,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "i18next": "^25.6.3",
+    "i18next-fs-backend": "^2.6.1",
+    "i18next-http-middleware": "^3.8.2",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.3",
     "mongodb": "^5.6.0",
-    "mongoose": "^7.3.1"
+    "mongoose": "^7.3.1",
+    "swagger-jsdoc": "^6.2.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -76,6 +80,7 @@
     "@types/mongodb-memory-server": "^1.8.0",
     "@types/node": "^22.16.0",
     "@types/supertest": "^2.0.12",
+    "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",

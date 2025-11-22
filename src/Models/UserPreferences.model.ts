@@ -6,7 +6,8 @@
  *
  * @module models/UserPreferences
  */
-import { Model, model, Schema, Document } from 'mongoose';
+
+import { Model, model, Schema, Document } from "mongoose";
 
 /**
  * Interface for UserPreferences document.
@@ -37,7 +38,7 @@ export interface IUserPreferences extends Document {
   };
   /** Dashboard preferences */
   dashboard: {
-    defaultView: 'overview' | 'zones' | 'pumps' | 'schedules';
+    defaultView: "overview" | "zones" | "pumps" | "schedules";
     refreshInterval: number; // in seconds
     showWeather: boolean;
     showWaterUsage: boolean;
@@ -48,10 +49,66 @@ export interface IUserPreferences extends Document {
 }
 
 /**
- * UserPreferences Schema.
- *
- * Represents the structure of the `UserPreferences` collection in MongoDB.
- * Stores user-specific settings for interface customization and notifications.
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserPreferences:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - language
+ *         - timezone
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         language:
+ *           type: string
+ *         timezone:
+ *           type: string
+ *         emailNotifications:
+ *           type: object
+ *           properties:
+ *             enabled:
+ *               type: boolean
+ *             scheduleUpdates:
+ *               type: boolean
+ *             systemAlerts:
+ *               type: boolean
+ *             maintenanceReminders:
+ *               type: boolean
+ *             weeklyReports:
+ *               type: boolean
+ *         pushNotifications:
+ *           type: object
+ *           properties:
+ *             enabled:
+ *               type: boolean
+ *             scheduleUpdates:
+ *               type: boolean
+ *             systemAlerts:
+ *               type: boolean
+ *             maintenanceReminders:
+ *               type: boolean
+ *         dashboard:
+ *           type: object
+ *           properties:
+ *             defaultView:
+ *               type: string
+ *               enum: [overview, zones, pumps, schedules]
+ *             refreshInterval:
+ *               type: number
+ *             showWeather:
+ *               type: boolean
+ *             showWaterUsage:
+ *               type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 const UserPreferencesSchema = new Schema<IUserPreferences>(
   {
@@ -59,20 +116,20 @@ const UserPreferencesSchema = new Schema<IUserPreferences>(
       type: String,
       required: true,
       unique: true,
-      ref: 'User',
+      ref: "User",
     },
 
     language: {
       type: String,
       required: true,
-      default: 'en',
-      enum: ['en', 'es', 'fr', 'de', 'it', 'pt'],
+      default: "en",
+      enum: ["en", "es", "fr", "de", "it", "pt"],
     },
 
     timezone: {
       type: String,
       required: true,
-      default: 'UTC',
+      default: "UTC",
     },
 
     emailNotifications: {
@@ -130,8 +187,8 @@ const UserPreferencesSchema = new Schema<IUserPreferences>(
       defaultView: {
         type: String,
         required: true,
-        enum: ['overview', 'zones', 'pumps', 'schedules'],
-        default: 'overview',
+        enum: ["overview", "zones", "pumps", "schedules"],
+        default: "overview",
       },
       refreshInterval: {
         type: Number,
@@ -163,7 +220,7 @@ const UserPreferencesSchema = new Schema<IUserPreferences>(
  * The compiled Mongoose model for UserPreferences based on the schema.
  */
 const UserPreferencesModel: Model<IUserPreferences> = model<IUserPreferences>(
-  'UserPreferences',
+  "UserPreferences",
   UserPreferencesSchema,
 );
 

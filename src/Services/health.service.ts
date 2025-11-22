@@ -1,5 +1,9 @@
-import mongoose from 'mongoose';
-import { DatabaseCheckResult, MemoryUsage } from '../interface/interfaces/health.interface';
+import mongoose from "mongoose";
+import {
+  DatabaseCheckResult,
+  MemoryUsage,
+} from "../interface/interfaces/health.interface";
+import { t } from "i18next";
 
 /**
  * Service for handling health check related operations
@@ -25,13 +29,14 @@ class HealthService {
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: 'Mongoose not connected',
+        error: "Mongoose not connected",
       };
     } catch (error) {
       return {
         connected: false,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown database error',
+        error:
+          error instanceof Error ? error.message : t("database.unknown_error"),
       };
     }
   }
@@ -44,10 +49,10 @@ class HealthService {
     const memoryUsage = process.memoryUsage();
 
     return {
-      rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
-      heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
-      heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-      external: `${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`,
+      rss: `${t("memory.rss")}: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
+      heapTotal: `${t("memory.heap_total")}: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+      heapUsed: `${t("memory.heap_used")}: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+      external: `${t("memory.external")}: ${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`,
     };
   }
 

@@ -9,10 +9,10 @@
  * - Test data integrity and persistence
  * - Validate numeric field type enforcement
  */
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import UserAddress from '../../src/Models/user/User.adress';
-import { IUserAddressSchema } from '../../src/interface/interfaces/models';
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import UserAddress from "../../src/Models/user/User.adress";
+import { IUserAddressSchema } from "../../src/interface/interfaces/models";
 
 /**
  * __UserAddress Model Unit Tests
@@ -25,12 +25,12 @@ import { IUserAddressSchema } from '../../src/interface/interfaces/models';
  * - Test data integrity and persistence
  * - Validate numeric field type enforcement
  */
-describe('UserAddress Model', () => {
+describe("UserAddress Model", () => {
   let mongoServer: MongoMemoryServer;
 
   const validAddress: Partial<IUserAddressSchema> = {
-    city: 'Tunis',
-    street: 'Habib Bourguiba Avenue',
+    city: "Tunis",
+    street: "Habib Bourguiba Avenue",
     codeZip: 1000,
   };
 
@@ -56,7 +56,7 @@ describe('UserAddress Model', () => {
    * - Verify saved document contains valid values
    * - Ensure default country and timestamp generation
    */
-  it('should create and save a user address successfully', async () => {
+  it("should create and save a user address successfully", async () => {
     const address = new UserAddress(validAddress);
     const savedAddress = await address.save();
 
@@ -64,7 +64,7 @@ describe('UserAddress Model', () => {
     expect(savedAddress.city).toBe(validAddress.city);
     expect(savedAddress.street).toBe(validAddress.street);
     expect(savedAddress.codeZip).toBe(validAddress.codeZip);
-    expect(savedAddress.country).toBe('Tunisia');
+    expect(savedAddress.country).toBe("Tunisia");
     expect(savedAddress.last_update).toBeDefined();
   });
 
@@ -82,7 +82,7 @@ describe('UserAddress Model', () => {
     const address = new UserAddress(addressData);
     const savedAddress = await address.save();
 
-    expect(savedAddress.country).toBe('Tunisia');
+    expect(savedAddress.country).toBe("Tunisia");
   });
 
   /**
@@ -92,16 +92,18 @@ describe('UserAddress Model', () => {
    * - Verify last_update timestamp is refreshed
    * - Ensure change tracking mechanism
    */
-  it('should update last_update timestamp on save', async () => {
+  it("should update last_update timestamp on save", async () => {
     const address = new UserAddress(validAddress);
     const savedAddress = await address.save();
     const initialUpdateTime = savedAddress.last_update;
 
-    savedAddress.city = 'Sfax';
+    savedAddress.city = "Sfax";
     const updatedAddress = await savedAddress.save();
 
-    expect(updatedAddress.city).toBe('Sfax');
-    expect(updatedAddress.last_update.getTime()).toBeGreaterThan(initialUpdateTime.getTime());
+    expect(updatedAddress.city).toBe("Sfax");
+    expect(updatedAddress.last_update.getTime()).toBeGreaterThan(
+      initialUpdateTime.getTime(),
+    );
   });
 
   /**
@@ -111,13 +113,13 @@ describe('UserAddress Model', () => {
    * - Verify partial data is accepted
    * - Ensure flexible address storage
    */
-  it('should allow partial address information', async () => {
-    const partialAddress = { city: 'Sousse' };
+  it("should allow partial address information", async () => {
+    const partialAddress = { city: "Sousse" };
     const address = new UserAddress(partialAddress);
     const savedAddress = await address.save();
 
     expect(savedAddress._id).toBeDefined();
-    expect(savedAddress.city).toBe('Sousse');
+    expect(savedAddress.city).toBe("Sousse");
     expect(savedAddress.street).toBeUndefined();
     expect(savedAddress.codeZip).toBeUndefined();
   });
@@ -129,10 +131,10 @@ describe('UserAddress Model', () => {
    * - Verify validation error is thrown
    * - Ensure postal code data integrity
    */
-  it('should validate codeZip as a number', async () => {
+  it("should validate codeZip as a number", async () => {
     const invalidAddress = {
       ...validAddress,
-      codeZip: 'not-a-number',
+      codeZip: "not-a-number",
     };
     const address = new UserAddress(invalidAddress);
 

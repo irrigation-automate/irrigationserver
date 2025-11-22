@@ -4,8 +4,12 @@
  * This module handles loading and typing environment variables for the application.
  */
 
-import { TjwtConfig, TmongoDbConfig, TserverConfig } from '../interface/types/configEnvirements';
-import dotenv from 'dotenv';
+import {
+  TjwtConfig,
+  TmongoDbConfig,
+  TserverConfig,
+} from "../interface/types/configEnvirements";
+import dotenv from "dotenv";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -20,7 +24,14 @@ dotenv.config();
  * @property {string} mongoDbDatabase - Name of the MongoDB database
  * @property {string} JWTSecret - Secret key for JWT token generation and verification
  */
-const { PORT, mongoDbUserName, mongoDbPassword, mongoDbDatabase, JWTSecret } = process.env;
+const {
+  PORT,
+  mongoDbUserName,
+  mongoDbPassword,
+  mongoDbDatabase,
+  JWTSecret,
+  DevelopmentServer,
+} = process.env;
 
 // Validate required environment variables
 const requiredEnvVars = {
@@ -36,7 +47,9 @@ const missingVars = Object.entries(requiredEnvVars)
   .map(([key]) => key);
 
 if (missingVars.length > 0) {
-  throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  throw new Error(
+    `Missing required environment variables: ${missingVars.join(", ")}`,
+  );
 }
 
 /**
@@ -44,7 +57,8 @@ if (missingVars.length > 0) {
  * @type {TserverConfig}
  */
 const serverConfig: TserverConfig = {
-  PORT: parseInt(PORT as string, 10) || 5001,
+  PORT: parseInt(PORT as string, 10) ?? 5000,
+  DevelopmentServer: DevelopmentServer ?? `http://localhost:${PORT}`,
 };
 
 /**

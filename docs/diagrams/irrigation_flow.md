@@ -146,8 +146,8 @@ GET    /api/v1/water/alerts           # Get active water alerts
 interface Pump {
   id: string;
   name: string;
-  type: 'submersible' | 'surface' | 'booster';
-  status: 'idle' | 'running' | 'fault';
+  type: "submersible" | "surface" | "booster";
+  status: "idle" | "running" | "fault";
   flowRate: number; // L/min
   maxPressure: number; // PSI
   powerConsumption: number; // Watts
@@ -172,7 +172,7 @@ interface Zone {
   area: number; // m²
   flowRate: number; // L/min
   pressure: number; // PSI
-  status: 'idle' | 'irrigating' | 'paused' | 'error';
+  status: "idle" | "irrigating" | "paused" | "error";
   vegetationType: string;
   soilType: string;
   coordinates: Array<{ lat: number; lng: number }>;
@@ -189,7 +189,7 @@ interface Schedule {
   zoneId: string;
   name: string;
   enabled: boolean;
-  type: 'interval' | 'fixed' | 'weather';
+  type: "interval" | "fixed" | "weather";
   days: number[]; // 0-6 (Sun-Sat)
   startTime: string; // HH:MM
   duration: number; // minutes

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
 // Declare modules with their types
-declare module '@/utils/responseHelpers' {
+declare module "@/utils/responseHelpers" {
   export interface ErrorDetails {
     [key: string]: unknown;
   }
@@ -51,14 +51,14 @@ declare module '@/utils/responseHelpers' {
   export function isError(error: unknown): error is Error;
 }
 
-declare module '@/utils/swagger' {
-  import { Express } from 'express';
+declare module "@/utils/swagger" {
+  import { Express } from "express";
 
   export function setupSwagger(app: Express): void;
 }
 
-declare module '@/Routes/tests/testController' {
-  import { RequestHandler } from 'express';
+declare module "@/Routes/tests/testController" {
+  import { RequestHandler } from "express";
 
   export const getTestData: RequestHandler;
   export const getTestError: RequestHandler;
